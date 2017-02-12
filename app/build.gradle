@@ -1,0 +1,74 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion '25.0.2'
+
+    defaultConfig {
+        applicationId "com.seki.saezurishiki"
+        minSdkVersion 14
+        targetSdkVersion 25
+        versionCode 18
+        versionName "1.68"
+
+//        jackOptions {
+//            enabled true
+//        }
+
+
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    dataBinding {
+        enabled = true
+    }
+
+
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+    }
+
+    applicationVariants.all { variant ->
+        if (variant.buildType.name.equals("release")) {
+            variant.outputs.each { output ->
+                if (output.outputFile != null && output.outputFile.name.endsWith('.apk')) {
+                    def applicationId = defaultConfig.applicationId
+                    def versionCode = defaultConfig.versionCode
+                    def versionName = defaultConfig.versionName
+                    def apkName = "${applicationId}_${versionCode}_${versionName}.apk"
+                    output.outputFile = new File(output.outputFile.parent, apkName)
+                }
+            }
+        }
+
+    }
+
+
+
+//    compileOptions {
+//        sourceCompatibility JavaVersion.VERSION_1_8
+//        targetCompatibility JavaVersion.VERSION_1_8
+//    }
+
+
+
+}
+
+dependencies {
+    compile 'com.android.support:appcompat-v7:25.1.0'
+    compile 'org.twitter4j:twitter4j-core:4.0.4'
+    compile 'org.twitter4j:twitter4j-stream:4.0.4'
+    compile 'org.twitter4j:twitter4j-media-support:4.0.4'
+    compile 'org.twitter4j:twitter4j-async:4.0.4'
+    compile 'com.android.support:design:25.1.0'
+    compile 'com.android.support:preference-v7:25.1.0'
+    compile 'com.squareup.picasso:picasso:2.3.3'
+    compile 'org.jetbrains:annotations-java5:15.0'
+    compile 'com.facebook.conceal:conceal:1.1.2@aar'
+}

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="pref_theme_color_entries">
+        <item>"ダーク"</item>
+        <item>"ライト"</item>
+    </string-array>
+    <string-array name="pref_theme_color_values">
+        <item>dark_theme</item>
+        <item>light_theme</item>
+    </string-array>
+
+    <string-array name="pref_text_size_entries">
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+    </string-array>
+    <string-array name="pref_text_size_values">
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+    </string-array>
+    <string name="one_tap_action">ワンタップ</string>
+    <string-array name="pref_entries_action_button_operation">
+        <item>ワンタップ</item>
+        <item>タップ＋確認ダイアログ</item>
+        <item>ロングタップ</item>
+    </string-array>
+
+    <string-array name="pref_entryValues_action_button_operation">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+</resources>

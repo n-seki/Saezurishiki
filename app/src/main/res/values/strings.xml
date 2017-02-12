@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">囀り式</string>
+
+    <string name="please_add_account">アカウントを追加してください</string>
+    <string name="oauth_consumer_key">xErr9otaGYvAJAYLRBAnFgzCq</string>
+    <string name="oauth_consumer_secret">HQvzieLqUq4HP0jWBAy60lKF8xlGZmkMgnuBgcprYByf0dsW5Q</string>
+
+    <!--エラーメッセージ-->
+    <string name="update_time_line_fail">ツイートを読み込めませんでした</string>
+    <string name="edit_text_empty">テキストを入力してください</string>
+    <string name="not_authorized_to_see_status">"Tweetを取得できません"</string>
+    <string name="status_is_duplicate">"tweet内容が重複しています"</string>
+    <string name="rate_limit_exceeded">"API切れです"</string>
+    <string name="bad_gateway">"Twitter is down"</string>
+    <string name="twitter_bad_something">"何かがおかしいです"</string>
+    <string name="page_not_exist">該当Tweetは削除されています</string>
+
+    <string name="default_follow_state">ロード中</string>
+
+    <string name="search_hint">hint</string>
+    <string name="re_tweet_button">リツイートボタン</string>
+
+    <!--送信完了メッセージ-->
+    <string name="tweet_complete">ツイートしました</string>
+    <string name="tweet_fail">ツイートに失敗しました</string>
+    <string name="reply_complete">返信しました</string>
+    <string name="sendDM_complete">送信しました</string>
+
+    <!--フォロー/リムーブ関係-->
+    <string name="do_follow">フォロー</string>
+    <string name="do_remove">リムーブ</string>
+
+    <!--preference関連-->
+    <string name="pref_theme_color_default">dark_theme</string>
+    <string name="pref_text_size_default">14</string>
+
+    <!--NavigationDrawer関連-->
+    <string name="drawer_open">drawerOpen</string>
+    <string name="drawer_close">drawerClose</string>
+    <!--DrawerのボタンID-->
+    <string name="tweet">ツイート</string>
+    <string name="favorite">お気に入り</string>
+    <string name="follow">フォロー</string>
+    <string name="follower">フォロワー</string>
+    <string name="send_DM">send DM</string>
+    <string name="DM_list">DM</string>
+    <string name="reply">返信</string>
+
+    <!--Load Buttonの文字-->
+    <string name="click_to_load">さらに読み込み</string>
+    <string name="now_loading">now loading……</string>
+
+    <!--アクション完了系-->
+    <string name="copy_done">コピーしました</string>
+    <string name="delete_tweet">tweetを削除しました</string>
+    <string name="re_tweet_done">リツイートしました</string>
+
+    <!--menu action-->
+    <string name="action_settings">設定</string>
+    <string name="action_add_account">Add Account</string>
+    <string name="action_change_user">Change Account</string>
+    <string name="action_search">search</string>
+    <string name="action_logout">ログアウト</string>
+
+    <!--承認用Twitter URL-->
+    <string name="callback_url">kawasemi://twitter</string>
+
+    <string name="please_write_text">メッセージを入力してください</string>
+    <string name="over_max_text_count">140字を超えています</string>
+    <string name="yes">はい</string>
+    <string name="cancel">いいえ</string>
+    <string name="do_you_log_out">ログアウトしますか？</string>
+    <string name="please_re_start_to_apply">適用するには再起動してください</string>
+    <string name="oauth_done">承認しました</string>
+    <string name="click_to_oauth">承認します</string>
+    <string name="user_icon">user icon</string>
+
+    <string name="send">送信</string>
+    <string name="zero">0</string>
+    <string name="per_140">/ 140</string>
+    <string name="header_icon">header icon</string>
+    <string name="picture">picture</string>
+    <string name="re_tweeted_by">Retweeted by</string>
+    <string name="action_block">ブロック</string>
+    <string name="action_follow">フォロー</string>
+    <string name="action_spam">スパム報告</string>
+    <string name="action_about_Kawasemi">囀り式について</string>
+    <string name="apache_license">http://www.apache.org/licenses/LICENSE-2.0</string>
+    <string name="library1">Picasso</string>
+    <string name="license_description">囀り式は、Apache License, Version 2.0の下で提供される以下のライブラリを使用しています</string>
+    <string name="library_link1">http://square.github.io/picasso/</string>
+    <string name="library2">Twitter4J</string>
+    <string name="library_link2">http://twitter4j.org/</string>
+    <string name="lock_icon">lock icon</string>
+    <string name="follow_request">フォローリクエスト</string>
+    <string name="done_follow_request">フォローリクエストを送信しました</string>
+    <string name="favorite_complete">ふぁぼしました</string>
+    <string name="request_block">ブロックしますか？</string>
+    <string name="release_block">ブロック解除</string>
+    <string name="block_complete">ブロックしました</string>
+    <string name="request__release_block">ブロックを解除しますか？</string>
+    <string name="release_block_complete">ブロックを解除しました</string>
+    <string name="done_remove">リムーブしました</string>
+    <string name="done_follow">フォローしました</string>
+    <string name="remove_button_label">フォロー解除</string>
+    <string name="follow_button_label">フォロー</string>
+    <string name="do_delete">ツイートを削除</string>
+    <string name="do_retweet">リツイートします</string>
+    <string name="do_favorite">ふぁぼします</string>
+    <string name="do_un_retweet">リツイート取り消し</string>
+    <string name="do_un_favorite">あんふぁぼ</string>
+    <string name="show_convasation">会話を表示</string>
+    <string name="show_biography">ユーザー表示</string>
+    <string name="do_copy">コピーします</string>
+    <string name="do_reply">返信します</string>
+    <string name="friend">Friend</string>
+    <string name="action_mute">ミュート</string>
+    <string name="action_destroy_mute">ミュート解除</string>
+    <string name="actionbar_home">Home</string>
+    <string name="actionbar_reply">Reply</string>
+    <string name="actionbar_message">Message</string>
+    <string name="update_image">画像投稿</string>
+    <string name="pref_appearance_title">見た目の設定</string>
+    <string name="pref_themeColor_summary">テーマを変更します</string>
+    <string name="pref_text_size_summary">ツイートなどの文字サイズを変更します</string>
+    <string name="non_relation_message">相互未フォロー</string>
+    <string name="follow_each_other_message">相互フォロー</string>
+    <string name="login_user_folloing_only_message">片思い</string>
+    <string name="login_user_followed_only_message">片思われ</string>
+    <string name="blocking_state_message">ブロック中</string>
+    <string name="new_tweet">new tweet</string>
+    <string name="since">Since</string>
+    <string name="location">Location</string>
+    <string name="web">Web</string>
+    <string name="do_show_tweet">ツイートを表示</string>
+    <string name="pref_text_size_key">pref_text_size</string>
+    <string name="pref_theme_key">pref_theme_color</string>
+    <string name="pref_show_thumbnail_key">pref_show_thumbnail</string>
+    <string name="pref_title_show_thumbnail">画像サムネイル表示</string>
+    <string name="pref_summary_show_thumbnail">サムネイルを表示します</string>
+    <string name="pref_summary_hide_thumbnail">サムネイルを表示しません</string>
+    <string name="pref_title_theme">テーマの設定</string>
+    <string name="pref_title_text_size">文字サイズの設定</string>
+    <string name="action_destroy_block">ブロック解除</string>
+    <string name="remove">リムーブ</string>
+    <string name="onFollowed">フォローされました</string>
+    <string name="connect">接続しました</string>
+    <string name="disconnect">接続が切れました</string>
+    <string name="reply_from">Reply from</string>
+    <string name="delete">Delete</string>
+    <string name="favorite_by">ふぁぼられました</string>
+    <string name="unfavorite_complete">お気に入りを解除しました</string>
+    <string name="unfavorite_by">お気に入りから解除されました</string>
+    <string name="message_by">DM受信</string>
+    <string name="about_license">ライセンスについて</string>
+    <string name="version">バージョン</string>
+    <string name="about_version">バージョン情報</string>
+    <string name="update_date">更新日</string>
+    <string name="last_update_date">リリース日 2016/12/29</string>
+    <string name="showing_loginUser">あなたです！</string>
+    <string name="pref_category_operation">操作設定</string>
+    <string name="pref_favorite_operation_Key">pref_favorite_operation_Key</string>
+    <string name="pref_favorite_operation_key">pref_favorite_operation_key</string>
+    <string name="pref_favorite_operation_title">ふぁぼボタンの動作</string>
+    <string name="pref_summary_favorite_operation">ふぁぼボタンをタップした際の動作を設定します</string>
+    <string name="pref_dialog_title_favorite_operation">動作を選択してください</string>
+    <string name="pref_default_action_button_operation">3</string>
+    <string name="pref_key_reTweet_operation">pref_key_reTweet_operation</string>
+    <string name="pref_title_reTweet_operation">リツイートボタンの動作</string>
+    <string name="pref_summary_reTweet_operation">リツイートボタンをタップした際の動作を設定します</string>
+    <string name="pref_dialog_title_reTweet_operation">動作を選択してください</string>
+    <string name="do_you_retweet">リツイートしますか？</string>
+    <string name="do_you_un_favorite">あんふぁぼしますか？</string>
+    <string name="do_you_favorite">ふぁぼしますか？</string>
+</resources>

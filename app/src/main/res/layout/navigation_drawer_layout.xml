@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_bio"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    android:clickable="false"
+    android:layout_gravity="start">
+
+    <ImageView
+        android:id="@+id/bio_header_icon"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
+        android:contentDescription="@string/header_icon"/>
+
+    <ImageView
+        android:id="@+id/bio_icon"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_below="@id/bio_header_icon"
+        android:layout_marginTop="16sp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:contentDescription="@string/user_icon"/>
+
+    <TextView
+        android:id="@+id/bio_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/bio_icon"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/bio_screen_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/bio_name"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
+        android:textSize="16sp"/>
+
+    <ImageView
+        android:id="@+id/bio_lock_icon"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_toRightOf="@id/bio_screen_name"
+        android:layout_toEndOf="@id/bio_screen_name"
+        android:layout_below="@id/bio_name"
+        android:layout_marginTop="4dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:background="@drawable/protected_mark"
+        android:contentDescription="@string/lock_icon"
+        android:visibility="invisible"/>
+
+    <ListView
+        android:id="@+id/drawer_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/bio_screen_name"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="start"
+        android:gravity="start"/>
+
+</RelativeLayout>
+

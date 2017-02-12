@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:orientation="vertical">
+
+    <ListView
+        android:layout_height="0dp"
+        android:layout_weight="12"
+        android:layout_width="match_parent"
+        android:divider="@color/gray_808080"
+        android:dividerHeight="1sp"
+        android:id="@+id/list"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+    <EditText
+        android:id="@+id/message_editor"
+        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_weight="5"
+        android:layout_margin="8dp"
+        android:layout_gravity="bottom"
+        android:inputType="textMultiLine"
+        android:minLines="1"
+        android:background="@color/white_FFFFFF"
+        android:textColor="@color/black">
+        <requestFocus/>
+    </EditText>
+
+    <Button
+        android:id="@+id/send_button"
+        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        app:backgroundTint="@color/blue_button_color_state"
+        android:gravity="center_horizontal|center_vertical"
+        android:layout_margin="8dp"
+        android:text="@string/send"
+        android:textColor="@color/white_FFFFFF"/>
+
+        </LinearLayout>
+
+</LinearLayout>

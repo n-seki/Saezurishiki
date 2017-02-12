@@ -1,0 +1,42 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!--<item
+        android:id="@+id/action_follow"
+        android:title="@string/action_follow"
+        android:icon="@android:drawable/ic_input_add"
+        app:showAsAction="ifRoom"/>-->
+
+    <!--<item
+        android:id="@+id/action_spam"
+        android:title="@string/action_spam"
+        app:showAsAction="never"/>-->
+
+    <item
+        android:id="@+id/action_block"
+        android:title="@string/action_block"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_release_block"
+        android:title="@string/release_block"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_mute"
+        android:title="@string/action_mute"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_destroy_mute"
+        android:title="@string/action_destroy_mute"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/action_settings"
+        android:title="@string/action_settings"
+        app:showAsAction="never"/>
+
+
+
+
+</menu>

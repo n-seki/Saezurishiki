@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="160dp">
+
+    <ImageView
+        android:id="@+id/bio_header_icon"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:scaleType="fitCenter"
+        android:alpha="0.6"
+        android:contentDescription="@string/user_icon" />
+
+    <ImageView
+        android:id="@+id/bio_user_icon"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="16dp"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="@string/user_icon" />
+
+    <TextView
+        android:id="@+id/bio_user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/bio_user_icon"
+        android:layout_marginTop="8dp"
+        android:textSize="16sp"
+        android:layout_centerHorizontal="true"/>
+
+
+    <View
+        android:id="@+id/protect_icon"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_toRightOf="@+id/bio_user_name"
+        android:layout_toEndOf="@+id/bio_user_name"
+        android:layout_below="@id/bio_user_icon"
+        android:layout_marginLeft="3dp"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="12dp"
+        android:visibility="gone"
+        android:clickable="false"
+        android:background="@drawable/protected_mark"/>
+
+    <TextView
+        android:id="@+id/bio_relation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/bio_user_name"
+        android:layout_centerHorizontal="true"/>
+</RelativeLayout>

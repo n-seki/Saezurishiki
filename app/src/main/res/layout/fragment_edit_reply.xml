@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="@color/background_color_unread">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <com.seki.saezurishiki.view.customview.TweetTextEditor
+            android:id = "@+id/tweet_editor"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="12"
+            android:padding="7sp"
+            android:gravity="top"
+            android:focusable="true"
+            android:cursorVisible="true"
+            android:background="@color/white_FFFFFF"
+            android:textColor="@color/background_color_unread"
+            android:inputType="textMultiLine">
+            <requestFocus/>
+        </com.seki.saezurishiki.view.customview.TweetTextEditor>
+
+        <ImageView
+            android:id="@+id/upload_image_1"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="start"
+            android:layout_margin="8dp"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/reply_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="7sp"
+            android:background="@color/black"
+            android:textColor="@color/white_FFFFFF"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="7sp"
+            android:gravity="end">
+
+            <ImageButton
+                android:id="@+id/image_upload_button"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="@drawable/image_update"
+                android:layout_margin="12dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:contentDescription="@string/update_image" />
+
+            <Button
+                android:id="@+id/tweet_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5sp"
+                app:backgroundTint="@color/blue_button_color_state"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:text="@string/tweet"
+                android:textColor="@color/white_FFFFFF"/>
+
+            <TextView
+                android:id="@+id/per_140"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white_FFFFFF"
+                android:text="@string/per_140"
+                android:layout_toLeftOf="@id/tweet_button"
+                android:layout_toStartOf="@id/tweet_button"
+                android:textSize="15sp"/>
+
+            <TextView
+                android:id="@+id/counter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white_FFFFFF"
+                android:text="@string/zero"
+                android:layout_toLeftOf="@id/per_140"
+                android:layout_toStartOf="@id/per_140"
+                android:textSize="15sp"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</ScrollView>

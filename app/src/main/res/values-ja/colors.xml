@@ -1,0 +1,56 @@
+<resources>
+
+    <!--未読-->
+    <color name="background_color_unread">#000000</color>
+
+    <!--自分のpost（未読）-->
+    <color name="background_color_my_post_unread">#00FF00</color>
+
+    <!--自分宛てのpost（未読）-->
+    <color name="background_color_reply_to_me">#FF4444</color>
+
+    <!--名前の色-->
+    <color name="user_name_text_color">#4196E1</color>
+
+    <!--既読-->
+    <color name="background_color_read">#000000</color>
+
+    <!--リツイート-->
+    <color name="background_color_reTweet">#00FFFF</color>
+
+    <!--文字色（白）-->
+    <color name="white_FFFFFF">#FFFFFF</color>
+
+    <!--お気に入り-->
+    <color name="background_color_favorite">#FFD700</color>
+
+    <!--削除ツイート-->
+    <color name="background_color_delete">#FFFFFF</color>
+
+    <!--test-->
+    <color name="black">#000000</color>
+
+    <color name="white90">#90FFFFFF</color>
+
+    <!--List Itemの枠線色-->
+    <color name="gray_808080">#808080</color>
+
+    <color name="color_accent">#616161</color>
+
+    <color name="follow_button_color">#00FFFF</color>
+
+    <color name="disable_send_direct_message_color">#808080</color>
+
+    <color name="blue_">#809FD9F6</color>
+
+    <color name="light_blue_0091EA">#0091ea</color>
+    <color name="light_red_F44336">#F44336</color>
+
+    <color name="colorAccent_dark">@color/light_blue_0091EA</color>
+
+    <color name="colorAccent_light">@color/light_red_F44336</color>
+    <color name="colorPrimary_light">@color/light_red_F44336</color>
+    <color name="blue_889FD9F6">#889FD8F6</color>
+
+
+</resources>

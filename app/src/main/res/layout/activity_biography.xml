@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appBarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/tool_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="?attr/actionBarSize">
+            </android.support.v7.widget.Toolbar>
+        </android.support.design.widget.AppBarLayout>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/bio_header_page"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:layout_below="@id/appBarLayout">
+        </android.support.v4.view.ViewPager>
+
+        <android.support.v7.widget.ButtonBarLayout
+            android:id="@+id/bio_action_buttons"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:orientation="horizontal"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/bio_header_page">
+
+            <Button
+                android:id="@+id/bio_reply_button"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/reply"
+                android:textStyle="bold"
+                android:textColor="@color/white_FFFFFF"
+                app:backgroundTint="@color/blue_button_color_state"/>
+
+            <Button
+                android:id="@+id/bio_message_button"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/send_DM"
+                android:textStyle="bold"
+                android:textColor="@color/white_FFFFFF"
+                app:backgroundTint="@color/blue_button_color_state"/>
+
+            <Button
+                android:id="@+id/bio_follow_button"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/follow_button_label"
+                android:textColor="@color/white_FFFFFF"
+                android:textStyle="bold"
+                app:backgroundTint="@color/blue_button_color_state"/>
+        </android.support.v7.widget.ButtonBarLayout>
+
+        <ListView
+            android:id="@+id/bio_drawer_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/bio_action_buttons"
+            android:layout_marginTop="16dp"
+            android:layout_gravity="start"
+            android:gravity="start"/>
+
+    <RelativeLayout
+        android:id="@+id/biography_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/appBarLayout">
+    </RelativeLayout>
+
+
+</RelativeLayout>

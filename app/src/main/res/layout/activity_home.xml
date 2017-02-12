@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/drawer_layout">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appBarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/tool_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white_FFFFFF"
+                android:minHeight="?attr/actionBarSize">
+            </android.support.v7.widget.Toolbar>
+        </android.support.design.widget.AppBarLayout>
+
+        <com.seki.saezurishiki.view.customview.NotificationTabLayout
+            android:id="@+id/fragmentTab"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/appBarLayout"
+            android:background="?attr/colorPrimary"
+            app:tabIndicatorHeight="3dp">
+        </com.seki.saezurishiki.view.customview.NotificationTabLayout>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/fragmentTab">
+        </android.support.v4.view.ViewPager>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/edit_tweet_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|bottom"
+                app:fabSize="normal"
+                app:borderWidth="0dp"
+                app:backgroundTint="@color/blue_button_color_state"
+                android:src="@drawable/edit_fab_button_background"/>
+        </FrameLayout>
+
+        <RelativeLayout
+            android:id="@+id/home_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/appBarLayout">
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <com.seki.saezurishiki.view.customview.TwitterUserDrawerView
+        android:id="@+id/drawer"
+        android:layout_width="300dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start">
+
+        <include layout="@layout/navigation_drawer_layout"/>
+
+    </com.seki.saezurishiki.view.customview.TwitterUserDrawerView>
+
+</android.support.v4.widget.DrawerLayout>

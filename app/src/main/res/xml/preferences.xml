@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+<PreferenceCategory
+        android:title="@string/pref_appearance_title">
+
+        <ListPreference
+            android:dependency="pref_theme_color"
+            android:key="@string/pref_theme_key"
+            android:title="@string/pref_title_theme"
+            android:dialogTitle="テーマを選択してください"
+            android:summary="@string/pref_themeColor_summary"
+            android:entries="@array/pref_theme_color_entries"
+            android:entryValues="@array/pref_theme_color_values"
+            android:defaultValue="@string/pref_theme_color_default"/>
+
+        <ListPreference
+            android:dependency="pref_text_size"
+            android:key="pref_text_size"
+            android:title="@string/pref_title_text_size"
+            android:dialogTitle="文字サイズを選択してください"
+            android:summary="@string/pref_text_size_summary"
+            android:entries="@array/pref_text_size_entries"
+            android:entryValues="@array/pref_text_size_values"
+            android:defaultValue="14"/>
+
+        <CheckBoxPreference
+            android:key="@string/pref_show_thumbnail_key"
+            android:title="@string/pref_title_show_thumbnail"
+            android:summaryOn="@string/pref_summary_show_thumbnail"
+            android:summaryOff="@string/pref_summary_hide_thumbnail"
+            android:disableDependentsState="false"
+            android:defaultValue="true"/>
+  </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/pref_category_operation">
+
+        <ListPreference
+            android:key="@string/pref_favorite_operation_key"
+            android:title="@string/pref_favorite_operation_title"
+            android:summary="@string/pref_summary_favorite_operation"
+            android:dialogTitle="@string/pref_dialog_title_favorite_operation"
+            android:entries="@array/pref_entries_action_button_operation"
+            android:entryValues="@array/pref_entryValues_action_button_operation"
+            android:defaultValue="@string/pref_default_action_button_operation"/>
+
+        <ListPreference
+            android:key="@string/pref_key_reTweet_operation"
+            android:title="@string/pref_title_reTweet_operation"
+            android:summary="@string/pref_summary_reTweet_operation"
+            android:dialogTitle="@string/pref_dialog_title_reTweet_operation"
+            android:entries="@array/pref_entries_action_button_operation"
+            android:entryValues="@array/pref_entryValues_action_button_operation"
+            android:defaultValue="@string/pref_default_action_button_operation"/>
+    </PreferenceCategory>
+</PreferenceScreen>
