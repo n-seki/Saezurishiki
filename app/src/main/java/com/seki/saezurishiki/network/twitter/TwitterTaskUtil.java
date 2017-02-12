@@ -3,6 +3,7 @@ package com.seki.saezurishiki.network.twitter;
 import android.content.Context;
 import android.support.v4.app.LoaderManager;
 
+import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.network.server.TwitterServer;
 
 import java.io.InputStream;
@@ -19,6 +20,7 @@ import twitter4j.Status;
 import twitter4j.StatusUpdate;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
+import twitter4j.TwitterResponse;
 import twitter4j.UploadedMedia;
 import twitter4j.User;
 import twitter4j.auth.AccessToken;
@@ -76,11 +78,12 @@ public final class TwitterTaskUtil {
 
 
 
-    public void destroyStatus(final long statusID, AsyncTwitterTask.AfterTask<Status> afterTask) {
-        AsyncTwitterTask.AsyncTask<Status> task = new AsyncTwitterTask.AsyncTask<Status>() {
+    public void destroyStatus(final long statusID, AsyncTwitterTask.AfterTask<TweetEntity> afterTask) {
+        AsyncTwitterTask.AsyncTask<TweetEntity> task = new AsyncTwitterTask.AsyncTask<TweetEntity>() {
             @Override
-            public Status doInBackground() throws TwitterException {
-                return twitter.destroyStatus(statusID);
+            public TweetEntity doInBackground() throws TwitterException {
+                Status status = twitter.destroyStatus(statusID);
+                return repository.map(status);
             }
         };
 
@@ -88,13 +91,13 @@ public final class TwitterTaskUtil {
     }
 
 
-    public void createReTweet(final long statusID, AsyncTwitterTask.AfterTask<Status> afterTask) {
-        AsyncTwitterTask.AsyncTask<Status> task = new AsyncTwitterTask.AsyncTask<Status>() {
+    public void createReTweet(final long statusID, AsyncTwitterTask.AfterTask<TweetEntity> afterTask) {
+        AsyncTwitterTask.AsyncTask<TweetEntity> task = new AsyncTwitterTask.AsyncTask<TweetEntity>() {
             @Override
-            public Status doInBackground() throws TwitterException {
+            public TweetEntity doInBackground() throws TwitterException {
                 final Status status = twitter.retweetStatus(statusID);
                 repository.addStatus(status);
-                return status;
+                return repository.map(status);
             }
         };
 
@@ -102,13 +105,13 @@ public final class TwitterTaskUtil {
     }
 
 
-    public void unFavorite(final long statusID, AsyncTwitterTask.AfterTask<Status> afterTask) {
-        AsyncTwitterTask.AsyncTask<Status> task = new AsyncTwitterTask.AsyncTask<Status>() {
+    public void unFavorite(final long statusID, AsyncTwitterTask.AfterTask<TweetEntity> afterTask) {
+        AsyncTwitterTask.AsyncTask<TweetEntity> task = new AsyncTwitterTask.AsyncTask<TweetEntity>() {
             @Override
-            public Status doInBackground() throws TwitterException {
+            public TweetEntity doInBackground() throws TwitterException {
                 final Status status = twitter.destroyFavorite(statusID);
                 repository.addStatus(status);
-                return status;
+                return repository.map(status);
             }
         };
 
@@ -116,13 +119,13 @@ public final class TwitterTaskUtil {
     }
 
 
-    public void createFavorite(final long statusID, AsyncTwitterTask.AfterTask<Status> afterTask) {
-        AsyncTwitterTask.AsyncTask<Status> task = new AsyncTwitterTask.AsyncTask<Status>() {
+    public void createFavorite(final long statusID, AsyncTwitterTask.AfterTask<TweetEntity> afterTask) {
+        AsyncTwitterTask.AsyncTask<TweetEntity> task = new AsyncTwitterTask.AsyncTask<TweetEntity>() {
             @Override
-            public Status doInBackground() throws TwitterException {
+            public TweetEntity doInBackground() throws TwitterException {
                 final Status status = twitter.createFavorite(statusID);
                 repository.addStatus(status);
-                return status;
+                return repository.map(status);
             }
         };
 

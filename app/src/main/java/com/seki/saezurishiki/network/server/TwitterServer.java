@@ -204,4 +204,8 @@ public class TwitterServer  {
             this.ALL_STATUS.add(status);
         }
     }
+
+    public TweetEntity map(Status status) {
+        return this.mapper.createTweetEntity(status);
+    }
 }
