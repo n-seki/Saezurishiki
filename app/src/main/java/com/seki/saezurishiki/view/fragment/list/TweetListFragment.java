@@ -32,7 +32,6 @@ import com.seki.saezurishiki.view.fragment.PictureFragment;
 import com.seki.saezurishiki.view.fragment.dialog.TweetLongClickDialog;
 import com.seki.saezurishiki.view.fragment.dialog.TweetSelectDialog;
 import com.seki.saezurishiki.view.fragment.dialog.YesNoSelectDialog;
-import com.seki.saezurishiki.network.twitter.AsyncTwitterTask;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
 import com.seki.saezurishiki.network.twitter.TwitterError;
 import com.seki.saezurishiki.network.twitter.TwitterTaskResult;
@@ -525,7 +524,7 @@ public abstract class TweetListFragment extends Fragment
 //     * @param status UserStreamで検知されたお気に入りStatus
 //     */
 //    private void setFavoriteStarAndCount(final Status status) {
-//        this.update(status.getId());
+//        this.updateTweet(status.getId());
 //    }
 
 
@@ -600,7 +599,7 @@ public abstract class TweetListFragment extends Fragment
             return;
         }
 
-        this.update(deletionNotice.getStatusId());
+        this.updateTweet(deletionNotice.getStatusId());
     }
 
     @Override
@@ -613,18 +612,18 @@ public abstract class TweetListFragment extends Fragment
         if (sourceUser.getId() == twitterAccount.getLoginUserId()) {
             return;
         }
-        update(status.getId());
+        updateTweet(status.getId());
     }
     @Override
     public void onUnFavorite(User sourceUser, User targetUser, Status status) {
         if (sourceUser.getId() == twitterAccount.getLoginUserId()) {
             return;
         }
-        update(status.getId());
+        updateTweet(status.getId());
     }
 
 
-    public synchronized void update(long id) {
+    public synchronized void updateTweet(long id) {
         if (this.mAdapter.isEmpty()) return;
         int visibleTop = mListView.getFirstVisiblePosition();
         int visibleLast = mListView.getLastVisiblePosition();
@@ -639,6 +638,12 @@ public abstract class TweetListFragment extends Fragment
         }
 
         mListView.getAdapter();
+    }
+
+
+    @Override
+    public void updateTweet(TweetEntity tweet) {
+        this.updateTweet(tweet.getId());
     }
 
 
