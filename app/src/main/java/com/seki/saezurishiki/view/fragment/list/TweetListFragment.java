@@ -646,6 +646,16 @@ public abstract class TweetListFragment extends Fragment
         this.updateTweet(tweet.getId());
     }
 
+    @Override
+    public void errorProcess(Exception e) {
+        if (e instanceof TwitterException) {
+            TwitterError.showText(getContext(), (TwitterException) e);
+            return;
+        }
+
+        throw new IllegalStateException(e);
+    }
+
 
 
     public void onDialogItemClick(TweetEntity status, int position) {
