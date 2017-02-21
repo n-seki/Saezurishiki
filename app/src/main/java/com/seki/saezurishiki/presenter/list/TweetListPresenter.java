@@ -42,24 +42,23 @@ public class TweetListPresenter implements ModelObserver {
         void completeDeleteTweet(TweetEntity tweet);
         void completeReTweet(TweetEntity tweet);
         void errorProcess(Exception e);
-        ViewType getViewType();
     }
 
     public void onResume() {
         this.tweetModel.addObserver(this);
     }
 
-    public TweetListPresenter(TweetListView view, User listOwner, TwitterAccount twitterAccount) {
+    public TweetListPresenter(TweetListView view, ViewType type, User listOwner, TwitterAccount twitterAccount) {
         this.view = view;
         this.listOwner = listOwner;
         this.tweetModel = ModelContainer.getTweetModel();
-        this.tweetListModel = ModelContainer.getTweetListModel(this.view.getViewType());
+        this.tweetListModel = ModelContainer.getTweetListModel(type);
         this.twitterAccount = twitterAccount;
     }
 
     //TODO
     public TweetListPresenter(TwitterAccount twitterAccount) {
-        this(null, null, twitterAccount);
+        this(null, null, null, twitterAccount);
     }
 
 
