@@ -55,7 +55,6 @@ import twitter4j.User;
 */
 public class UserActivity extends    AppCompatActivity
                           implements EditTweetFragment.Callback,
-                                     UserStreamUserListener,
                                      FragmentControl {
 
 
@@ -83,7 +82,6 @@ public class UserActivity extends    AppCompatActivity
 
         SaezurishikiApp app = (SaezurishikiApp)getApplication();
         this.twitterAccount = app.getTwitterAccount();
-        this.twitterAccount.addStreamListener(this);
 
         final int theme = this.twitterAccount.setting.getTheme();
         setTheme(theme);
@@ -99,7 +97,6 @@ public class UserActivity extends    AppCompatActivity
 
     @Override
     public void onDestroy() {
-        this.twitterAccount.removeListener(this);
         super.onDestroy();
     }
 
@@ -732,19 +729,4 @@ public class UserActivity extends    AppCompatActivity
         this.addFragment(fragment);
     }
 
-    @Override
-    public void onFollow(User source, User followedUser) {
-    }
-
-    @Override
-    public void onRemove(User source, User removedUser) {
-    }
-
-    @Override
-    public void onBlock(User source, User blockedUser) {
-    }
-
-    @Override
-    public void onUnblock(User source, User unblockedUser) {
-    }
 }
