@@ -10,9 +10,12 @@ import android.support.v7.app.AlertDialog;
 
 import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.entity.TweetEntity;
+import com.seki.saezurishiki.view.activity.UserActivity;
 import com.seki.saezurishiki.view.fragment.list.TweetListFragment;
 
 import java.io.Serializable;
+
+import twitter4j.User;
 
 public class YesNoSelectDialog<T extends Serializable> extends DialogFragment {
 
@@ -154,6 +157,22 @@ public class YesNoSelectDialog<T extends Serializable> extends DialogFragment {
                     }
                 })
                 .build();
+    }
+
+
+    @SuppressWarnings("unchecked")
+    public static DialogFragment newReleaseBlockDialog(final User user, Listener<User> action) {
+        return new YesNoSelectDialog.Builder<User>()
+                        .setItem(user)
+                        .setTitle(R.string.action_destroy_block)
+                        .setSummary(user.getScreenName() + "のブロックを解除しますか？")
+                        .setPositiveAction(action)
+                        .setNegativeAction(new YesNoSelectDialog.Listener<User>() {
+                            @Override
+                            public void onItemClick(User item) {//do nothing
+                            }
+                        })
+                        .build();
     }
 
 

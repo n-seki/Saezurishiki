@@ -655,26 +655,15 @@ public class UserActivity extends    AppCompatActivity
 
     @SuppressWarnings("unchecked")
     private void showReleaseBlockDialog() {
-        DialogFragment dialogFragment =
-                new YesNoSelectDialog.Builder<User>()
-                        .setItem(mUser)
-                        .setTitle(R.string.action_destroy_block)
-                        .setSummary(mUser.getScreenName() + "のブロックを解除しますか？")
-                        .setPositiveAction(new YesNoSelectDialog.Listener<User>() {
-                            @Override
-                            public void onItemClick(User item) {
-                                UserActivity.this.releaseBlock();
-                            }
-                        })
-                        .setNegativeAction(new YesNoSelectDialog.Listener<User>() {
-                            @Override
-                            public void onItemClick(User item) {
-                                //do nothing
-                            }
-                        })
-                        .build();
+        YesNoSelectDialog.Listener<User> action = new YesNoSelectDialog.Listener<User>() {
+            @Override
+            public void onItemClick(User item) {
+                UserActivity.this.releaseBlock();
+            }
+        };
 
-        dialogFragment.show(getSupportFragmentManager(), "YesNoSelectDialog");
+        DialogFragment dialog = YesNoSelectDialog.newReleaseBlockDialog(mUser, action);
+        dialog.show(getSupportFragmentManager(), "YesNoSelectDialog");
     }
 
 
