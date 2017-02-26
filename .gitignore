@@ -6,3 +6,4 @@
 /build
 
 .idea/*.xml
+.idea/misc.xml
