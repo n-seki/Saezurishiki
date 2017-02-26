@@ -138,7 +138,7 @@ public abstract class TweetListFragment extends Fragment
         this.twitterAccount.addStreamListener(this);
         setRetainInstance(true);
 
-        this.presenter = new TweetListPresenter(this, null, null, this.twitterAccount);
+        this.presenter = new TweetListPresenter(this, null, this.twitterAccount);
     }
 
 

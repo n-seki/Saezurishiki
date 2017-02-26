@@ -14,13 +14,9 @@ import com.seki.saezurishiki.network.twitter.AsyncTwitterTask;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
 import com.seki.saezurishiki.network.twitter.TwitterTaskResult;
 import com.seki.saezurishiki.network.twitter.TwitterTaskUtil;
-import com.seki.saezurishiki.view.ViewType;
-import com.seki.saezurishiki.view.fragment.list.TweetListFragment;
 
-import java.util.List;
 
 import twitter4j.Paging;
-import twitter4j.Status;
 
 
 public class TweetListPresenter implements ModelObserver {
@@ -48,17 +44,17 @@ public class TweetListPresenter implements ModelObserver {
         this.tweetModel.addObserver(this);
     }
 
-    public TweetListPresenter(TweetListView view, ViewType type, User listOwner, TwitterAccount twitterAccount) {
+    public TweetListPresenter(TweetListView view, User listOwner, TwitterAccount twitterAccount) {
         this.view = view;
         this.listOwner = listOwner;
         this.tweetModel = ModelContainer.getTweetModel();
-        this.tweetListModel = ModelContainer.getTweetListModel(type);
+        this.tweetListModel = ModelContainer.getTweetListModel();
         this.twitterAccount = twitterAccount;
     }
 
     //TODO
     public TweetListPresenter(TwitterAccount twitterAccount) {
-        this(null, null, null, twitterAccount);
+        this(null, null, twitterAccount);
     }
 
 
