@@ -6,16 +6,16 @@ import com.seki.saezurishiki.entity.TweetEntity;
 
 public class DialogSelectAction {
 
-    public static final int SHOW_TWEET   = R.string.do_show_tweet;
+    public static final int SHOW_TWEET   = 0;
     public static final int BIOGRAPHY    = 10;
     public static final int URL          = 20;
     public static final int MEDIA = 30;
 
-    public static final int DELETE = R.string.do_delete;
-    public static final int RE_TWEET = R.string.do_retweet;
-    public static final int UN_RE_TWEET = R.string.do_un_retweet;
-    public static final int FAVORITE = R.string.do_favorite;
-    public static final int UN_FAVORITE = R.string.do_un_favorite;
+    public static final int DELETE = 40;
+    public static final int RE_TWEET = 50;
+    public static final int UN_RE_TWEET = 60;
+    public static final int FAVORITE = 70;
+    public static final int UN_FAVORITE = 80;
 
     public final Object item;
     public final Class<?> clazz;
