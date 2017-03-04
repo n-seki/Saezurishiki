@@ -63,6 +63,15 @@ public class TweetListPresenter implements ModelObserver {
     }
 
 
+    public void onClickFavoriteButton(TweetEntity tweet) {
+        if (!tweet.isFavorited) {
+            createFavorite(tweet);
+        } else {
+            destroyFavorite(tweet);
+        }
+    }
+
+
     //Status → Entityの変換が必要
     public void createFavorite(TweetEntity tweet) {
         AsyncTwitterTask.AfterTask<TweetEntity> afterTask = new AsyncTwitterTask.AfterTask<TweetEntity>() {

@@ -100,7 +100,7 @@ public abstract class TweetListFragment extends Fragment
                 return;
             }
 
-            TweetListFragment.this.reTweet(status);
+            presenter.onClickRetweetButton(status);
         }
 
         @Override
@@ -109,11 +109,8 @@ public abstract class TweetListFragment extends Fragment
                 TweetListFragment.this.showFavoriteDialog(status);
                 return;
             }
-            if (status.isFavorited) {
-                TweetListFragment.this.destroyFavorite(status);
-            } else {
-                TweetListFragment.this.createFavorite(status);
-            }
+
+            presenter.onClickFavoriteButton(status);
         }
 
         @Override
