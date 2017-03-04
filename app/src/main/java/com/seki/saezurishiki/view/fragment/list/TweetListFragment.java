@@ -217,8 +217,6 @@ public abstract class TweetListFragment extends Fragment
     }
 
 
-    //このメソッドはpresenterに処理移譲しない
-    //Adapter<Tweet>となり、Repositoryも参照しないようになるため
     void onItemClick(int position) {
         TwitterEntity item = this.twitterAccount.getRepository().getTwitterEntity(mAdapter.getItemIdAtPosition(position));
         if (item.getItemType() == TwitterEntity.Type.LoadButton) {
@@ -229,7 +227,7 @@ public abstract class TweetListFragment extends Fragment
         TweetListFragment.this.showDialog((TweetEntity)item);
     }
 
-    //このメソッドはpresenterに処理移譲しない。理由は上記メソッド参照。
+
     boolean onItemLongClick(int position) {
         TwitterEntity item = this.twitterAccount.getRepository().getStatus(mAdapter.getItemIdAtPosition(position));
         if (mAdapter.getItem(position).isButton()) {
@@ -246,7 +244,6 @@ public abstract class TweetListFragment extends Fragment
 
 
 
-    //このメソッドはPresenterに移譲しない。Dialogの表示処理であるため。
     void showLongClickDialog(TweetEntity status) {
         DialogFragment dialog = TweetLongClickDialog.newInstance(status);
         dialog.setTargetFragment(this, 0);
@@ -263,14 +260,12 @@ public abstract class TweetListFragment extends Fragment
      */
     protected boolean isFirstOpen = true;
 
-    //このメソッドはListViewインターフェイスの実装部とし、
-    //presenterからコール可能とする
+
     public void errorProcess( TwitterException twitterException ) {
         TwitterError.showText(getActivity(), twitterException);
     }
 
 
-    //このメソッドはPresenterに移譲しない。Dialogの表示処理であるため。
     protected void showDialog(TweetEntity status) {
         DialogFragment dialog = TweetSelectDialog.getInstance(status.getId());
         dialog.setTargetFragment(this, 0);
@@ -282,7 +277,6 @@ public abstract class TweetListFragment extends Fragment
      * EditTweetFragmentを表示する
      * mStatusがreTweetである場合には元TweetのUserに対してのReplyとなる
      */
-    //このメソッドはPresenterに移譲しない。Fragmentの表示処理であるため。
     protected void openReplyEditor(TweetEntity status) {
         Fragment fragment = EditTweetFragment.newReplyEditorFromStatus(status);
         this.fragmentControl.requestShowFragment(fragment);
@@ -292,28 +286,6 @@ public abstract class TweetListFragment extends Fragment
     //このメソッドはpresenterに移譲しない。Dialogの表示処理であるため。
     @SuppressWarnings("unchecked")
     private void showFavoriteDialog(final TweetEntity status) {
-//        DialogFragment dialogFragment =
-//                new YesNoSelectDialog.Builder<TweetEntity>()
-//                        .setItem(status)
-//                        .setTitle(status.isFavorited ? R.string.do_you_un_favorite : R.string.do_you_favorite)
-//                        .setSummary(status.user.getName() + "\n" + status.text)
-//                        .setPositiveAction(new YesNoSelectDialog.Listener<TweetEntity>() {
-//                            @Override
-//                            public void onItemClick(TweetEntity item) {
-//                                if (status.isFavorited) {
-//                                    TweetListFragment.this.destroyFavorite(status);
-//                                } else {
-//                                    TweetListFragment.this.createFavorite(status);
-//                                }
-//                            }
-//                        })
-//                        .setNegativeAction(new YesNoSelectDialog.Listener<TweetEntity>() {
-//                            @Override
-//                            public void onItemClick(TweetEntity item) {
-//                                //do nothing
-//                            }
-//                        })
-//                        .build();
 
         YesNoSelectDialog.Listener<TweetEntity> action = new YesNoSelectDialog.Listener<TweetEntity>() {
             @Override
@@ -338,60 +310,31 @@ public abstract class TweetListFragment extends Fragment
      * ⇒ここではcreateFavoriteを叩くだけで、後はuserStreamのコールバックで行う
      */
     protected void createFavorite(TweetEntity tweet) {
-//        AsyncTwitterTask.AfterTask<Status> afterTask = new AsyncTwitterTask.AfterTask<Status>() {
-//            @Override
-//            public void onLoadFinish(TwitterTaskResult<Status> result) {
-//                if (result.isException()) {
-//                    TweetListFragment.this.errorProcess(result.getException());
-//                    return;
-//                }
-//
-//                TweetListFragment.this.setFavoriteStarAndCount(result.getResult());
-//            }
-//        };
-//
-//        mTwitterTaskUtil.createFavorite(status.getId(), afterTask);
-
         this.presenter.createFavorite(tweet);
     }
 
-    //このメソッドは上記メソッドのオーバーロードメソッドであり、presenterに移譲する必要はない。
+
     protected void createFavorite(long statusID) {
         this.createFavorite(twitterAccount.getRepository().getStatus(statusID));
     }
 
-   //このメソッドはPresenterに処理移譲する必要があるため、移譲した
+
     /**
      * 非同期でUnFavoriteを行う
      * 正常時はToast表示後にListView更新メソッドを呼び出し,favorite_starを非表示にする
      * ⇒ここではunFavoriteをたたくだけで、あとはUserStreamのコールバックで行う
      */
     protected void destroyFavorite(TweetEntity tweet) {
-//        AsyncTwitterTask.AfterTask<Status> afterTask = new AsyncTwitterTask.AfterTask<Status>() {
-//            @Override
-//            public void onLoadFinish(TwitterTaskResult<Status> result) {
-//                if (result.isException()) {
-//                    TweetListFragment.this.errorProcess(result.getException());
-//                    return;
-//                }
-//
-//                TweetListFragment.this.setFavoriteStarAndCount(result.getResult());
-//            }
-//        };
-//
-//        mTwitterTaskUtil.unFavorite(status.getId(), afterTask);
-
         this.presenter.destroyFavorite(tweet);
     }
 
 
-    //このメソッドは上記メソッドのオーバーロードメソッドであり、presenterに移譲する必要はない。
     protected void destroyFavorite(long statusID) {
         this.destroyFavorite(twitterAccount.getRepository().getStatus(statusID));
     }
 
 
-    //このメソッドはPresenterに処理移譲する必要がない。Fragmentの表示処理であるため。
+
     /**
      * ConversationFragment表示依頼
      */
@@ -401,7 +344,6 @@ public abstract class TweetListFragment extends Fragment
     }
 
 
-    //このメソッドはPresenterに移譲する必要はない。Activityの表示処理であるため。
     /**
      * BiographyActivity表示依頼
      * 保持しているStatusがリツイートの場合にはリツイートされたStatusのUser情報表示
@@ -415,24 +357,6 @@ public abstract class TweetListFragment extends Fragment
 
     @SuppressWarnings("unchecked")
     private void showReTweetDialog(final TweetEntity tweet) {
-//        DialogFragment dialogFragment =
-//                new YesNoSelectDialog.Builder<TweetEntity>()
-//                        .setItem(status)
-//                        .setTitle(R.string.do_you_retweet)
-//                        .setSummary(status.user.getName() + "\n" + status.text)
-//                        .setPositiveAction(new YesNoSelectDialog.Listener<TweetEntity>() {
-//                            @Override
-//                            public void onItemClick(TweetEntity item) {
-//                                TweetListFragment.this.reTweet(status);
-//                            }
-//                        })
-//                        .setNegativeAction(new YesNoSelectDialog.Listener<TweetEntity>() {
-//                            @Override
-//                            public void onItemClick(TweetEntity item) {
-//                                //do nothing
-//                            }
-//                        })
-//                        .build();
         YesNoSelectDialog.Listener<TweetEntity> action = new YesNoSelectDialog.Listener<TweetEntity>() {
             @Override
             public void onItemClick(TweetEntity item) {
@@ -455,19 +379,6 @@ public abstract class TweetListFragment extends Fragment
      * 正常時はToast表示を行うのみで,その後の処理はUserStreamでの通知時に行う
      */
     private void reTweet(final TweetEntity tweet) {
-//        AsyncTwitterTask.AfterTask<Status> afterTask = new AsyncTwitterTask.AfterTask<Status>() {
-//            @Override
-//            public void onLoadFinish(TwitterTaskResult<Status> result) {
-//                if (result.isException()) {
-//                    TweetListFragment.this.errorProcess(result.getException());
-//                    return;
-//                }
-//                CustomToast.show(TweetListFragment.this.getActivity(), R.string.re_tweet_done, Toast.LENGTH_SHORT);
-//            }
-//        };
-//
-//        mTwitterTaskUtil.createReTweet(status.getId(), afterTask);
-
         this.presenter.reTweet(tweet);
     }
 
@@ -483,27 +394,13 @@ public abstract class TweetListFragment extends Fragment
         mAdapter.remove(tweet.getId());
     }
 
-    //このメソッドはPresenterへの処理移譲が必要だったため、移譲した。
+
     /**
      * Status削除処理
      * ログインユーザーのStatusを削除する
      * 削除依頼の応答が正常であればリスト上から該当Statusを消去する
      */
     private void deletePost(TweetEntity tweet) {
-//        AsyncTwitterTask.AfterTask<Status> afterTask = new AsyncTwitterTask.AfterTask<Status>() {
-//            @Override
-//            public void onLoadFinish(TwitterTaskResult<Status> result) {
-//                if (result.isException()) {
-//                    TweetListFragment.this.errorProcess(result.getException());
-//                    return;
-//                }
-//                CustomToast.show(TweetListFragment.this.getActivity(), R.string.delete_tweet, Toast.LENGTH_SHORT);
-//                mAdapter.remove(result.getResult().getId());
-//            }
-//        };
-//
-//        mTwitterTaskUtil.destroyStatus(status.getId(), afterTask);
-
         this.presenter.deleteTweet(tweet);
     }
 
@@ -514,19 +411,6 @@ public abstract class TweetListFragment extends Fragment
     }
 
 
-//Presenter.View.updateTweetの実装に変更したため削除
-//    /**
-//     * 他のユーザーがログインユーザーのStatusをお気に入りに登録、またはお気に入りから削除したときに
-//     * リストから該当するStatusを検索し、画面上に表示中である場合にはfavorite_starを表示状態を変更する。
-//     * またListで保持しているStatusを更新する
-//     * @param status UserStreamで検知されたお気に入りStatus
-//     */
-//    private void setFavoriteStarAndCount(final Status status) {
-//        this.updateTweet(status.getId());
-//    }
-
-
-    //Contextが必要なので一旦移譲しない。Presenterの責務範囲決定後に移譲するかも。
     /**
      * Statusのtextをコピーします
      */
