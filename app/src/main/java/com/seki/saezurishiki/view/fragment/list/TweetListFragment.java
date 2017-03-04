@@ -99,7 +99,8 @@ public abstract class TweetListFragment extends Fragment
                 TweetListFragment.this.showReTweetDialog(status);
                 return;
             }
-            //TweetListFragment.this.reTweet(status);
+
+            TweetListFragment.this.reTweet(status);
         }
 
         @Override
