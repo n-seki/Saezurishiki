@@ -126,34 +126,38 @@ public class TweetSelectDialog extends DialogFragment {
 
         if (mIsDelete) {
             String userName = mStatus.user.getScreenName();
-            adapter.add(BIOGRAPHY, userName, isThemeDark ? R.drawable.drawer_friend_follower_dark : R.drawable.drawer_friend_follower_light);
+            final int icon = isThemeDark ? R.drawable.drawer_friend_follower_dark : R.drawable.drawer_friend_follower_light;
+            adapter.add(BIOGRAPHY, userName, icon);
             return;
         }
 
+
         if (mStatus.inReplyToStatusId != -1 && mStatus.inReplyToScreenName != null && mStatus.inReplyToUserId != -1) {
-            adapter.add(CONVERSATION, isThemeDark ? R.drawable.drawer_tweet_dark : R.drawable.drawer_tweet_light);
-        } else {
-            adapter.add(SHOW_TWEET, isThemeDark ? R.drawable.drawer_tweet_dark : R.drawable.drawer_tweet_light);
+            final int icon = isThemeDark ? R.drawable.drawer_tweet_dark : R.drawable.drawer_tweet_light;
+            adapter.add(SHOW_TWEET, icon);
         }
 
         List<String> usersName = StatusUtil.getAllUserMentionName(mStatus, this.loginUserId);
+        final int followerIcon = isThemeDark ? R.drawable.drawer_friend_follower_dark : R.drawable.drawer_friend_follower_light;
         int bioCount = BIOGRAPHY;
         for (String name : usersName) {
-            adapter.add(bioCount++, UIControlUtil.getMentionUserNameText(name), isThemeDark ? R.drawable.drawer_friend_follower_dark : R.drawable.drawer_friend_follower_light);
+            adapter.add(bioCount++, UIControlUtil.getMentionUserNameText(name), followerIcon);
         }
 
         if (mStatus.urlEntities != null && mStatus.urlEntities.length != 0) {
+            final int icon = isThemeDark ? R.drawable.internet_icon_dark : R.drawable.internet_icon_light;
             int urlCount = URL;
             for (URLEntity urlEntity : mStatus.urlEntities) {
-                adapter.add(urlCount++, urlEntity.getDisplayURL(), isThemeDark ? R.drawable.internet_icon_dark : R.drawable.internet_icon_light);
+                adapter.add(urlCount++, urlEntity.getDisplayURL(), icon);
             }
         }
 
         List<String> mediaURL = UIControlUtil.createMediaURLList(mStatus);
         if (!mediaURL.isEmpty()) {
             int mediaCount = MEDIA;
+            final int icon = isThemeDark ? R.drawable.image_update : R.drawable.image_update_light;
             for (String media : mediaURL) {
-                adapter.add(mediaCount++, media, isThemeDark ? R.drawable.image_update : R.drawable.image_update_light);
+                adapter.add(mediaCount++, media, icon);
             }
         }
     }
