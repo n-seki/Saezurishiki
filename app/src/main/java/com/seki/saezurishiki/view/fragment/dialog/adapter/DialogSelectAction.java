@@ -1,7 +1,5 @@
 package com.seki.saezurishiki.view.fragment.dialog.adapter;
 
-
-import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.entity.TweetEntity;
 
 public class DialogSelectAction {

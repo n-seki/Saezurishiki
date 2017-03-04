@@ -18,7 +18,6 @@ import com.seki.saezurishiki.view.fragment.dialog.adapter.DialogSelectAction;
 
 public class TweetLongClickDialog extends DialogFragment {
 
-
     private TweetEntity mStatus;
     private LongClickDialogListener mListener;
 
@@ -108,7 +107,6 @@ public class TweetLongClickDialog extends DialogFragment {
             final DialogSelectAction action = DialogSelectAction.favorite(mStatus.getId());
             adapter.add(new DialogItemAdapter.DialogItem(action, getString(R.string.do_favorite), favIcon));
         }
-
     }
 
 
