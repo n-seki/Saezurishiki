@@ -59,7 +59,7 @@ public class TweetListPresenter implements ModelObserver {
 
 
     public void onClickRetweetButton(TweetEntity tweet) {
-        this.tweetModel.reTweet(tweet);
+        reTweet(tweet);
     }
 
 
