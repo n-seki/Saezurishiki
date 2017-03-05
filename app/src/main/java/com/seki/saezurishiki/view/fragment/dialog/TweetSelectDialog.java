@@ -38,7 +38,7 @@ public class TweetSelectDialog extends DialogFragment {
     private int theme;
 
     public interface DialogCallback {
-        void onDialogItemClick(TweetEntity status, int action);
+        void onDialogItemClick(DialogSelectAction<TweetEntity> action);
     }
 
 
@@ -101,8 +101,9 @@ public class TweetSelectDialog extends DialogFragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                int action = (int) view.getTag();
-                mListener.onDialogItemClick(mStatus, action);
+                @SuppressWarnings("unchecked")
+                final DialogSelectAction<TweetEntity> action = (DialogSelectAction)view.getTag();
+                mListener.onDialogItemClick(action);
                 dismiss();
             }
         });
@@ -132,7 +133,7 @@ public class TweetSelectDialog extends DialogFragment {
         List<Long> usersId = StatusUtil.getAllUserMentionId(mStatus, this.loginUserId);
         final int followerIcon = isThemeDark ? R.drawable.drawer_friend_follower_dark : R.drawable.drawer_friend_follower_light;
         for (int position = 0; position < usersId.size(); position++) {
-            final DialogSelectAction action = DialogSelectAction.showBiography(usersId.get(position));
+            final DialogSelectAction action = DialogSelectAction.showBiography(mStatus, usersId.get(position));
             adapter.add(new DialogItemAdapter.DialogItem(action, usersName.get(position), followerIcon));
         }
 
@@ -141,7 +142,7 @@ public class TweetSelectDialog extends DialogFragment {
             final int icon = isThemeDark ? R.drawable.internet_icon_dark : R.drawable.internet_icon_light;
             for (URLEntity entity : mStatus.urlEntities) {
                 final String url = entity.getURL();
-                final DialogSelectAction action = DialogSelectAction.openURL(url);
+                final DialogSelectAction action = DialogSelectAction.openURL(mStatus, url);
                 adapter.add(new DialogItemAdapter.DialogItem(action, url, icon));
             }
         }
@@ -150,7 +151,7 @@ public class TweetSelectDialog extends DialogFragment {
         if (!mediaURL.isEmpty()) {
             final int icon = isThemeDark ? R.drawable.image_update : R.drawable.image_update_light;
             for (String media : mediaURL) {
-                final DialogSelectAction action = DialogSelectAction.mediaURL(media);
+                final DialogSelectAction action = DialogSelectAction.mediaURL(mStatus, media);
                 adapter.add(new DialogItemAdapter.DialogItem(action, media, icon));
             }
         }

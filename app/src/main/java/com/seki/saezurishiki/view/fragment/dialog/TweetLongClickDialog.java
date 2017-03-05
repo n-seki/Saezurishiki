@@ -24,7 +24,7 @@ public class TweetLongClickDialog extends DialogFragment {
     private int theme;
 
     public interface LongClickDialogListener {
-        void onLongClickDialogItemSelect(int item, long statusID);
+        void onLongClickDialogItemSelect(DialogSelectAction<TweetEntity> action);
     }
 
     public static DialogFragment newInstance(TweetEntity status) {
@@ -70,8 +70,9 @@ public class TweetLongClickDialog extends DialogFragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                int action = (int) view.getTag();
-                mListener.onLongClickDialogItemSelect(action, mStatus.getId());
+                @SuppressWarnings("unchecked")
+                final DialogSelectAction<TweetEntity> action = (DialogSelectAction<TweetEntity>)view.getTag();
+                mListener.onLongClickDialogItemSelect(action);
                 dismiss();
             }
         });
@@ -84,27 +85,27 @@ public class TweetLongClickDialog extends DialogFragment {
 
         if (mStatus.isSentByLoginUser) {
             final int icon = isThemeDark ? R.drawable.delete_white : R.drawable.delete_black;
-            final DialogSelectAction action = DialogSelectAction.delete(mStatus.getId());
+            final DialogSelectAction action = DialogSelectAction.delete(mStatus);
             adapter.add(new DialogItemAdapter.DialogItem(action, getString(R.string.delete_tweet), icon));
         }
 
         if (!mStatus.user.isProtected()) {
             final int icon = isThemeDark ? R.drawable.re_tweet_white : R.drawable.re_tweet_black;
             if (mStatus.isRetweetedbyLoginUser) {
-                final DialogSelectAction action = DialogSelectAction.unRetweet(mStatus.getId());
+                final DialogSelectAction action = DialogSelectAction.unRetweet(mStatus);
                 adapter.add(new DialogItemAdapter.DialogItem(action, getString(R.string.do_un_retweet), icon));
             } else {
-                final DialogSelectAction action = DialogSelectAction.retweet(mStatus.getId());
+                final DialogSelectAction action = DialogSelectAction.retweet(mStatus);
                 adapter.add(new DialogItemAdapter.DialogItem(action, getString(R.string.do_retweet), icon));
             }
         }
 
         final int favIcon = isThemeDark ? R.drawable.drawer_favorite_dark : R.drawable.drawer_favorite_light;
         if (mStatus.isFavorited) {
-            final DialogSelectAction action = DialogSelectAction.unFavorite(mStatus.getId());
+            final DialogSelectAction action = DialogSelectAction.unFavorite(mStatus);
             adapter.add(new DialogItemAdapter.DialogItem(action, getString(R.string.do_un_favorite), favIcon));
         } else {
-            final DialogSelectAction action = DialogSelectAction.favorite(mStatus.getId());
+            final DialogSelectAction action = DialogSelectAction.favorite(mStatus);
             adapter.add(new DialogItemAdapter.DialogItem(action, getString(R.string.do_favorite), favIcon));
         }
     }

@@ -27,6 +27,7 @@ import com.seki.saezurishiki.control.UIControlUtil;
 import com.seki.saezurishiki.entity.LoadButton;
 import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.entity.TwitterEntity;
+import com.seki.saezurishiki.view.fragment.dialog.adapter.DialogSelectAction;
 import com.seki.saezurishiki.view.fragment.editor.EditTweetFragment;
 import com.seki.saezurishiki.view.fragment.PictureFragment;
 import com.seki.saezurishiki.view.fragment.dialog.TweetLongClickDialog;
@@ -426,10 +427,9 @@ public abstract class TweetListFragment extends Fragment
     /**
      * TweetDialogFragmentでclickされたURLを表示する
      * URLをuriとして暗黙的Intentで外部アプリを起動する
-     * @param position clickされたURLのURLEntity[]内でのposition
+     * @param url 表示したいURL
      */
-    private void openLink(TweetEntity status, int position) {
-        String url = status.urlEntities[position].getURL();
+    private void openLink(String url) {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         startActivity(intent);
     }
@@ -540,84 +540,71 @@ public abstract class TweetListFragment extends Fragment
 
 
 
-    public void onDialogItemClick(TweetEntity status, int position) {
-        switch ( position ) {
-            case TweetSelectDialog.REPLY :
-                this.openReplyEditor(status);
+    public void onDialogItemClick(DialogSelectAction<TweetEntity> selectedItem) {
+        switch (selectedItem.action) {
+            case DialogSelectAction.FAVORITE:
+                this.createFavorite(selectedItem.targetItem);
                 break;
 
-            case TweetSelectDialog.FAVORITE :
-                this.createFavorite(status);
+            case DialogSelectAction.RE_TWEET:
+                this.reTweet(selectedItem.targetItem);
                 break;
 
-            case TweetSelectDialog.ReTWEET :
-                this.reTweet(status);
+            case DialogSelectAction.SHOW_TWEET:
+                this.displayDetailTweet(selectedItem.targetItem);
                 break;
 
-//            case TweetSelectDialog.QUOTED_TWEET:
-//                this.openQuotedTweetEditor(status);
-//                break;
-
-            case TweetSelectDialog.CONVERSATION :
-                this.displayDetailTweet(status);
+            case DialogSelectAction.UN_FAVORITE:
+                this.destroyFavorite(selectedItem.targetItem);
                 break;
 
-            case TweetSelectDialog.UN_FAVORITE:
-                this.destroyFavorite(status);
+            case DialogSelectAction.BIOGRAPHY:
+                final long targetUserId = (Long)selectedItem.item;
+                this.fragmentControl.requestShowUser(targetUserId);
                 break;
 
-            case TweetSelectDialog.SHOW_TWEET:
-                this.displayDetailTweet(status);
+            case DialogSelectAction.URL:
+                final String targetUrl = (String)selectedItem.item;
+                this.openLink(targetUrl);
+                break;
+
+            case DialogSelectAction.MEDIA:
+                final String targetMedia = (String)selectedItem.item;
+                Fragment f = PictureFragment.getInstance(targetMedia, selectedItem.targetItem);
+                this.fragmentControl.requestShowFragment(f);
                 break;
 
             default:
-                if (TweetSelectDialog.BIOGRAPHY <= position && position < TweetSelectDialog.URL) {
-                    this.displayBiography(status, position - TweetSelectDialog.BIOGRAPHY);
-                    break;
-                }
-
-                if (TweetSelectDialog.URL <= position && position < TweetSelectDialog.MEDIA) {
-                    this.openLink(status, position - TweetSelectDialog.URL);
-                    break;
-                }
-
-                if (TweetSelectDialog.MEDIA <= position) {
-                    List<String> medias = UIControlUtil.createMediaURLList(status);
-                    Fragment f = PictureFragment.getInstance(medias.get(position - TweetSelectDialog.MEDIA), status);
-                    this.fragmentControl.requestShowFragment(f);
-                    break;
-                }
-
-                throw new IllegalStateException("resultCode is not legal");
+                throw new IllegalArgumentException("action is invalid! : " + selectedItem.action);
         }
     }
 
     @Override
-    public void onLongClickDialogItemSelect(int action, long statusID) {
-        switch (action) {
-            case TweetLongClickDialog.DELETE :
-                this.deletePost(statusID);
+    public void onLongClickDialogItemSelect(DialogSelectAction<TweetEntity> selectedItem) {
+        switch (selectedItem.action) {
+            case DialogSelectAction.DELETE :
+                this.deletePost(selectedItem.targetItem.getId());
                 break;
 
-            case TweetLongClickDialog.RE_TWEET:
-                this.reTweet(statusID);
+            case DialogSelectAction.RE_TWEET:
+                this.reTweet(selectedItem.targetItem.getId());
                 break;
 
-            case TweetLongClickDialog.UN_RE_TWEET:
+            case DialogSelectAction.UN_RE_TWEET:
                 //TODO
-                this.deletePost(statusID);
+                this.deletePost(selectedItem.targetItem.getId());
                 break;
 
-            case TweetLongClickDialog.FAVORITE:
-                this.createFavorite(statusID);
+            case DialogSelectAction.FAVORITE:
+                this.createFavorite(selectedItem.targetItem.getId());
                 break;
 
-            case TweetLongClickDialog.UN_FAVORITE:
-                this.destroyFavorite(statusID);
+            case DialogSelectAction.UN_FAVORITE:
+                this.destroyFavorite(selectedItem.targetItem.getId());
                 break;
 
             default:
-                throw new IllegalArgumentException("action is invalid! : " + action);
+                throw new IllegalArgumentException("action is invalid! : " + selectedItem.action);
         }
     }
 
