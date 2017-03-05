@@ -525,20 +525,8 @@ public abstract class TweetListFragment extends Fragment
 
     public void onDialogItemClick(DialogSelectAction<TweetEntity> selectedItem) {
         switch (selectedItem.action) {
-            case DialogSelectAction.FAVORITE:
-                this.createFavorite(selectedItem.targetItem);
-                break;
-
-            case DialogSelectAction.RE_TWEET:
-                this.reTweet(selectedItem.targetItem);
-                break;
-
             case DialogSelectAction.SHOW_TWEET:
                 this.displayDetailTweet(selectedItem.targetItem);
-                break;
-
-            case DialogSelectAction.UN_FAVORITE:
-                this.destroyFavorite(selectedItem.targetItem);
                 break;
 
             case DialogSelectAction.BIOGRAPHY:
