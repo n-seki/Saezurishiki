@@ -374,18 +374,11 @@ public abstract class TweetListFragment extends Fragment
     public void completeReTweet(TweetEntity tweet) {
         CustomToast.show(TweetListFragment.this.getActivity(), R.string.re_tweet_done, Toast.LENGTH_SHORT);
     }
-    /**
-     * リツイートを行う
-     * mStatusのリツイートを非同期で行う.
-     * 正常時はToast表示を行うのみで,その後の処理はUserStreamでの通知時に行う
-     */
-    private void reTweet(final TweetEntity tweet) {
-        this.presenter.reTweet(tweet);
-    }
 
-    protected void reTweet(long statusID) {
-        TweetEntity status = this.twitterAccount.getRepository().getStatus(statusID);
-        this.reTweet(status);
+
+
+    protected void reTweet(TweetEntity tweet) {
+        this.presenter.reTweet(tweet.getId());
     }
 
 
@@ -577,7 +570,7 @@ public abstract class TweetListFragment extends Fragment
                 break;
 
             case DialogSelectAction.RE_TWEET:
-                this.reTweet(selectedItem.targetItem.getId());
+                this.reTweet(selectedItem.targetItem);
                 break;
 
             case DialogSelectAction.UN_RE_TWEET:

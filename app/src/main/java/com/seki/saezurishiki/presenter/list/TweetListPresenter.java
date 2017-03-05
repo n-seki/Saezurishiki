@@ -59,7 +59,7 @@ public class TweetListPresenter implements ModelObserver {
 
 
     public void onClickRetweetButton(TweetEntity tweet) {
-        reTweet(tweet);
+        reTweet(tweet.getId());
     }
 
 
@@ -124,7 +124,7 @@ public class TweetListPresenter implements ModelObserver {
     }
 
     //Status → Entityの変換が必要
-    public void reTweet(TweetEntity tweet) {
+    public void reTweet(long tweetID) {
         AsyncTwitterTask.AfterTask<TweetEntity> afterTask = new AsyncTwitterTask.AfterTask<TweetEntity>() {
             @Override
             public void onLoadFinish(TwitterTaskResult<TweetEntity> result) {
@@ -137,7 +137,7 @@ public class TweetListPresenter implements ModelObserver {
             }
         };
 
-        this.twitterTaskUtil.createReTweet(tweet.getId(), afterTask);
+        this.twitterTaskUtil.createReTweet(tweetID, afterTask);
     }
 
     public void onClickLoadButton(View view) {
