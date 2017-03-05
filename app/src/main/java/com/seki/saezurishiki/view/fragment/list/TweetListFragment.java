@@ -564,31 +564,7 @@ public abstract class TweetListFragment extends Fragment
 
     @Override
     public void onLongClickDialogItemSelect(DialogSelectAction<TweetEntity> selectedItem) {
-        switch (selectedItem.action) {
-            case DialogSelectAction.DELETE :
-                this.deletePost(selectedItem.targetItem.getId());
-                break;
-
-            case DialogSelectAction.RE_TWEET:
-                this.reTweet(selectedItem.targetItem);
-                break;
-
-            case DialogSelectAction.UN_RE_TWEET:
-                //TODO
-                this.deletePost(selectedItem.targetItem.getId());
-                break;
-
-            case DialogSelectAction.FAVORITE:
-                this.createFavorite(selectedItem.targetItem.getId());
-                break;
-
-            case DialogSelectAction.UN_FAVORITE:
-                this.destroyFavorite(selectedItem.targetItem.getId());
-                break;
-
-            default:
-                throw new IllegalArgumentException("action is invalid! : " + selectedItem.action);
-        }
+        this.presenter.onClickLongClickDialog(selectedItem);
     }
 
 

@@ -1,6 +1,5 @@
 package com.seki.saezurishiki.presenter.list;
 
-import android.view.View;
 
 import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.entity.User;
@@ -14,9 +13,8 @@ import com.seki.saezurishiki.network.twitter.AsyncTwitterTask;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
 import com.seki.saezurishiki.network.twitter.TwitterTaskResult;
 import com.seki.saezurishiki.network.twitter.TwitterTaskUtil;
+import com.seki.saezurishiki.view.fragment.dialog.adapter.DialogSelectAction;
 
-
-import twitter4j.Paging;
 
 
 public class TweetListPresenter implements ModelObserver {
@@ -140,12 +138,37 @@ public class TweetListPresenter implements ModelObserver {
         this.twitterTaskUtil.createReTweet(tweetID, afterTask);
     }
 
-    public void onClickLoadButton(View view) {
-        this.tweetListModel.request(new Paging());
-    }
 
     public void onDeleteTweet(TweetEntity tweetEntity) {
         this.tweetModel.delete(tweetEntity);
+    }
+
+
+    public void onClickLongClickDialog(DialogSelectAction<TweetEntity> selectedItem) {
+        switch (selectedItem.action) {
+            case DialogSelectAction.DELETE :
+                this.deleteTweet(selectedItem.targetItem.getId());
+                break;
+
+            case DialogSelectAction.RE_TWEET:
+                this.reTweet(selectedItem.targetItem.getId());
+                break;
+
+            case DialogSelectAction.UN_RE_TWEET:
+                this.deleteTweet(selectedItem.targetItem.getId());
+                break;
+
+            case DialogSelectAction.FAVORITE:
+                this.createFavorite(selectedItem.targetItem);
+                break;
+
+            case DialogSelectAction.UN_FAVORITE:
+                this.destroyFavorite(selectedItem.targetItem);
+                break;
+
+            default:
+                throw new IllegalArgumentException("action is invalid! : " + selectedItem.action);
+        }
     }
 
 
