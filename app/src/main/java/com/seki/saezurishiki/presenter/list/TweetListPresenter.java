@@ -107,7 +107,7 @@ public class TweetListPresenter implements ModelObserver {
     }
 
     //Status → Entityの変換が必要
-    public void deleteTweet(TweetEntity tweet) {
+    public void deleteTweet(long tweetID) {
         AsyncTwitterTask.AfterTask<TweetEntity> afterTask = new AsyncTwitterTask.AfterTask<TweetEntity>() {
             @Override
             public void onLoadFinish(TwitterTaskResult<TweetEntity> result) {
@@ -120,7 +120,7 @@ public class TweetListPresenter implements ModelObserver {
             }
         };
 
-        this.twitterTaskUtil.destroyStatus(tweet.getId(), afterTask);
+        this.twitterTaskUtil.destroyStatus(tweetID, afterTask);
     }
 
     //Status → Entityの変換が必要

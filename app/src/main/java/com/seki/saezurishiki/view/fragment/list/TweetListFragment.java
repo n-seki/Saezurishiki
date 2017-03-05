@@ -396,19 +396,9 @@ public abstract class TweetListFragment extends Fragment
     }
 
 
-    /**
-     * Status削除処理
-     * ログインユーザーのStatusを削除する
-     * 削除依頼の応答が正常であればリスト上から該当Statusを消去する
-     */
-    private void deletePost(TweetEntity tweet) {
-        this.presenter.deleteTweet(tweet);
-    }
 
-
-    //このメソッドは上記メソッドのオーバーロードメソッドであり、presenterに移譲する必要はない。
-    protected void deletePost(long statusID) {
-        this.deletePost(this.twitterAccount.getRepository().getStatus(statusID));
+    protected void deletePost(long tweetID) {
+        this.presenter.deleteTweet(tweetID);
     }
 
 
