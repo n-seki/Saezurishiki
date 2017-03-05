@@ -86,7 +86,7 @@ public class TweetLongClickDialog extends DialogFragment {
         if (mStatus.isSentByLoginUser) {
             final int icon = isThemeDark ? R.drawable.delete_white : R.drawable.delete_black;
             final DialogSelectAction action = DialogSelectAction.delete(mStatus);
-            adapter.add(new DialogItemAdapter.DialogItem(action, getString(R.string.delete_tweet), icon));
+            adapter.add(new DialogItemAdapter.DialogItem(action, getString(R.string.do_delete), icon));
         }
 
         if (!mStatus.user.isProtected()) {
