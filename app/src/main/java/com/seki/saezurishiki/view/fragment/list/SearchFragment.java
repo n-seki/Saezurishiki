@@ -79,7 +79,7 @@ public class SearchFragment extends TweetListFragment {
             }
         };
 
-        mTwitterTaskUtil.search(twitterQuery, afterTask);
+        mTwitterWrapper.search(twitterQuery, afterTask);
     }
 
     @Override

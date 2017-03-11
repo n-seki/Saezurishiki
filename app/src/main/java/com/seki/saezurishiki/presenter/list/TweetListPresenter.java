@@ -12,7 +12,7 @@ import com.seki.saezurishiki.model.TweetModel;
 import com.seki.saezurishiki.network.twitter.AsyncTwitterTask;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
 import com.seki.saezurishiki.network.twitter.TwitterTaskResult;
-import com.seki.saezurishiki.network.twitter.TwitterTaskUtil;
+import com.seki.saezurishiki.network.twitter.TwitterWrapper;
 import com.seki.saezurishiki.view.fragment.dialog.adapter.DialogSelectAction;
 
 
@@ -25,7 +25,7 @@ public class TweetListPresenter implements ModelObserver {
     private final TweetListModel tweetListModel;
     private final User listOwner;
 
-    private TwitterTaskUtil twitterTaskUtil;
+    private TwitterWrapper twitterWrapper;
 
     public interface TweetListView {
         void updateTweet(TweetEntity tweetEntity);
@@ -84,7 +84,7 @@ public class TweetListPresenter implements ModelObserver {
             }
         };
 
-        this.twitterTaskUtil.createFavorite(tweet.getId(), afterTask);
+        this.twitterWrapper.createFavorite(tweet.getId(), afterTask);
     }
 
     //Status → Entityの変換が必要
@@ -101,7 +101,7 @@ public class TweetListPresenter implements ModelObserver {
             }
         };
 
-        this.twitterTaskUtil.unFavorite(tweet.getId(), afterTask);
+        this.twitterWrapper.unFavorite(tweet.getId(), afterTask);
     }
 
     //Status → Entityの変換が必要
@@ -118,7 +118,7 @@ public class TweetListPresenter implements ModelObserver {
             }
         };
 
-        this.twitterTaskUtil.destroyStatus(tweetID, afterTask);
+        this.twitterWrapper.destroyStatus(tweetID, afterTask);
     }
 
     //Status → Entityの変換が必要
@@ -135,7 +135,7 @@ public class TweetListPresenter implements ModelObserver {
             }
         };
 
-        this.twitterTaskUtil.createReTweet(tweetID, afterTask);
+        this.twitterWrapper.createReTweet(tweetID, afterTask);
     }
 
 
@@ -202,8 +202,8 @@ public class TweetListPresenter implements ModelObserver {
 
 
     //TODO
-    public void setTwitterTaskUtil(TwitterTaskUtil twitterTaskUtil) {
-        this.twitterTaskUtil = twitterTaskUtil;
+    public void setTwitterWrapper(TwitterWrapper twitterWrapper) {
+        this.twitterWrapper = twitterWrapper;
     }
 
 

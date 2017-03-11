@@ -36,8 +36,7 @@ import com.seki.saezurishiki.network.twitter.AsyncTwitterTask;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
 import com.seki.saezurishiki.network.twitter.TwitterError;
 import com.seki.saezurishiki.network.twitter.TwitterTaskResult;
-import com.seki.saezurishiki.network.twitter.TwitterTaskUtil;
-import com.seki.saezurishiki.network.twitter.streamListener.UserStreamUserListener;
+import com.seki.saezurishiki.network.twitter.TwitterWrapper;
 import com.seki.saezurishiki.view.control.FragmentControl;
 
 import java.io.Serializable;
@@ -65,7 +64,7 @@ public class UserActivity extends    AppCompatActivity
 
     private RelationshipModel relation;
 
-    private TwitterTaskUtil mTwitterTask;
+    private TwitterWrapper mTwitterTask;
     private User mUser;
 
     private FragmentController mFragmentController;
@@ -89,7 +88,7 @@ public class UserActivity extends    AppCompatActivity
 
         this.relation = new RelationshipModel();
         mFragmentController = new FragmentController(getSupportFragmentManager());
-        mTwitterTask = new TwitterTaskUtil(this, getSupportLoaderManager(), this.twitterAccount);
+        mTwitterTask = new TwitterWrapper(this, getSupportLoaderManager(), this.twitterAccount);
         mListAdapter = new DrawerButtonListAdapter(this, R.layout.drawer_list_button, theme);
         this.loadUser();
 

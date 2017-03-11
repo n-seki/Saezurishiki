@@ -50,7 +50,7 @@ public class FavoritesFragment extends TimeLineFragment {
 
     @Override
     AsyncTwitterTask.AsyncTask<ResponseList<Status>> getStatusesLoader() {
-        return mTwitterTaskUtil.getFavoriteTimeLineLoader(mUserId, FavoritesFragment.super.createLastPaging());
+        return mTwitterWrapper.getFavoriteTimeLineLoader(mUserId, FavoritesFragment.super.createLastPaging());
     }
 
 }

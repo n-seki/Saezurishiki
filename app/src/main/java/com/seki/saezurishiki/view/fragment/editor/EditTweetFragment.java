@@ -34,7 +34,7 @@ import com.seki.saezurishiki.network.twitter.AsyncTwitterTask;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
 import com.seki.saezurishiki.network.twitter.TwitterError;
 import com.seki.saezurishiki.network.twitter.TwitterTaskResult;
-import com.seki.saezurishiki.network.twitter.TwitterTaskUtil;
+import com.seki.saezurishiki.network.twitter.TwitterWrapper;
 import com.seki.saezurishiki.view.customview.TweetTextEditor;
 import com.seki.saezurishiki.view.fragment.DataType;
 
@@ -69,7 +69,7 @@ public class EditTweetFragment extends Fragment {
 
     private int mEditorType;
 
-    private TwitterTaskUtil mTwitterTaskUtil;
+    private TwitterWrapper mTwitterWrapper;
     private List<Long> mediaIds;
     private InputStream media;
     private String mFileName;
@@ -182,7 +182,7 @@ public class EditTweetFragment extends Fragment {
 
         final SaezurishikiApp app = (SaezurishikiApp)getActivity().getApplication();
         final TwitterAccount twitterAccount = app.getTwitterAccount();
-        mTwitterTaskUtil = new TwitterTaskUtil(getActivity(), getLoaderManager(), twitterAccount);
+        mTwitterWrapper = new TwitterWrapper(getActivity(), getLoaderManager(), twitterAccount);
         mediaIds = new ArrayList<>();
         this.loginUserId = twitterAccount.getLoginUserId();
 
@@ -267,7 +267,7 @@ public class EditTweetFragment extends Fragment {
                 }
             };
 
-            mTwitterTaskUtil.uploadImage(data.toString(), media, afterTask);
+            mTwitterWrapper.uploadImage(data.toString(), media, afterTask);
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();

@@ -11,7 +11,7 @@ import android.widget.Toast;
 import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.network.twitter.AsyncTwitterTask;
 import com.seki.saezurishiki.network.twitter.TwitterTaskResult;
-import com.seki.saezurishiki.network.twitter.TwitterTaskUtil;
+import com.seki.saezurishiki.network.twitter.TwitterWrapper;
 import com.seki.saezurishiki.network.twitter.TwitterUtil;
 
 import twitter4j.TwitterException;
@@ -103,7 +103,7 @@ public class TwitterOauthActivity extends AppCompatActivity {
             }
         };
 
-        TwitterTaskUtil.getOAuthAccessToken(this, getSupportLoaderManager(), mRequestToken, verifier, AFTER_TASK);
+        TwitterWrapper.getOAuthAccessToken(this, getSupportLoaderManager(), mRequestToken, verifier, AFTER_TASK);
     }
 
 

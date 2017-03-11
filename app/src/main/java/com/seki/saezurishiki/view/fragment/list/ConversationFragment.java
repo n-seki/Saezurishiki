@@ -95,7 +95,7 @@ public class ConversationFragment extends TweetListFragment {
 
 
     private void loadStatus(final long id) {
-        mTwitterTaskUtil.showStatus(id, new AsyncTwitterTask.AfterTask<Status>() {
+        mTwitterWrapper.showStatus(id, new AsyncTwitterTask.AfterTask<Status>() {
             @Override
             public void onLoadFinish(TwitterTaskResult<Status> result) {
                 ConversationFragment.this.onLoadStatus(result);

@@ -22,7 +22,7 @@ import com.seki.saezurishiki.control.UIControlUtil;
 import com.seki.saezurishiki.network.twitter.AsyncTwitterTask;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
 import com.seki.saezurishiki.network.twitter.TwitterTaskResult;
-import com.seki.saezurishiki.network.twitter.TwitterTaskUtil;
+import com.seki.saezurishiki.network.twitter.TwitterWrapper;
 import com.seki.saezurishiki.network.twitter.streamListener.UserStreamUserListener;
 import com.seki.saezurishiki.view.fragment.DataType;
 
@@ -45,7 +45,7 @@ public abstract class UsersListFragment extends Fragment implements UserStreamUs
     private View mListFooter;
     private ListView mListView;
 
-    TwitterTaskUtil twitterTask;
+    TwitterWrapper twitterTask;
 
     protected TwitterAccount twitterAccount;
 
@@ -77,7 +77,7 @@ public abstract class UsersListFragment extends Fragment implements UserStreamUs
         this.twitterAccount = app.getTwitterAccount();
         mUserId = data.getLong(DataType.USER_ID);
         mCount = data.getInt(DataType.COUNT);
-        this.twitterTask = new TwitterTaskUtil(getActivity(), getLoaderManager(), this.twitterAccount);
+        this.twitterTask = new TwitterWrapper(getActivity(), getLoaderManager(), this.twitterAccount);
     }
 
 

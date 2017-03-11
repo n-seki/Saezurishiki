@@ -22,7 +22,7 @@ import com.seki.saezurishiki.network.twitter.AsyncTwitterTask;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
 import com.seki.saezurishiki.network.twitter.TwitterError;
 import com.seki.saezurishiki.network.twitter.TwitterTaskResult;
-import com.seki.saezurishiki.network.twitter.TwitterTaskUtil;
+import com.seki.saezurishiki.network.twitter.TwitterWrapper;
 import com.seki.saezurishiki.network.twitter.streamListener.DirectMessageUserStreamListener;
 import com.seki.saezurishiki.view.control.RequestTabState;
 import com.seki.saezurishiki.view.control.TabManagedView;
@@ -44,7 +44,7 @@ public class RecentlyDirectMessageListFragment extends Fragment implements Direc
     private DirectMessageAdapter mAdapter;
     private boolean isLoading;
     private CallBack mCallBack;
-    private TwitterTaskUtil mTwitterTask;
+    private TwitterWrapper mTwitterTask;
     private long mLastUnreadMessageId;
     private TwitterAccount twitterAccount;
     private TabViewControl tabViewControl;
@@ -149,7 +149,7 @@ public class RecentlyDirectMessageListFragment extends Fragment implements Direc
         this.twitterAccount.addStreamListener(this);
         mAdapter = new DirectMessageAdapter(getActivity(), R.layout.direct_message_layout, twitterAccount.getRepository());
         mAdapter.setBackgroundColor();
-        mTwitterTask = new TwitterTaskUtil(getActivity(), getLoaderManager(), twitterAccount);
+        mTwitterTask = new TwitterWrapper(getActivity(), getLoaderManager(), twitterAccount);
     }
 
     @Override

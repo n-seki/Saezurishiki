@@ -31,7 +31,7 @@ public class HomeTimeLineFragment extends UserStreamTimeLineFragment {
 
     @Override
     AsyncTwitterTask.AsyncTask<ResponseList<Status>> getStatusesLoader() {
-        return mTwitterTaskUtil.getHomeTimeLineLoader(createLastPaging());
+        return mTwitterWrapper.getHomeTimeLineLoader(createLastPaging());
     }
 
 
@@ -83,13 +83,13 @@ public class HomeTimeLineFragment extends UserStreamTimeLineFragment {
     @Override
     protected AsyncTwitterTask.AsyncTask<ResponseList<Status>> getSwipeTask() {
         final int count = 50;
-        return mTwitterTaskUtil.getHomeTimeLineLoader(new Paging().count(count));
+        return mTwitterWrapper.getHomeTimeLineLoader(new Paging().count(count));
     }
 
 
 
     void runLoadButtonClickedTask(Paging paging, AsyncTwitterTask.AfterTask<ResponseList<Status>> afterTask) {
-        mTwitterTaskUtil.getHomeTimeLine(paging, afterTask);
+        mTwitterWrapper.getHomeTimeLine(paging, afterTask);
     }
 
 }

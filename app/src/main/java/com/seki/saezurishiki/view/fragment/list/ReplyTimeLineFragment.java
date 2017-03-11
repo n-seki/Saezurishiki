@@ -32,7 +32,7 @@ public class ReplyTimeLineFragment extends UserStreamTimeLineFragment {
 
     @Override
     AsyncTwitterTask.AsyncTask<ResponseList<Status>> getStatusesLoader() {
-        return mTwitterTaskUtil.getMentionTimeLineLoader(createLastPaging());
+        return mTwitterWrapper.getMentionTimeLineLoader(createLastPaging());
     }
 
 
@@ -75,7 +75,7 @@ public class ReplyTimeLineFragment extends UserStreamTimeLineFragment {
     @Override
     protected AsyncTwitterTask.AsyncTask<ResponseList<Status>> getSwipeTask() {
         final int count = isFirstOpen ? 50 : 200;
-        return mTwitterTaskUtil.getMentionTimeLineLoader(new Paging().count(count));
+        return mTwitterWrapper.getMentionTimeLineLoader(new Paging().count(count));
     }
 
 
@@ -95,7 +95,7 @@ public class ReplyTimeLineFragment extends UserStreamTimeLineFragment {
 
 
     void runLoadButtonClickedTask(Paging paging, AsyncTwitterTask.AfterTask<ResponseList<Status>> afterTask) {
-        mTwitterTaskUtil.getMentionTimeLine(paging, afterTask);
+        mTwitterWrapper.getMentionTimeLine(paging, afterTask);
     }
 
 

@@ -49,7 +49,7 @@ import com.seki.saezurishiki.network.twitter.AsyncTwitterTask;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
 import com.seki.saezurishiki.network.twitter.TwitterError;
 import com.seki.saezurishiki.network.twitter.TwitterTaskResult;
-import com.seki.saezurishiki.network.twitter.TwitterTaskUtil;
+import com.seki.saezurishiki.network.twitter.TwitterWrapper;
 import com.seki.saezurishiki.network.twitter.TwitterUtil;
 import com.seki.saezurishiki.network.twitter.streamListener.CustomUserStreamListener;
 import com.seki.saezurishiki.view.customview.NotificationTabLayout;
@@ -92,7 +92,7 @@ public class LoginUserActivity extends    AppCompatActivity
 
     private int mDisplayPosition = -1;
 
-    private TwitterTaskUtil mTwitterTask;
+    private TwitterWrapper mTwitterTask;
 
     private FragmentController mFragmentController;
 
@@ -142,7 +142,7 @@ public class LoginUserActivity extends    AppCompatActivity
         mReceiver = new ConnectionReceiver(this);
         registerReceiver(mReceiver, filter);
 
-        mTwitterTask = new TwitterTaskUtil(this, getSupportLoaderManager(), this.twitterAccount);
+        mTwitterTask = new TwitterWrapper(this, getSupportLoaderManager(), this.twitterAccount);
 
         this.loadUser();
         this.setupActionBar();

@@ -24,7 +24,7 @@ import com.seki.saezurishiki.network.twitter.AsyncTwitterTask;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
 import com.seki.saezurishiki.network.twitter.TwitterError;
 import com.seki.saezurishiki.network.twitter.TwitterTaskResult;
-import com.seki.saezurishiki.network.twitter.TwitterTaskUtil;
+import com.seki.saezurishiki.network.twitter.TwitterWrapper;
 import com.seki.saezurishiki.network.twitter.streamListener.DirectMessageUserStreamListener;
 import com.seki.saezurishiki.view.fragment.DataType;
 
@@ -46,7 +46,7 @@ public class DirectMessageFragment extends Fragment implements DirectMessageUser
 
     private DirectMessageAdapter mAdapter;
 
-    private TwitterTaskUtil mTwitterTask;
+    private TwitterWrapper mTwitterTask;
 
     private ListView mListView;
 
@@ -73,7 +73,7 @@ public class DirectMessageFragment extends Fragment implements DirectMessageUser
 
         mUserID = ((User)getArguments().getSerializable(DataType.USER)).getId();
         mAdapter = new DirectMessageAdapter(getActivity(), R.layout.direct_message_layout, twitterAccount.getRepository());
-        mTwitterTask = new TwitterTaskUtil(getActivity(), getLoaderManager(), this.twitterAccount);
+        mTwitterTask = new TwitterWrapper(getActivity(), getLoaderManager(), this.twitterAccount);
 
         setHasOptionsMenu(true);
     }

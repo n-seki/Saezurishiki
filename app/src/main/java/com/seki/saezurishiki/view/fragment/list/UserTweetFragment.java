@@ -50,7 +50,7 @@ public class UserTweetFragment extends TimeLineFragment {
     @Override
     AsyncTwitterTask.AsyncTask<ResponseList<Status>> getStatusesLoader() {
         //return TASK;
-        return mTwitterTaskUtil.getUserTweetListTask(mUserId, UserTweetFragment.super.createLastPaging());
+        return mTwitterWrapper.getUserTweetListTask(mUserId, UserTweetFragment.super.createLastPaging());
     }
 
 }

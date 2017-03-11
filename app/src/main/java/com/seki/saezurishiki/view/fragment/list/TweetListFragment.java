@@ -36,7 +36,7 @@ import com.seki.saezurishiki.view.fragment.dialog.YesNoSelectDialog;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
 import com.seki.saezurishiki.network.twitter.TwitterError;
 import com.seki.saezurishiki.network.twitter.TwitterTaskResult;
-import com.seki.saezurishiki.network.twitter.TwitterTaskUtil;
+import com.seki.saezurishiki.network.twitter.TwitterWrapper;
 import com.seki.saezurishiki.network.twitter.streamListener.StatusUserStreamListener;
 import com.seki.saezurishiki.view.control.FragmentControl;
 
@@ -63,7 +63,7 @@ public abstract class TweetListFragment extends Fragment
 
     protected TimeLineAdapter mAdapter;
 
-    protected TwitterTaskUtil mTwitterTaskUtil;
+    protected TwitterWrapper mTwitterWrapper;
 
     protected ListView mListView;
 
@@ -158,9 +158,9 @@ public abstract class TweetListFragment extends Fragment
 
         mAdapter = new TimeLineAdapter(getActivity(), R.layout.tweet_layout_with_picture, listener, twitterAccount);
         mListView.setAdapter(mAdapter);
-        mTwitterTaskUtil = new TwitterTaskUtil(getActivity(), getLoaderManager(), this.twitterAccount);
+        mTwitterWrapper = new TwitterWrapper(getActivity(), getLoaderManager(), this.twitterAccount);
 
-        this.presenter.setTwitterTaskUtil(this.mTwitterTaskUtil);
+        this.presenter.setTwitterWrapper(this.mTwitterWrapper);
     }
 
 
