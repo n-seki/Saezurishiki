@@ -58,7 +58,7 @@ final class StatusServer {
             throw new NullPointerException("Status is null!");
         }
 
-        ALL_STATUS.put(status.getId(), mapper.createTweetEntity(status));
+        ALL_STATUS.put(status.getId(), mapper.map(status));
     }
 
 

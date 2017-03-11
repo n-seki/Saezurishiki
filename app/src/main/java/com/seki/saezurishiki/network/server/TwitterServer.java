@@ -206,6 +206,6 @@ public class TwitterServer  {
     }
 
     public TweetEntity map(Status status) {
-        return this.mapper.createTweetEntity(status);
+        return this.mapper.map(status);
     }
 }

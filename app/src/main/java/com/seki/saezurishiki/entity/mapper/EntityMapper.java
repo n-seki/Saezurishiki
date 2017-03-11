@@ -13,7 +13,7 @@ public class EntityMapper {
         this.loginUserId = loginUserId;
     }
 
-    public TweetEntity createTweetEntity(Status status) {
+    public TweetEntity map(Status status) {
         final boolean isLoginUserStatus =
                 this.loginUserId == status.getUser().getId();
 
