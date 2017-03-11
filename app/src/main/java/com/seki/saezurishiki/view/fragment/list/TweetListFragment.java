@@ -407,24 +407,12 @@ public abstract class TweetListFragment extends Fragment
      * @param buttonID 選択されたLoad ButtonのID
      */
     void setStatusIntoList(List<Status> statusList, long buttonID) {
-        //読み込んだStatusが0の場合には取得漏れはないと判断してButtonを消して終わり
-        if (statusList.isEmpty()) {
+        final boolean allLoaded = mAdapter.setStatusIntoList(statusList, buttonID, 200);
+        if (allLoaded) {
             removeLoadButton(buttonID);
-            return;
+        } else {
+            changeLoadButtonText(buttonID, false);
         }
-
-        int buttonPosition = mAdapter.getLoadButtonPosition(buttonID);
-
-        for (Status status : statusList) {
-            mAdapter.insert(status.getId(), buttonPosition++);
-        }
-
-        if (statusList.size() < 200) {
-            removeLoadButton(buttonID);
-            return;
-        }
-
-        changeLoadButtonText(buttonID, false);
     }
 
 

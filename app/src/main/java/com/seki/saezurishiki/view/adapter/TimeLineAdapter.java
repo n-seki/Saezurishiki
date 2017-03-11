@@ -533,4 +533,20 @@ public class TimeLineAdapter extends ArrayAdapter<AdapterItem> {
     }
 
 
+    public boolean setStatusIntoList(List<Status> list, long buttonID, int maxSize) {
+        if (list.isEmpty()) {
+            return true;
+        }
+
+        int buttonPosition = getLoadButtonPosition(buttonID);
+
+        for (Status status : list) {
+            insert(status.getId(), buttonPosition++);
+        }
+
+        return list.size() < maxSize;
+
+    }
+
+
 }
