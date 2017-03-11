@@ -17,54 +17,52 @@ public class DialogSelectAction<T> {
 
     public final T targetItem;
     public final Object item;
-    public final Class<?> clazz;
     public final int action;
 
-    public DialogSelectAction(T targetItem, Object item, Class<?> clazz, int action) {
+    DialogSelectAction(T targetItem, Object item, int action) {
         this.targetItem = targetItem;
         this.item = item;
-        this.clazz = clazz;
         this.action = action;
     }
 
 
     public static DialogSelectAction showBiography(TweetEntity tweet) {
-        return new DialogSelectAction<>(tweet, tweet.user.getId(), Long.class, BIOGRAPHY);
+        return new DialogSelectAction<>(tweet, tweet.user.getId(), BIOGRAPHY);
     }
 
     public static DialogSelectAction showBiography(TweetEntity tweet, long userId) {
-        return new DialogSelectAction<>(tweet, userId, Long.class, BIOGRAPHY);
+        return new DialogSelectAction<>(tweet, userId, BIOGRAPHY);
     }
 
     public static DialogSelectAction showTweet(TweetEntity tweet) {
-        return new DialogSelectAction<>(tweet, tweet.getId(), Long.class, SHOW_TWEET);
+        return new DialogSelectAction<>(tweet, tweet.getId(), SHOW_TWEET);
     }
 
     public static DialogSelectAction openURL(TweetEntity tweet, String url) {
-        return new DialogSelectAction<>(tweet, url, String.class, URL);
+        return new DialogSelectAction<>(tweet, url, URL);
     }
 
     public static DialogSelectAction mediaURL(TweetEntity tweet, String mediaUrl) {
-        return new DialogSelectAction<>(tweet, mediaUrl, String.class, MEDIA);
+        return new DialogSelectAction<>(tweet, mediaUrl, MEDIA);
     }
 
     public static DialogSelectAction delete(TweetEntity tweet) {
-        return new DialogSelectAction<>(tweet, tweet.getId(), Long.class, DELETE);
+        return new DialogSelectAction<>(tweet, tweet.getId(), DELETE);
     }
 
     public static DialogSelectAction retweet(TweetEntity tweet) {
-        return new DialogSelectAction<>(tweet, tweet.getId(), Long.class, RE_TWEET);
+        return new DialogSelectAction<>(tweet, tweet.getId(), RE_TWEET);
     }
 
     public static DialogSelectAction unRetweet(TweetEntity tweet) {
-        return new DialogSelectAction<>(tweet, tweet.getId(), Long.class, UN_RE_TWEET);
+        return new DialogSelectAction<>(tweet, tweet.getId(), UN_RE_TWEET);
     }
 
     public static DialogSelectAction favorite(TweetEntity tweet) {
-        return new DialogSelectAction<>(tweet, tweet.getId(), Long.class, FAVORITE);
+        return new DialogSelectAction<>(tweet, tweet.getId(), FAVORITE);
     }
 
     public static DialogSelectAction unFavorite(TweetEntity tweet) {
-        return new DialogSelectAction<>(tweet, tweet.getId(), Long.class, UN_FAVORITE);
+        return new DialogSelectAction<>(tweet, tweet.getId(), UN_FAVORITE);
     }
 }
