@@ -315,10 +315,6 @@ public abstract class TweetListFragment extends Fragment
     }
 
 
-    protected void createFavorite(long statusID) {
-        this.createFavorite(twitterAccount.getRepository().getStatus(statusID));
-    }
-
 
     /**
      * 非同期でUnFavoriteを行う
@@ -327,11 +323,6 @@ public abstract class TweetListFragment extends Fragment
      */
     protected void destroyFavorite(TweetEntity tweet) {
         this.presenter.destroyFavorite(tweet);
-    }
-
-
-    protected void destroyFavorite(long statusID) {
-        this.destroyFavorite(twitterAccount.getRepository().getStatus(statusID));
     }
 
 
@@ -344,16 +335,6 @@ public abstract class TweetListFragment extends Fragment
         this.fragmentControl.requestShowFragment(conversation);
     }
 
-
-    /**
-     * BiographyActivity表示依頼
-     * 保持しているStatusがリツイートの場合にはリツイートされたStatusのUser情報表示
-     * を依頼する
-     */
-    private void displayBiography(TweetEntity status, int position) {
-        List<Long> users = StatusUtil.getAllUserMentionId(status, this.twitterAccount.getLoginUserId());
-        this.fragmentControl.requestShowUser(users.get(position));
-    }
 
 
     @SuppressWarnings("unchecked")
@@ -388,11 +369,6 @@ public abstract class TweetListFragment extends Fragment
         mAdapter.remove(tweet.getId());
     }
 
-
-
-    protected void deletePost(long tweetID) {
-        this.presenter.deleteTweet(tweetID);
-    }
 
 
     /**
