@@ -52,25 +52,25 @@ public class ReplyTimeLineFragment extends UserStreamTimeLineFragment {
 
 
 
-    @Override
-    public void onStatus(final Status status) {
-        if (status.getInReplyToUserId()!= this.twitterAccount.getLoginUserId()) {
-            return;
-        }
-        super.onStatus(status);
-
-        if (!mListTopVisible || mIsLoading) {
-            mSavedStatuses.add(status.getId());
-            //notifyUnreadItem(true);
-            this.tabViewControl.requestChangeTabState(this);
-            return;
-        }
-
-        mAdapter.insert(status.getId(), 0);
-        if (!this.tabViewControl.isCurrentSelect(this)) {
-            this.tabViewControl.requestChangeTabState(this);
-        }
-    }
+//    @Override
+//    public void onStatus(final Status status) {
+//        if (status.getInReplyToUserId()!= this.twitterAccount.getLoginUserId()) {
+//            return;
+//        }
+//        super.onStatus(status);
+//
+//        if (!mListTopVisible || mIsLoading) {
+//            mSavedStatuses.add(status.getId());
+//            //notifyUnreadItem(true);
+//            this.tabViewControl.requestChangeTabState(this);
+//            return;
+//        }
+//
+//        mAdapter.insert(status.getId(), 0);
+//        if (!this.tabViewControl.isCurrentSelect(this)) {
+//            this.tabViewControl.requestChangeTabState(this);
+//        }
+//    }
 
     @Override
     protected AsyncTwitterTask.AsyncTask<ResponseList<Status>> getSwipeTask() {

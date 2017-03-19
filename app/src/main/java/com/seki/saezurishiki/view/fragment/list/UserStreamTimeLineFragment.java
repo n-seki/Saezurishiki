@@ -321,22 +321,22 @@ public abstract class UserStreamTimeLineFragment extends TimeLineFragment
     abstract void releaseSavedStatus();
 
 
-    @Override
-    public void onStatus(final Status status){
-
-        isNeedSwipeLoad = false; //UserStreamの更新があれば無条件にSwipeロードを無効
-
-        //AdapterにStatusがない場合はなにもしない
-        if (mAdapter.getCount() == 0) return;
-
-        //listの先頭Statusと同一だったらなにもしない
-        if (status.getId() == getListTopStatusID()) return;
-
-        //LoadButtonが不要だったら何もしない
-        if (!isNeedLoadButton) return;
-
-        addLoadButton();
-    }
+//    @Override
+//    public void onStatus(final Status status){
+//
+//        isNeedSwipeLoad = false; //UserStreamの更新があれば無条件にSwipeロードを無効
+//
+//        //AdapterにStatusがない場合はなにもしない
+//        if (mAdapter.getCount() == 0) return;
+//
+//        //listの先頭Statusと同一だったらなにもしない
+//        if (status.getId() == getListTopStatusID()) return;
+//
+//        //LoadButtonが不要だったら何もしない
+//        if (!isNeedLoadButton) return;
+//
+//        addLoadButton();
+//    }
 
 
     boolean isNeedLoadButton = false;

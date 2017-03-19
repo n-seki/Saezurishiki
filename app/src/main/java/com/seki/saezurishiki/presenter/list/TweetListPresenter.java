@@ -13,8 +13,11 @@ import com.seki.saezurishiki.network.twitter.AsyncTwitterTask;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
 import com.seki.saezurishiki.network.twitter.TwitterTaskResult;
 import com.seki.saezurishiki.network.twitter.TwitterWrapper;
+import com.seki.saezurishiki.network.twitter.streamListener.StatusUserStreamListener;
 import com.seki.saezurishiki.view.fragment.dialog.adapter.DialogSelectAction;
 
+import twitter4j.Status;
+import twitter4j.StatusDeletionNotice;
 
 
 public class TweetListPresenter implements ModelObserver {
@@ -29,10 +32,6 @@ public class TweetListPresenter implements ModelObserver {
 
     public interface TweetListView {
         void updateTweet(TweetEntity tweetEntity);
-        //void reTweet(TweetEntity tweetEntity);
-        //void deleteTweet(TweetEntity tweet);
-        //void showTweet(TweetEntity tweet);
-        //void loadTweets(List<TweetEntity> list);
         void completeDeleteTweet(TweetEntity tweet);
         void completeReTweet(TweetEntity tweet);
         void errorProcess(Exception e);

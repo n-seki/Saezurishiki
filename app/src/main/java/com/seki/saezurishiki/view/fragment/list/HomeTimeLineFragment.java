@@ -65,20 +65,20 @@ public class HomeTimeLineFragment extends UserStreamTimeLineFragment {
     }
 
 
-    @Override
-    public void onStatus(final Status status) {
-        super.onStatus(status);
-        if (!mListTopVisible || mIsLoading) {
-            mSavedStatuses.add(status.getId());
-            this.tabViewControl.requestChangeTabState(this);
-            return;
-        }
-
-        mAdapter.insert(status.getId(), 0);
-        if (!this.tabViewControl.isCurrentSelect(this)) {
-            this.tabViewControl.requestChangeTabState(this);
-        }
-    }
+//    @Override
+//    public void onStatus(final Status status) {
+//        super.onStatus(status);
+//        if (!mListTopVisible || mIsLoading) {
+//            mSavedStatuses.add(status.getId());
+//            this.tabViewControl.requestChangeTabState(this);
+//            return;
+//        }
+//
+//        mAdapter.insert(status.getId(), 0);
+//        if (!this.tabViewControl.isCurrentSelect(this)) {
+//            this.tabViewControl.requestChangeTabState(this);
+//        }
+//    }
 
     @Override
     protected AsyncTwitterTask.AsyncTask<ResponseList<Status>> getSwipeTask() {

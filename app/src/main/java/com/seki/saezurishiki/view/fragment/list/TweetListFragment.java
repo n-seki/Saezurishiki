@@ -56,7 +56,6 @@ import twitter4j.User;
  */
 public abstract class TweetListFragment extends Fragment
         implements
-        StatusUserStreamListener,
         TweetSelectDialog.DialogCallback,
         TweetLongClickDialog.LongClickDialogListener,
         TweetListPresenter.TweetListView {
@@ -134,7 +133,6 @@ public abstract class TweetListFragment extends Fragment
         super.onCreate(savedInstanceState);
         SaezurishikiApp app = (SaezurishikiApp)getActivity().getApplication();
         this.twitterAccount = app.getTwitterAccount();
-        this.twitterAccount.addStreamListener(this);
         setRetainInstance(true);
 
         this.presenter = new TweetListPresenter(this, null, this.twitterAccount);
@@ -181,7 +179,6 @@ public abstract class TweetListFragment extends Fragment
     @Override
     public void onDestroy() {
         mAdapter.clear();
-        this.twitterAccount.removeListener(this);
         this.fragmentControl = null;
         super.onDestroy();
     }
@@ -421,35 +418,35 @@ public abstract class TweetListFragment extends Fragment
     }
 
 
-    @Override
-    public void onDeletionNotice(final StatusDeletionNotice deletionNotice) {
-        if (deletionNotice.getUserId() == this.twitterAccount.getLoginUserId()) {
-            mAdapter.remove(deletionNotice.getStatusId());
-            return;
-        }
-
-        this.updateTweet(deletionNotice.getStatusId());
-    }
-
-    @Override
-    public void onStatus(final Status status) {
-        //do nothing
-    }
-
-    @Override
-    public void onFavorite(User sourceUser, User targetUser, Status status) {
-        if (sourceUser.getId() == twitterAccount.getLoginUserId()) {
-            return;
-        }
-        updateTweet(status.getId());
-    }
-    @Override
-    public void onUnFavorite(User sourceUser, User targetUser, Status status) {
-        if (sourceUser.getId() == twitterAccount.getLoginUserId()) {
-            return;
-        }
-        updateTweet(status.getId());
-    }
+//    @Override
+//    public void onDeletionNotice(final StatusDeletionNotice deletionNotice) {
+//        if (deletionNotice.getUserId() == this.twitterAccount.getLoginUserId()) {
+//            mAdapter.remove(deletionNotice.getStatusId());
+//            return;
+//        }
+//
+//        this.updateTweet(deletionNotice.getStatusId());
+//    }
+//
+//    @Override
+//    public void onStatus(final Status status) {
+//        //do nothing
+//    }
+//
+//    @Override
+//    public void onFavorite(User sourceUser, User targetUser, Status status) {
+//        if (sourceUser.getId() == twitterAccount.getLoginUserId()) {
+//            return;
+//        }
+//        updateTweet(status.getId());
+//    }
+//    @Override
+//    public void onUnFavorite(User sourceUser, User targetUser, Status status) {
+//        if (sourceUser.getId() == twitterAccount.getLoginUserId()) {
+//            return;
+//        }
+//        updateTweet(status.getId());
+//    }
 
 
     public synchronized void updateTweet(long id) {
