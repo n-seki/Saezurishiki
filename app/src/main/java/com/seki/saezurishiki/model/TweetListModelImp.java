@@ -8,16 +8,14 @@ import twitter4j.StatusDeletionNotice;
 import twitter4j.User;
 
 
-class TweetListModelImp extends ModelBaseImp implements TweetListModel {
+abstract class TweetListModelImp extends ModelBaseImp implements TweetListModel {
 
     TweetListModelImp(Repository repository) {
         super(repository);
     }
 
     @Override
-    public void request(Paging paging) {
-
-    }
+    abstract public void request(Paging paging);
 
     @Override
     public void onStatus(Status tweet) {
