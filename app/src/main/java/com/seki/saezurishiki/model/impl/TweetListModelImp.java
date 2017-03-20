@@ -1,6 +1,9 @@
 package com.seki.saezurishiki.model.impl;
 
+import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.model.TweetListModel;
+import com.seki.saezurishiki.model.adapter.ModelActionType;
+import com.seki.saezurishiki.model.adapter.ModelMessage;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
 
 import twitter4j.Paging;
@@ -19,8 +22,11 @@ abstract class TweetListModelImp extends ModelBaseImp implements TweetListModel 
     abstract public void request(Paging paging);
 
     @Override
-    public void onStatus(Status tweet) {
-
+    public void onStatus(Status status) {
+        final TweetEntity tweet = this.twitterAccount.getRepository().map(status);
+        this.twitterAccount.getRepository().addStatus(tweet);
+        final ModelMessage message = ModelMessage.of(ModelActionType.LOAD_TWEET, tweet);
+        this.observable.notifyObserver(message);
     }
 
     @Override
