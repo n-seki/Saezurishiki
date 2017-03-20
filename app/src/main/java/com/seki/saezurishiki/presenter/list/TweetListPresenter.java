@@ -11,7 +11,6 @@ import com.seki.saezurishiki.model.util.ModelObservable;
 import com.seki.saezurishiki.model.util.ModelObserver;
 import com.seki.saezurishiki.network.twitter.AsyncTwitterTask;
 import com.seki.saezurishiki.network.twitter.TwitterTaskResult;
-import com.seki.saezurishiki.network.twitter.TwitterWrapper;
 import com.seki.saezurishiki.view.fragment.dialog.adapter.DialogSelectAction;
 
 import java.util.List;
@@ -22,8 +21,6 @@ public class TweetListPresenter implements ModelObserver {
     private final TweetListView view;
     private final TweetListModel tweetListModel;
     private final UserEntity listOwner;
-
-    private TwitterWrapper twitterWrapper;
 
     public interface TweetListView {
         void updateTweet(TweetEntity tweetEntity);
@@ -64,72 +61,20 @@ public class TweetListPresenter implements ModelObserver {
     }
 
 
-    //Status → Entityの変換が必要
     public void createFavorite(TweetEntity tweet) {
-        AsyncTwitterTask.AfterTask<TweetEntity> afterTask = new AsyncTwitterTask.AfterTask<TweetEntity>() {
-            @Override
-            public void onLoadFinish(TwitterTaskResult<TweetEntity> result) {
-                if (result.isException()) {
-                    view.errorProcess(result.getException());
-                    return;
-                }
-
-                view.updateTweet(result.getResult());
-            }
-        };
-
-        this.twitterWrapper.createFavorite(tweet.getId(), afterTask);
     }
 
-    //Status → Entityの変換が必要
+
     public void destroyFavorite(TweetEntity tweet) {
-        AsyncTwitterTask.AfterTask<TweetEntity> afterTask = new AsyncTwitterTask.AfterTask<TweetEntity>() {
-            @Override
-            public void onLoadFinish(TwitterTaskResult<TweetEntity> result) {
-                if (result.isException()) {
-                    view.errorProcess(result.getException());
-                    return;
-                }
-
-                view.updateTweet(result.getResult());
-            }
-        };
-
-        this.twitterWrapper.unFavorite(tweet.getId(), afterTask);
     }
 
-    //Status → Entityの変換が必要
+
     public void deleteTweet(long tweetID) {
-        AsyncTwitterTask.AfterTask<TweetEntity> afterTask = new AsyncTwitterTask.AfterTask<TweetEntity>() {
-            @Override
-            public void onLoadFinish(TwitterTaskResult<TweetEntity> result) {
-                if (result.isException()) {
-                    view.errorProcess(result.getException());
-                    return;
-                }
-
-                view.completeDeleteTweet(result.getResult());
-            }
-        };
-
-        this.twitterWrapper.destroyStatus(tweetID, afterTask);
     }
 
-    //Status → Entityの変換が必要
+
     public void reTweet(long tweetID) {
-        AsyncTwitterTask.AfterTask<TweetEntity> afterTask = new AsyncTwitterTask.AfterTask<TweetEntity>() {
-            @Override
-            public void onLoadFinish(TwitterTaskResult<TweetEntity> result) {
-                if (result.isException()) {
-                    view.errorProcess(result.getException());
-                    return;
-                }
 
-                view.completeReTweet(result.getResult());
-            }
-        };
-
-        this.twitterWrapper.createReTweet(tweetID, afterTask);
     }
 
 
