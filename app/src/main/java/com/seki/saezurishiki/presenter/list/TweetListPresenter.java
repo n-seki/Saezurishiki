@@ -21,7 +21,6 @@ import java.util.List;
 public class TweetListPresenter implements ModelObserver {
 
     private final TweetListView view;
-    private final TweetModel tweetModel;
     private final TweetListModel tweetListModel;
     private final UserEntity listOwner;
 
@@ -38,19 +37,16 @@ public class TweetListPresenter implements ModelObserver {
 
     public void onResume() {
         this.tweetListModel.addObserver(this);
-        this.tweetModel.addObserver(this);
     }
 
     public void onPause() {
         this.tweetListModel.removeObserver(this);
-        this.tweetModel.removeObserver(this);
     }
 
-    public TweetListPresenter(TweetListView view, UserEntity listOwner, TweetListModel listModel, TweetModel tweetModel) {
+    public TweetListPresenter(TweetListView view, UserEntity listOwner, TweetListModel listModel) {
         this.view = view;
         this.listOwner = listOwner;
         this.tweetListModel = listModel;
-        this.tweetModel = tweetModel;
 
         this.view.setPresenter(this);
     }
@@ -139,7 +135,6 @@ public class TweetListPresenter implements ModelObserver {
 
 
     public void onDeleteTweet(TweetEntity tweetEntity) {
-        this.tweetModel.delete(tweetEntity);
     }
 
 
