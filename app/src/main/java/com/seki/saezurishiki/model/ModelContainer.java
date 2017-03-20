@@ -11,7 +11,6 @@ public final class ModelContainer {
 
     public static void initialize(Repository repository) {
         tweetModelImp = new TweetModelImp(repository);
-        getTweetLitModel = new TweetListModelImp(repository);
     }
 
     public static TweetModel getTweetModel() {
