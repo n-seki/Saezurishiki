@@ -1,5 +1,6 @@
 package com.seki.saezurishiki.model;
 
+import com.seki.saezurishiki.model.impl.TweetModelImp;
 import com.seki.saezurishiki.repository.Repository;
 
 public final class ModelContainer {

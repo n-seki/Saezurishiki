@@ -1,5 +1,6 @@
-package com.seki.saezurishiki.model;
+package com.seki.saezurishiki.model.impl;
 
+import com.seki.saezurishiki.model.TweetListModel;
 import com.seki.saezurishiki.repository.Repository;
 
 import twitter4j.Paging;

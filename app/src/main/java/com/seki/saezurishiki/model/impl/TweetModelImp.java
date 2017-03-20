@@ -1,8 +1,10 @@
-package com.seki.saezurishiki.model;
+package com.seki.saezurishiki.model.impl;
 
 import com.seki.saezurishiki.entity.TweetEntity;
+import com.seki.saezurishiki.model.TweetModel;
 import com.seki.saezurishiki.model.adapter.ModelActionType;
 import com.seki.saezurishiki.model.adapter.ModelMessage;
+import com.seki.saezurishiki.model.impl.ModelBaseImp;
 import com.seki.saezurishiki.repository.Repository;
 
 
