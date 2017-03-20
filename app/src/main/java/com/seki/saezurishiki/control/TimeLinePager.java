@@ -1,5 +1,6 @@
 package com.seki.saezurishiki.control;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -18,8 +19,11 @@ public class TimeLinePager extends FragmentPagerAdapter {
     public static final int POSITION_REPLY = 1;
     public static final int POSITION_MESSAGE = 2;
 
-    public TimeLinePager(FragmentManager fragmentManager) {
+    final private Context context;
+
+    public TimeLinePager(FragmentManager fragmentManager, Context context) {
         super(fragmentManager);
+        this.context = context;
     }
 
     @Override
