@@ -15,14 +15,10 @@ import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 
-public class HomeTweetListModel extends TweetListModelImp {
+class HomeTweetListModel extends TweetListModelImp {
 
     HomeTweetListModel(TwitterAccount twitterAccount) {
         super(twitterAccount);
-    }
-
-    public static TweetListModel getInstance(TwitterAccount account) {
-        return new HomeTweetListModel(account);
     }
 
     @Override
