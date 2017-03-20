@@ -1,8 +1,40 @@
 package com.seki.saezurishiki.model.impl;
 
-/**
- * Created by seki on 2017/03/20.
- */
 
-public class HomeTweetListModel {
+import com.seki.saezurishiki.model.adapter.ModelActionType;
+import com.seki.saezurishiki.model.adapter.ModelMessage;
+import com.seki.saezurishiki.network.twitter.TwitterAccount;
+
+import java.util.List;
+import java.util.concurrent.RunnableFuture;
+
+import twitter4j.Paging;
+import twitter4j.ResponseList;
+import twitter4j.Status;
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+
+public class HomeTweetListModel extends TweetListModelImp {
+
+    HomeTweetListModel(TwitterAccount twitterAccount) {
+        super(twitterAccount);
+    }
+
+    @Override
+    public void request(final Paging paging) {
+        final Twitter twitter = this.twitterAccount.twitter;
+        this.executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    final ResponseList<Status> result = twitter.getHomeTimeline(paging);
+                    final ModelMessage message = ModelMessage.of(ModelActionType.LOAD_TWEETS, result);
+                    observable.notifyObserver(message);
+                } catch (TwitterException e) {
+                    final ModelMessage error = ModelMessage.error(e);
+                    observable.notifyObserver(error);
+                }
+            }
+        });
+    }
 }
