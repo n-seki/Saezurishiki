@@ -358,7 +358,7 @@ public abstract class TweetListFragment extends Fragment
 
 
     protected void reTweet(TweetEntity tweet) {
-        this.presenter.reTweet(tweet.getId());
+        this.presenter.reTweet(tweet);
     }
 
 

@@ -9,8 +9,6 @@ import com.seki.saezurishiki.model.TweetListModel;
 import com.seki.saezurishiki.model.adapter.ModelMessage;
 import com.seki.saezurishiki.model.util.ModelObservable;
 import com.seki.saezurishiki.model.util.ModelObserver;
-import com.seki.saezurishiki.network.twitter.AsyncTwitterTask;
-import com.seki.saezurishiki.network.twitter.TwitterTaskResult;
 import com.seki.saezurishiki.view.fragment.dialog.adapter.DialogSelectAction;
 
 import java.util.List;
@@ -48,7 +46,7 @@ public class TweetListPresenter implements ModelObserver {
     }
 
     public void onClickRetweetButton(TweetEntity tweet) {
-        reTweet(tweet.getId());
+        reTweet(tweet);
     }
 
 
@@ -62,38 +60,42 @@ public class TweetListPresenter implements ModelObserver {
 
 
     public void createFavorite(TweetEntity tweet) {
+        this.tweetListModel.favorite(tweet);
     }
 
 
     public void destroyFavorite(TweetEntity tweet) {
+        this.tweetListModel.unFavorite(tweet);
     }
 
 
-    public void deleteTweet(long tweetID) {
+    public void deleteTweet(TweetEntity tweet) {
+        this.tweetListModel.delete(tweet);
     }
 
 
-    public void reTweet(long tweetID) {
-
+    public void reTweet(TweetEntity tweet) {
+        this.tweetListModel.reTweet(tweet);
     }
 
 
-    public void onDeleteTweet(TweetEntity tweetEntity) {
+    public void onDeleteTweet(TweetEntity tweet) {
+        this.view.completeDeleteTweet(tweet);
     }
 
 
     public void onClickLongClickDialog(DialogSelectAction<TweetEntity> selectedItem) {
         switch (selectedItem.action) {
             case DialogSelectAction.DELETE :
-                this.deleteTweet(selectedItem.targetItem.getId());
+                this.deleteTweet(selectedItem.targetItem);
                 break;
 
             case DialogSelectAction.RE_TWEET:
-                this.reTweet(selectedItem.targetItem.getId());
+                this.reTweet(selectedItem.targetItem);
                 break;
 
             case DialogSelectAction.UN_RE_TWEET:
-                this.deleteTweet(selectedItem.targetItem.getId());
+                this.deleteTweet(selectedItem.targetItem);
                 break;
 
             case DialogSelectAction.FAVORITE:
