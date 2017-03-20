@@ -6,6 +6,7 @@ package com.seki.saezurishiki.model.adapter;
 
 public enum ModelActionType {
     LOAD_TWEET,
+    LOAD_REPLY,
     LOAD_TWEETS,
     LOAD_FAVORITE,
 
