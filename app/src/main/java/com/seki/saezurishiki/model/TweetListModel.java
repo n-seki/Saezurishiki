@@ -1,6 +1,7 @@
 package com.seki.saezurishiki.model;
 
 
+import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.model.util.ModelObserver;
 import com.seki.saezurishiki.network.twitter.streamListener.StatusUserStreamListener;
 
@@ -12,6 +13,10 @@ import twitter4j.User;
 public interface TweetListModel extends ModelBase, StatusUserStreamListener {
 
     void request(Paging paging);
+    void favorite(TweetEntity tweetEntity);
+    void unFavorite(TweetEntity tweetEntity);
+    void reTweet(TweetEntity tweetEntity);
+    void delete(TweetEntity tweetEntity);
 
     @Override
     void addObserver(ModelObserver observer);

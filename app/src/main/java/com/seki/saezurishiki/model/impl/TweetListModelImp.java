@@ -45,4 +45,24 @@ abstract class TweetListModelImp extends ModelBaseImp implements TweetListModel 
 
     }
 
+    @Override
+    public void favorite(TweetEntity tweetEntity) {
+
+    }
+
+    @Override
+    public void unFavorite(TweetEntity tweetEntity) {
+
+    }
+
+    @Override
+    public void reTweet(TweetEntity tweetEntity) {
+
+    }
+
+    @Override
+    public void delete(TweetEntity tweetEntity) {
+
+    }
+
 }
