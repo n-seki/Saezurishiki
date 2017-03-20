@@ -23,7 +23,6 @@ public class TweetListPresenter implements ModelObserver {
 
     private final TweetListView view;
     private final TweetModel tweetModel;
-    private final TwitterAccount twitterAccount;
     private final TweetListModel tweetListModel;
     private final UserEntity listOwner;
 
@@ -38,6 +37,7 @@ public class TweetListPresenter implements ModelObserver {
     }
 
     public void onResume() {
+        this.tweetListModel.addObserver(this);
         this.tweetModel.addObserver(this);
     }
 
@@ -45,8 +45,14 @@ public class TweetListPresenter implements ModelObserver {
         this.view = view;
         this.listOwner = listOwner;
         this.tweetModel = null;
-        this.tweetListModel = null;
-        this.twitterAccount = twitterAccount;
+        this.tweetListModel = null;;
+    }
+
+    public TweetListPresenter(TweetListView view, UserEntity listOwner, TweetListModel listModel, TweetModel tweetModel) {
+        this.view = view;
+        this.listOwner = listOwner;
+        this.tweetListModel = listModel;
+        this.tweetModel = tweetModel;
     }
 
     //TODO
