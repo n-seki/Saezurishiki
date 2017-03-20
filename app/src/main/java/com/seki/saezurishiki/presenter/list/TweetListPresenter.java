@@ -198,11 +198,4 @@ public class TweetListPresenter implements ModelObserver {
         }
     }
 
-
-    //TODO
-    public void setTwitterWrapper(TwitterWrapper twitterWrapper) {
-        this.twitterWrapper = twitterWrapper;
-    }
-
-
 }
