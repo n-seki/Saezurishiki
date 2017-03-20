@@ -3,7 +3,6 @@ package com.seki.saezurishiki.presenter.list;
 
 import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.entity.UserEntity;
-import com.seki.saezurishiki.model.ModelContainer;
 import com.seki.saezurishiki.model.TweetListModel;
 import com.seki.saezurishiki.model.adapter.ModelMessage;
 import com.seki.saezurishiki.model.util.ModelObservable;
@@ -40,8 +39,8 @@ public class TweetListPresenter implements ModelObserver {
     public TweetListPresenter(TweetListView view, UserEntity listOwner, TwitterAccount twitterAccount) {
         this.view = view;
         this.listOwner = listOwner;
-        this.tweetModel = ModelContainer.getTweetModel();
-        this.tweetListModel = ModelContainer.getTweetListModel();
+        this.tweetModel = null;
+        this.tweetListModel = null;
         this.twitterAccount = twitterAccount;
     }
 
