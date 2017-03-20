@@ -2,7 +2,6 @@ package com.seki.saezurishiki.model.impl;
 
 
 import com.seki.saezurishiki.entity.TweetEntity;
-import com.seki.saezurishiki.model.TweetListModel;
 import com.seki.saezurishiki.model.adapter.ModelActionType;
 import com.seki.saezurishiki.model.adapter.ModelMessage;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
