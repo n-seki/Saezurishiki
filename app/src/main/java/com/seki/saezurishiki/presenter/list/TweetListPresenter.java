@@ -1,6 +1,8 @@
 package com.seki.saezurishiki.presenter.list;
 
 
+import android.os.Handler;
+
 import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.entity.UserEntity;
 import com.seki.saezurishiki.model.TweetListModel;
@@ -170,8 +172,13 @@ public class TweetListPresenter implements ModelObserver {
 
 
     @Override
-    public void update(ModelObservable observable, ModelMessage message) {
-        this.dispatch(message);
+    public void update(ModelObservable observable, final ModelMessage message) {
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                dispatch(message);
+            }
+        });
     }
 
     @SuppressWarnings("unchecked")
