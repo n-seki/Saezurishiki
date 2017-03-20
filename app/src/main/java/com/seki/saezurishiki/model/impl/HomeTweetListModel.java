@@ -1,12 +1,12 @@
 package com.seki.saezurishiki.model.impl;
 
 
+import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.model.adapter.ModelActionType;
 import com.seki.saezurishiki.model.adapter.ModelMessage;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
 
 import java.util.List;
-import java.util.concurrent.RunnableFuture;
 
 import twitter4j.Paging;
 import twitter4j.ResponseList;
@@ -28,7 +28,8 @@ public class HomeTweetListModel extends TweetListModelImp {
             public void run() {
                 try {
                     final ResponseList<Status> result = twitter.getHomeTimeline(paging);
-                    final ModelMessage message = ModelMessage.of(ModelActionType.LOAD_TWEETS, result);
+                    final List<TweetEntity> tweets = twitterAccount.getRepository().map(result);
+                    final ModelMessage message = ModelMessage.of(ModelActionType.LOAD_TWEETS, tweets);
                     observable.notifyObserver(message);
                 } catch (TwitterException e) {
                     final ModelMessage error = ModelMessage.error(e);

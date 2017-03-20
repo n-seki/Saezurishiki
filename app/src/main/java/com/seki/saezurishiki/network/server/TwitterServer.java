@@ -208,4 +208,13 @@ public class TwitterServer  {
     public TweetEntity map(Status status) {
         return this.mapper.map(status);
     }
+
+    public List<TweetEntity> map(ResponseList<Status> statuses) {
+        final List<TweetEntity> tweets = new ArrayList<>(statuses.size());
+        for (final Status status : statuses) {
+            tweets.add(mapper.map(status));
+        }
+
+        return tweets;
+    }
 }
