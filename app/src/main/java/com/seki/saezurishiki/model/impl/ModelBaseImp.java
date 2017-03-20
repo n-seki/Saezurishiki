@@ -9,13 +9,13 @@ import com.seki.saezurishiki.repository.Repository;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-abstract public class ModelBaseImp implements ModelBase {
+abstract class ModelBaseImp implements ModelBase {
 
     final Repository repository;
     final ModelObservable observable;
     final Executor executor = Executors.newCachedThreadPool();
 
-    protected ModelBaseImp(Repository repository) {
+    ModelBaseImp(Repository repository) {
         this.repository = repository;
         this.observable = new ModelObservable();
     }
