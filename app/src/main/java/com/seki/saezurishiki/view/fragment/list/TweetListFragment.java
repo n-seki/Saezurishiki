@@ -473,6 +473,13 @@ public abstract class TweetListFragment extends Fragment
     }
 
     @Override
+    public void loadTweets(List<TweetEntity> tweets) {
+        for (TweetEntity tweet : tweets) {
+            mAdapter.insert(tweet.getId(), 0);
+        }
+    }
+
+    @Override
     public void errorProcess(Exception e) {
         if (e instanceof TwitterException) {
             TwitterError.showText(getContext(), (TwitterException) e);
