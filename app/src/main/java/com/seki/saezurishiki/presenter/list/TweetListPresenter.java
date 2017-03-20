@@ -41,6 +41,11 @@ public class TweetListPresenter implements ModelObserver {
         this.tweetModel.addObserver(this);
     }
 
+    public void onPause() {
+        this.tweetListModel.removeObserver(this);
+        this.tweetModel.removeObserver(this);
+    }
+
     public TweetListPresenter(TweetListView view, UserEntity listOwner, TwitterAccount twitterAccount) {
         this.view = view;
         this.listOwner = listOwner;
