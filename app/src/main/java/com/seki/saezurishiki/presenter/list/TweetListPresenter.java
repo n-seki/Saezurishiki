@@ -11,7 +11,6 @@ import com.seki.saezurishiki.model.util.ModelObservable;
 import com.seki.saezurishiki.model.util.ModelObserver;
 import com.seki.saezurishiki.model.TweetModel;
 import com.seki.saezurishiki.network.twitter.AsyncTwitterTask;
-import com.seki.saezurishiki.network.twitter.TwitterAccount;
 import com.seki.saezurishiki.network.twitter.TwitterTaskResult;
 import com.seki.saezurishiki.network.twitter.TwitterWrapper;
 import com.seki.saezurishiki.view.fragment.dialog.adapter.DialogSelectAction;
@@ -33,6 +32,7 @@ public class TweetListPresenter implements ModelObserver {
         void loadTweets(List<TweetEntity> tweets);
         void completeDeleteTweet(TweetEntity tweet);
         void completeReTweet(TweetEntity tweet);
+        void setPresenter(TweetListPresenter presenter);
         void errorProcess(Exception e);
     }
 
@@ -51,6 +51,8 @@ public class TweetListPresenter implements ModelObserver {
         this.listOwner = listOwner;
         this.tweetListModel = listModel;
         this.tweetModel = tweetModel;
+
+        this.view.setPresenter(this);
     }
 
     public void onClickRetweetButton(TweetEntity tweet) {

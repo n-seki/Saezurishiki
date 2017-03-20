@@ -9,10 +9,14 @@ import com.seki.saezurishiki.network.twitter.TwitterAccount;
 import com.seki.saezurishiki.repository.Repository;
 
 
-class TweetModelImp extends ModelBaseImp implements TweetModel {
+public class TweetModelImp extends ModelBaseImp implements TweetModel {
 
     TweetModelImp(TwitterAccount twitterAccount) {
         super(twitterAccount);
+    }
+
+    public static TweetModel getInstance(TwitterAccount account) {
+        return new TweetModelImp(account);
     }
 
 

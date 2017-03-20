@@ -154,8 +154,6 @@ public abstract class TweetListFragment extends Fragment
         mAdapter = new TimeLineAdapter(getActivity(), R.layout.tweet_layout_with_picture, listener, twitterAccount);
         mListView.setAdapter(mAdapter);
         mTwitterWrapper = new TwitterWrapper(getActivity(), getLoaderManager(), this.twitterAccount);
-
-        this.presenter.setTwitterWrapper(this.mTwitterWrapper);
     }
 
 
@@ -166,10 +164,17 @@ public abstract class TweetListFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
+        this.presenter.onResume();
 
         if (mAdapter.isEmpty()) {
             this.loadTimeLine();
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        this.presenter.onPause();
     }
 
 
@@ -474,6 +479,11 @@ public abstract class TweetListFragment extends Fragment
         for (TweetEntity tweet : tweets) {
             mAdapter.insert(tweet.getId(), 0);
         }
+    }
+
+    @Override
+    public void setPresenter(TweetListPresenter presenter) {
+        this.presenter = presenter;
     }
 
     @Override

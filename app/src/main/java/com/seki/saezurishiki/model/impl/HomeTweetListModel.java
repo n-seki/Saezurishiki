@@ -2,6 +2,7 @@ package com.seki.saezurishiki.model.impl;
 
 
 import com.seki.saezurishiki.entity.TweetEntity;
+import com.seki.saezurishiki.model.TweetListModel;
 import com.seki.saezurishiki.model.adapter.ModelActionType;
 import com.seki.saezurishiki.model.adapter.ModelMessage;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
@@ -18,6 +19,10 @@ public class HomeTweetListModel extends TweetListModelImp {
 
     HomeTweetListModel(TwitterAccount twitterAccount) {
         super(twitterAccount);
+    }
+
+    public static TweetListModel getInstance(TwitterAccount account) {
+        return new HomeTweetListModel(account);
     }
 
     @Override

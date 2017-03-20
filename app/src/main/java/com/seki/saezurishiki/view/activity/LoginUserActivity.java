@@ -231,7 +231,7 @@ public class LoginUserActivity extends    AppCompatActivity
 
 
     private void setupTimeLine(int theme) {
-        TimeLinePager pagerAdapter = new TimeLinePager(getSupportFragmentManager(), this);
+        TimeLinePager pagerAdapter = new TimeLinePager(getSupportFragmentManager());
 
         mViewPager = (ViewPager) LoginUserActivity.this.findViewById(R.id.pager);
         mViewPager.addOnPageChangeListener(LoginUserActivity.this);
