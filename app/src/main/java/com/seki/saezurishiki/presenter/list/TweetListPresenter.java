@@ -46,25 +46,12 @@ public class TweetListPresenter implements ModelObserver {
         this.tweetModel.removeObserver(this);
     }
 
-    public TweetListPresenter(TweetListView view, UserEntity listOwner, TwitterAccount twitterAccount) {
-        this.view = view;
-        this.listOwner = listOwner;
-        this.tweetModel = null;
-        this.tweetListModel = null;;
-    }
-
     public TweetListPresenter(TweetListView view, UserEntity listOwner, TweetListModel listModel, TweetModel tweetModel) {
         this.view = view;
         this.listOwner = listOwner;
         this.tweetListModel = listModel;
         this.tweetModel = tweetModel;
     }
-
-    //TODO
-    public TweetListPresenter(TwitterAccount twitterAccount) {
-        this(null, null, twitterAccount);
-    }
-
 
     public void onClickRetweetButton(TweetEntity tweet) {
         reTweet(tweet.getId());

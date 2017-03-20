@@ -72,7 +72,6 @@ public abstract class TweetListFragment extends Fragment
 
     protected TwitterAccount twitterAccount;
 
-
     TweetListPresenter presenter;
 
 
@@ -134,8 +133,6 @@ public abstract class TweetListFragment extends Fragment
         SaezurishikiApp app = (SaezurishikiApp)getActivity().getApplication();
         this.twitterAccount = app.getTwitterAccount();
         setRetainInstance(true);
-
-        this.presenter = new TweetListPresenter(this, null, this.twitterAccount);
     }
 
 
