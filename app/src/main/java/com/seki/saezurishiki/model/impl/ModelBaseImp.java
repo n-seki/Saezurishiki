@@ -4,6 +4,7 @@ package com.seki.saezurishiki.model.impl;
 import com.seki.saezurishiki.model.ModelBase;
 import com.seki.saezurishiki.model.util.ModelObservable;
 import com.seki.saezurishiki.model.util.ModelObserver;
+import com.seki.saezurishiki.network.twitter.TwitterAccount;
 import com.seki.saezurishiki.repository.Repository;
 
 import java.util.concurrent.Executor;
@@ -11,12 +12,12 @@ import java.util.concurrent.Executors;
 
 abstract class ModelBaseImp implements ModelBase {
 
-    final Repository repository;
+    final TwitterAccount twitterAccount;
     final ModelObservable observable;
     final Executor executor = Executors.newCachedThreadPool();
 
-    ModelBaseImp(Repository repository) {
-        this.repository = repository;
+    ModelBaseImp(TwitterAccount twitterAccount) {
+        this.twitterAccount = twitterAccount;
         this.observable = new ModelObservable();
     }
 

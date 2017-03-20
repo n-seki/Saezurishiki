@@ -5,13 +5,14 @@ import com.seki.saezurishiki.model.TweetModel;
 import com.seki.saezurishiki.model.adapter.ModelActionType;
 import com.seki.saezurishiki.model.adapter.ModelMessage;
 import com.seki.saezurishiki.model.impl.ModelBaseImp;
+import com.seki.saezurishiki.network.twitter.TwitterAccount;
 import com.seki.saezurishiki.repository.Repository;
 
 
 class TweetModelImp extends ModelBaseImp implements TweetModel {
 
-    TweetModelImp(Repository repository) {
-        super(repository);
+    TweetModelImp(TwitterAccount twitterAccount) {
+        super(twitterAccount);
     }
 
 

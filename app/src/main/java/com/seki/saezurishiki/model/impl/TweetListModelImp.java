@@ -1,7 +1,7 @@
 package com.seki.saezurishiki.model.impl;
 
 import com.seki.saezurishiki.model.TweetListModel;
-import com.seki.saezurishiki.repository.Repository;
+import com.seki.saezurishiki.network.twitter.TwitterAccount;
 
 import twitter4j.Paging;
 import twitter4j.Status;
@@ -11,8 +11,8 @@ import twitter4j.User;
 
 abstract class TweetListModelImp extends ModelBaseImp implements TweetListModel {
 
-    TweetListModelImp(Repository repository) {
-        super(repository);
+    TweetListModelImp(TwitterAccount twitterAccount) {
+        super(twitterAccount);
     }
 
     @Override
