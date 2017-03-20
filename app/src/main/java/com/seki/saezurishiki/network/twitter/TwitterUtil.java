@@ -24,7 +24,7 @@ public final class TwitterUtil {
 
     private TwitterUtil(){}
 
-    private final static String PREFERENCE_USER_ID = "All-User-ID";
+    private final static String PREFERENCE_USER_ID = "All-UserEntity-ID";
     private final static String USERS_ACCESS_TOKEN = "users-access-token";
     private final static String ACCESS_TOKEN = "Access-Token";
     private final static String ACCESS_TOKEN_SECRET = "Access-Token-Secret";
@@ -129,7 +129,7 @@ public final class TwitterUtil {
      * 認証成功したユーザーのIDと名前をSharedPreferenceに保存する.
      * ユーザー情報を保存するSharedPreferenceは以下のようになっている
      *
-     * ファイル名:All-User-ID(PREFERENCE_USER_ID)
+     * ファイル名:All-UserEntity-ID(PREFERENCE_USER_ID)
      * key = login-user-id : value = ログインユーザーのID
      * key = user-id + userName : value = ユーザーのID
      * @param context Context
@@ -185,7 +185,7 @@ public final class TwitterUtil {
 
         final long loginUserId = usersInfo.getLong(LOGIN_USER_ID, -1);
         if ( loginUserId == -1 ) {
-            throw new IllegalStateException("SharedPreference don't store Login User ID!");
+            throw new IllegalStateException("SharedPreference don't store Login UserEntity ID!");
         }
 
         return loginUserId;

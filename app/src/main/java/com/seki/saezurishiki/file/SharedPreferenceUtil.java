@@ -26,7 +26,7 @@ public final class SharedPreferenceUtil {
 
 
     private static final String ALL_USER_NAME = "all-user-name";
-    private final static String PREFERENCE_USER_ID = "All-User-ID";
+    private final static String PREFERENCE_USER_ID = "All-UserEntity-ID";
     private final static String USERS_ACCESS_TOKEN = "users-access-token";
 
     public static void clearLoginUserInfo(Context context) {

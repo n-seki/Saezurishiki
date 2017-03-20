@@ -434,14 +434,14 @@ public abstract class TweetListFragment extends Fragment
 //    }
 //
 //    @Override
-//    public void onFavorite(User sourceUser, User targetUser, Status status) {
+//    public void onFavorite(UserEntity sourceUser, UserEntity targetUser, Status status) {
 //        if (sourceUser.getId() == twitterAccount.getLoginUserId()) {
 //            return;
 //        }
 //        updateTweet(status.getId());
 //    }
 //    @Override
-//    public void onUnFavorite(User sourceUser, User targetUser, Status status) {
+//    public void onUnFavorite(UserEntity sourceUser, UserEntity targetUser, Status status) {
 //        if (sourceUser.getId() == twitterAccount.getLoginUserId()) {
 //            return;
 //        }

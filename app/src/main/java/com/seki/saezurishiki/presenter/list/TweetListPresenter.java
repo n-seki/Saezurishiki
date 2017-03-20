@@ -2,7 +2,7 @@ package com.seki.saezurishiki.presenter.list;
 
 
 import com.seki.saezurishiki.entity.TweetEntity;
-import com.seki.saezurishiki.entity.User;
+import com.seki.saezurishiki.entity.UserEntity;
 import com.seki.saezurishiki.model.ModelContainer;
 import com.seki.saezurishiki.model.TweetListModel;
 import com.seki.saezurishiki.model.adapter.ModelMessage;
@@ -13,11 +13,7 @@ import com.seki.saezurishiki.network.twitter.AsyncTwitterTask;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
 import com.seki.saezurishiki.network.twitter.TwitterTaskResult;
 import com.seki.saezurishiki.network.twitter.TwitterWrapper;
-import com.seki.saezurishiki.network.twitter.streamListener.StatusUserStreamListener;
 import com.seki.saezurishiki.view.fragment.dialog.adapter.DialogSelectAction;
-
-import twitter4j.Status;
-import twitter4j.StatusDeletionNotice;
 
 
 public class TweetListPresenter implements ModelObserver {
@@ -26,7 +22,7 @@ public class TweetListPresenter implements ModelObserver {
     private final TweetModel tweetModel;
     private final TwitterAccount twitterAccount;
     private final TweetListModel tweetListModel;
-    private final User listOwner;
+    private final UserEntity listOwner;
 
     private TwitterWrapper twitterWrapper;
 
@@ -41,7 +37,7 @@ public class TweetListPresenter implements ModelObserver {
         this.tweetModel.addObserver(this);
     }
 
-    public TweetListPresenter(TweetListView view, User listOwner, TwitterAccount twitterAccount) {
+    public TweetListPresenter(TweetListView view, UserEntity listOwner, TwitterAccount twitterAccount) {
         this.view = view;
         this.listOwner = listOwner;
         this.tweetModel = ModelContainer.getTweetModel();

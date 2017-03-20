@@ -57,7 +57,7 @@ public class UserActivity extends    AppCompatActivity
                                      FragmentControl {
 
 
-    public static final String USER = "User";
+    public static final String USER = "UserEntity";
     public static final String USER_ID = "userID";
 
     public static final int SHOW_ACTIVITY = 0x0800;

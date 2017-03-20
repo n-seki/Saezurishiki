@@ -38,7 +38,7 @@ public class TwitterUserDrawerView extends NavigationView {
 
     public synchronized void updateUser(User user) {
         if (user == null) {
-            throw new NullPointerException("User is null!");
+            throw new NullPointerException("UserEntity is null!");
         }
 
         Picasso.with(getContext()).load(user.getProfileBannerURL()).into((ImageView) findViewById(R.id.bio_header_icon));
