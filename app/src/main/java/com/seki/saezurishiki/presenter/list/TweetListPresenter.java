@@ -14,6 +14,8 @@ import com.seki.saezurishiki.network.twitter.TwitterTaskResult;
 import com.seki.saezurishiki.network.twitter.TwitterWrapper;
 import com.seki.saezurishiki.view.fragment.dialog.adapter.DialogSelectAction;
 
+import java.util.List;
+
 
 public class TweetListPresenter implements ModelObserver {
 
@@ -27,6 +29,7 @@ public class TweetListPresenter implements ModelObserver {
 
     public interface TweetListView {
         void updateTweet(TweetEntity tweetEntity);
+        void loadTweets(List<TweetEntity> tweets);
         void completeDeleteTweet(TweetEntity tweet);
         void completeReTweet(TweetEntity tweet);
         void errorProcess(Exception e);
@@ -184,7 +187,7 @@ public class TweetListPresenter implements ModelObserver {
                 //this.view.deleteTweet((TweetEntity)message.data);
                 break;
             case LOAD_TWEETS:
-                //this.view.loadTweets((List<TweetEntity>)message.data);
+                this.view.loadTweets((List<TweetEntity>)message.data);
                 break;
             case ERROR:
                 this.view.errorProcess(message.exception);
