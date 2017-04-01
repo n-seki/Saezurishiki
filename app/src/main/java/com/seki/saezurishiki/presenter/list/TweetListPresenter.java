@@ -19,7 +19,7 @@ import twitter4j.Paging;
 
 public class TweetListPresenter implements ModelObserver {
 
-    private final TweetListView view;
+    final TweetListView view;
     private final TweetListModel tweetListModel;
     private final UserEntity listOwner;
 
@@ -130,7 +130,7 @@ public class TweetListPresenter implements ModelObserver {
     }
 
     @SuppressWarnings("unchecked")
-    private void dispatch(ModelMessage message) {
+    void dispatch(ModelMessage message) {
         switch (message.type) {
             case LOAD_TWEET:
                 //this.view.showTweet((TweetEntity) message.data);
