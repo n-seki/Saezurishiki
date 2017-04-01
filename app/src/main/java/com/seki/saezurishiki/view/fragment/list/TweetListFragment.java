@@ -220,6 +220,11 @@ public abstract class TweetListFragment extends Fragment
     void onItemClick(int position) {
         TwitterEntity item = this.twitterAccount.getRepository().getTwitterEntity(mAdapter.getItemIdAtPosition(position));
         if (item.getItemType() == TwitterEntity.Type.LoadButton) {
+            final boolean debug = true;
+            if (debug) {
+                throw new IllegalStateException("Load Button load is not implements!!!");
+            }
+
             TweetListFragment.this.onClickLoadButton(item.getId());
             return;
         }
