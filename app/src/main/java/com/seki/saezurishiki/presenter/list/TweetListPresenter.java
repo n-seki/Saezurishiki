@@ -138,8 +138,8 @@ public class TweetListPresenter implements ModelObserver {
                 this.view.loadTweets((List<TweetEntity>)message.data);
                 break;
 
-            case RECIEVE_FAVOTIE:
-            case RECIEVE_UN_FAVORITE:
+            case RECEIVE_FAVORITE:
+            case RECEIVE_UN_FAVORITE:
 
             case ERROR:
                 this.view.errorProcess(message.exception);

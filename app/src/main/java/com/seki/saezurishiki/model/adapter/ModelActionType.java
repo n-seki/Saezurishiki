@@ -1,8 +1,5 @@
 package com.seki.saezurishiki.model.adapter;
 
-/**
- * Created by seki on 2017/01/22.
- */
 
 public enum ModelActionType {
     LOAD_TWEET,
@@ -10,10 +7,10 @@ public enum ModelActionType {
     LOAD_TWEETS,
     LOAD_FAVORITE,
 
-    REVIEVE_TWEET,
-    RECIEVE_FAVOTIE,
-    RECIEVE_UN_FAVORITE,
-    RECIEVE_DELETION,
+    RECEIVE_TWEET,
+    RECEIVE_FAVORITE,
+    RECEIVE_UN_FAVORITE,
+    RECEIVE_DELETION,
 
     POST_TWEET,
     UPDATE_TWEET,

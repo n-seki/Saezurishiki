@@ -27,14 +27,14 @@ abstract class TweetListModelImp extends ModelBaseImp implements TweetListModel 
     public void onStatus(Status status) {
         final TweetEntity tweet = this.twitterAccount.getRepository().map(status);
         this.twitterAccount.getRepository().addStatus(tweet);
-        final ModelMessage message = ModelMessage.of(ModelActionType.REVIEVE_TWEET, tweet);
+        final ModelMessage message = ModelMessage.of(ModelActionType.RECEIVE_TWEET, tweet);
         this.observable.notifyObserver(message);
     }
 
     @Override
     public void onDeletionNotice(StatusDeletionNotice deletionNotice) {
         this.twitterAccount.getRepository().addDeletionNotice(deletionNotice);
-        final ModelMessage message = ModelMessage.of(ModelActionType.RECIEVE_DELETION, deletionNotice);
+        final ModelMessage message = ModelMessage.of(ModelActionType.RECEIVE_DELETION, deletionNotice);
         this.observable.notifyObserver(message);
     }
 
@@ -42,7 +42,7 @@ abstract class TweetListModelImp extends ModelBaseImp implements TweetListModel 
     public void onFavorite(User sourceUser, User targetUser, Status targetTweet) {
         final TweetEntity tweet = this.twitterAccount.getRepository().map(targetTweet);
         this.twitterAccount.getRepository().addStatus(tweet);
-        final ModelMessage message = ModelMessage.of(ModelActionType.RECIEVE_FAVOTIE, tweet);
+        final ModelMessage message = ModelMessage.of(ModelActionType.RECEIVE_FAVORITE, tweet);
         this.observable.notifyObserver(message);
     }
 
@@ -50,7 +50,7 @@ abstract class TweetListModelImp extends ModelBaseImp implements TweetListModel 
     public void onUnFavorite(User sourceUser, User targetUser, Status targetTweet) {
         final TweetEntity tweet = this.twitterAccount.getRepository().map(targetTweet);
         this.twitterAccount.getRepository().addStatus(tweet);
-        final ModelMessage message = ModelMessage.of(ModelActionType.RECIEVE_UN_FAVORITE, tweet);
+        final ModelMessage message = ModelMessage.of(ModelActionType.RECEIVE_UN_FAVORITE, tweet);
         this.observable.notifyObserver(message);
     }
 
