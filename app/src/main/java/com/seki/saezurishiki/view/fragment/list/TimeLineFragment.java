@@ -75,19 +75,6 @@ public abstract class TimeLineFragment extends TweetListFragment {
     }
 
 
-    protected long getListTopStatusID() {
-        if ( mAdapter == null || mAdapter.getCount() == 0 ) {
-            return -1;
-        }
-
-        if (this.twitterAccount.getRepository().getStatus(mAdapter.getItemIdAtPosition(0)).getItemType() == TwitterEntity.Type.LoadButton) {
-            return -1;
-        }
-
-        return mAdapter.getItemIdAtPosition(0);
-    }
-
-
     @Override
     protected void onLoadFinished(TwitterTaskResult<ResponseList<Status>> result) {
         this.isFirstOpen = false;
