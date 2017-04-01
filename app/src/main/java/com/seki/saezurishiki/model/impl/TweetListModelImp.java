@@ -21,7 +21,7 @@ abstract class TweetListModelImp extends ModelBaseImp implements TweetListModel 
     }
 
     @Override
-    abstract public void request(Paging paging);
+    abstract public void request(long userId, Paging paging);
 
     @Override
     public void onStatus(Status status) {

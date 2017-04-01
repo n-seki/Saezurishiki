@@ -21,13 +21,13 @@ public class FavoriteListModel extends TweetListModelImp {
     }
 
     @Override
-    public void request(final Paging paging) {
+    public void request(final long userId, final Paging paging) {
         final Twitter twitter = this.twitterAccount.twitter;
         this.executor.execute(new Runnable() {
             @Override
             public void run() {
                 try {
-                    final ResponseList<Status> result = twitter.getFavorites(paging);
+                    final ResponseList<Status> result = twitter.getFavorites(userId, paging);
                     final List<TweetEntity> tweets = twitterAccount.getRepository().map(result);
                     twitterAccount.getRepository().add(result);
                     final ModelMessage message = ModelMessage.of(ModelActionType.LOAD_REPLY, tweets);

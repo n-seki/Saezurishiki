@@ -21,7 +21,7 @@ public class ReplyTweetListModel extends TweetListModelImp {
     }
 
     @Override
-    public void request(final Paging paging) {
+    public void request(final long userId, final Paging paging) {
         final Twitter twitter = this.twitterAccount.twitter;
         this.executor.execute(new Runnable() {
             @Override

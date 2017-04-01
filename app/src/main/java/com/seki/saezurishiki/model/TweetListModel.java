@@ -12,7 +12,7 @@ import twitter4j.User;
 
 public interface TweetListModel extends ModelBase, StatusUserStreamListener {
 
-    void request(Paging paging);
+    void request(long userId, Paging paging);
     void favorite(TweetEntity tweetEntity);
     void unFavorite(TweetEntity tweetEntity);
     void reTweet(TweetEntity tweetEntity);
