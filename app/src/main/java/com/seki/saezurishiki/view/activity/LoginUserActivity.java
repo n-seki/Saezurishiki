@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import com.seki.saezurishiki.application.SaezurishikiApp;
 import com.seki.saezurishiki.R;
+import com.seki.saezurishiki.entity.UserEntity;
 import com.seki.saezurishiki.view.adapter.DrawerButtonListAdapter;
 import com.seki.saezurishiki.control.CustomToast;
 import com.seki.saezurishiki.control.FragmentController;
@@ -231,7 +232,7 @@ public class LoginUserActivity extends    AppCompatActivity
 
 
     private void setupTimeLine(int theme) {
-        TimeLinePager pagerAdapter = new TimeLinePager(getSupportFragmentManager());
+        TimeLinePager pagerAdapter = new TimeLinePager(getSupportFragmentManager(), new UserEntity(mLoginUser));
 
         mViewPager = (ViewPager) LoginUserActivity.this.findViewById(R.id.pager);
         mViewPager.addOnPageChangeListener(LoginUserActivity.this);

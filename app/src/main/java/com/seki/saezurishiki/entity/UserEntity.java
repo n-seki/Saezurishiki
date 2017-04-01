@@ -5,7 +5,7 @@ import java.util.Date;
 public class UserEntity {
     final private twitter4j.User mUser;
 
-    UserEntity(twitter4j.User user) {
+    public UserEntity(twitter4j.User user) {
         mUser = user;
     }
 
