@@ -29,6 +29,7 @@ import android.widget.Toast;
 import com.seki.saezurishiki.application.SaezurishikiApp;
 import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.entity.UserEntity;
+import com.seki.saezurishiki.model.impl.ModelContainer;
 import com.seki.saezurishiki.view.adapter.DrawerButtonListAdapter;
 import com.seki.saezurishiki.control.CustomToast;
 import com.seki.saezurishiki.control.FragmentController;
@@ -144,6 +145,7 @@ public class LoginUserActivity extends    AppCompatActivity
         registerReceiver(mReceiver, filter);
 
         mTwitterTask = new TwitterWrapper(this, getSupportLoaderManager(), this.twitterAccount);
+        ModelContainer.start(twitterAccount);
 
         this.loadUser();
         this.setupActionBar();
@@ -300,6 +302,7 @@ public class LoginUserActivity extends    AppCompatActivity
 
 
     void applicationFinalizer() {
+        ModelContainer.destory();
         if (this.twitterAccount != null) {
             this.twitterAccount.removeListener(this);
             this.twitterAccount.onActivityDestroyed(this);
