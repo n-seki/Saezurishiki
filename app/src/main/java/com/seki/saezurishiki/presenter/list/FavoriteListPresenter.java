@@ -24,6 +24,12 @@ public class FavoriteListPresenter extends TweetListPresenter {
                 this.view.loadTweets((List<TweetEntity>)message.data);
                 break;
 
+            case RECEIVE_FAVORITE :
+            case RECEIVE_UN_FAVORITE :
+            case RECEIVE_DELETION:
+                this.view.updateTweet((TweetEntity)message.data);
+                break;
+
             default:
                 //no operation
         }

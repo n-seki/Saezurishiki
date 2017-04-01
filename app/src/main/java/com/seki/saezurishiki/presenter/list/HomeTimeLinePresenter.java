@@ -1,5 +1,7 @@
 package com.seki.saezurishiki.presenter.list;
 
+import android.util.Log;
+
 import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.entity.UserEntity;
 import com.seki.saezurishiki.model.TweetListModel;
@@ -7,22 +9,25 @@ import com.seki.saezurishiki.model.adapter.ModelMessage;
 
 import java.util.List;
 
-public class UserTweetListPresenter extends TweetListPresenter {
 
+public class HomeTimeLinePresenter extends TweetListPresenter {
 
-    public UserTweetListPresenter(TweetListView view, UserEntity listOwner, TweetListModel listModel) {
+    public HomeTimeLinePresenter(TweetListView view, UserEntity listOwner, TweetListModel listModel) {
         super(view, listOwner, listModel);
     }
 
 
     @SuppressWarnings("unchecked")
     @Override
-    public void dispatch(ModelMessage message) {
-
+    void dispatch(ModelMessage message) {
         switch (message.type) {
-
-            case LOAD_TWEET_LIST:
+            case LOAD_HOME_LIST:
                 this.view.loadTweets((List<TweetEntity>)message.data);
+                break;
+
+            case RECEIVE_TWEET:
+                this.view.catchNewTweet((TweetEntity)message.data);
+                Log.d("HommeTimeLinePresenter", "receive-tweet");
                 break;
 
             case RECEIVE_FAVORITE :
@@ -30,12 +35,6 @@ public class UserTweetListPresenter extends TweetListPresenter {
             case RECEIVE_DELETION:
                 this.view.updateTweet((TweetEntity)message.data);
                 break;
-
-            case ERROR:
-                this.view.errorProcess(message.exception);
-                break;
-            default:
-                //no operation
         }
     }
 }

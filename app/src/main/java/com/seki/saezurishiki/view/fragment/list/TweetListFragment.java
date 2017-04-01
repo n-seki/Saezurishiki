@@ -370,6 +370,11 @@ public abstract class TweetListFragment extends Fragment
         mAdapter.remove(tweet.getId());
     }
 
+    @Override
+    public void catchNewTweet(TweetEntity tweetEntity) {
+        this.mAdapter.insert(tweetEntity.getId(), 0);
+    }
+
 
 
     /**

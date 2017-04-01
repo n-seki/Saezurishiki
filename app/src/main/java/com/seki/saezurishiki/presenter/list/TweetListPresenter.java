@@ -26,6 +26,7 @@ public class TweetListPresenter implements ModelObserver {
     public interface TweetListView {
         void updateTweet(TweetEntity tweetEntity);
         void loadTweets(List<TweetEntity> tweets);
+        void catchNewTweet(TweetEntity tweet);
         void completeDeleteTweet(TweetEntity tweet);
         void completeReTweet(TweetEntity tweet);
         void setPresenter(TweetListPresenter presenter);

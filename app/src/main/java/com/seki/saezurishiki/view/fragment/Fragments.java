@@ -6,6 +6,8 @@ import android.support.v4.app.Fragment;
 import com.seki.saezurishiki.entity.UserEntity;
 import com.seki.saezurishiki.model.impl.ModelContainer;
 import com.seki.saezurishiki.presenter.list.FavoriteListPresenter;
+import com.seki.saezurishiki.presenter.list.HomeTimeLinePresenter;
+import com.seki.saezurishiki.presenter.list.ReplyTimeLinePresenter;
 import com.seki.saezurishiki.presenter.list.TweetListPresenter;
 import com.seki.saezurishiki.presenter.list.UserTweetListPresenter;
 import com.seki.saezurishiki.view.fragment.list.FavoritesFragment;
@@ -21,13 +23,13 @@ public final class Fragments {
 
     public static Fragment createInjectHomeTimeLineFragment(final int tabPosition, UserEntity owner) {
         final TweetListFragment fragment = UserStreamTimeLineFragment.getHomeTimeLine(tabPosition);
-        new TweetListPresenter(fragment, owner, ModelContainer.getHomeTweetListModel());
+        new HomeTimeLinePresenter(fragment, owner, ModelContainer.getHomeTweetListModel());
         return fragment;
     }
 
     public static Fragment createInjectReplyTimeLineFragment(final int tabPosition, UserEntity owner) {
         final TweetListFragment fragment = UserStreamTimeLineFragment.getReplyTimeLine(tabPosition);
-        new TweetListPresenter(fragment, owner, ModelContainer.getReplyTweetListModel());
+        new ReplyTimeLinePresenter(fragment, owner, ModelContainer.getReplyTweetListModel());
         return fragment;
     }
 
