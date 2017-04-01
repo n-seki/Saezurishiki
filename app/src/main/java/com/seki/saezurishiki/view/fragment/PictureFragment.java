@@ -18,6 +18,7 @@ import android.widget.ImageView;
 
 import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.entity.TweetEntity;
+import com.seki.saezurishiki.view.fragment.util.DataType;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;

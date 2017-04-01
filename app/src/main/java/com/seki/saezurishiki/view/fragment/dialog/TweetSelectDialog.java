@@ -1,7 +1,6 @@
 package com.seki.saezurishiki.view.fragment.dialog;
 
 import android.app.Dialog;
-import android.databinding.tool.util.L;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -15,13 +14,12 @@ import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.control.StatusUtil;
 import com.seki.saezurishiki.control.UIControlUtil;
 import com.seki.saezurishiki.entity.TweetEntity;
-import com.seki.saezurishiki.view.fragment.DataType;
+import com.seki.saezurishiki.view.fragment.util.DataType;
 import com.seki.saezurishiki.network.server.TwitterServer;
 import com.seki.saezurishiki.view.fragment.dialog.adapter.DialogSelectAction;
 
 import java.util.List;
 
-import twitter4j.Status;
 import twitter4j.URLEntity;
 
 /**

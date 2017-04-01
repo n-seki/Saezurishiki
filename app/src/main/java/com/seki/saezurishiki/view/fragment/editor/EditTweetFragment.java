@@ -36,7 +36,7 @@ import com.seki.saezurishiki.network.twitter.TwitterError;
 import com.seki.saezurishiki.network.twitter.TwitterTaskResult;
 import com.seki.saezurishiki.network.twitter.TwitterWrapper;
 import com.seki.saezurishiki.view.customview.TweetTextEditor;
-import com.seki.saezurishiki.view.fragment.DataType;
+import com.seki.saezurishiki.view.fragment.util.DataType;
 
 import org.jetbrains.annotations.Contract;
 

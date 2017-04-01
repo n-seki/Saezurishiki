@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.control.UIControlUtil;
-import com.seki.saezurishiki.view.fragment.DataType;
+import com.seki.saezurishiki.view.fragment.util.DataType;
 import com.squareup.picasso.Picasso;
 
 import twitter4j.User;

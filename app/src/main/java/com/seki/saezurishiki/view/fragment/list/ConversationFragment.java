@@ -8,7 +8,7 @@ import android.widget.ListView;
 import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.network.twitter.AsyncTwitterTask;
 import com.seki.saezurishiki.network.twitter.TwitterTaskResult;
-import com.seki.saezurishiki.view.fragment.DataType;
+import com.seki.saezurishiki.view.fragment.util.DataType;
 
 import twitter4j.ResponseList;
 import twitter4j.Status;

@@ -24,7 +24,7 @@ import com.seki.saezurishiki.network.twitter.TwitterAccount;
 import com.seki.saezurishiki.network.twitter.TwitterTaskResult;
 import com.seki.saezurishiki.network.twitter.TwitterWrapper;
 import com.seki.saezurishiki.network.twitter.streamListener.UserStreamUserListener;
-import com.seki.saezurishiki.view.fragment.DataType;
+import com.seki.saezurishiki.view.fragment.util.DataType;
 
 import twitter4j.PagableResponseList;
 import twitter4j.TwitterException;

@@ -3,7 +3,7 @@ package com.seki.saezurishiki.view.fragment.list;
 import android.os.Bundle;
 
 import com.seki.saezurishiki.network.twitter.AsyncTwitterTask;
-import com.seki.saezurishiki.view.fragment.DataType;
+import com.seki.saezurishiki.view.fragment.util.DataType;
 
 import twitter4j.ResponseList;
 import twitter4j.Status;

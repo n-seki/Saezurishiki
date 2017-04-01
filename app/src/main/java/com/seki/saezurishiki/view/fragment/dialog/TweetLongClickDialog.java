@@ -13,7 +13,7 @@ import android.widget.ListView;
 import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.application.SaezurishikiApp;
 import com.seki.saezurishiki.entity.TweetEntity;
-import com.seki.saezurishiki.view.fragment.DataType;
+import com.seki.saezurishiki.view.fragment.util.DataType;
 import com.seki.saezurishiki.view.fragment.dialog.adapter.DialogSelectAction;
 
 public class TweetLongClickDialog extends DialogFragment {

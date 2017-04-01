@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.network.twitter.AsyncTwitterTask;
 import com.seki.saezurishiki.network.twitter.TwitterTaskResult;
-import com.seki.saezurishiki.view.fragment.DataType;
+import com.seki.saezurishiki.view.fragment.util.DataType;
 
 import twitter4j.Query;
 import twitter4j.QueryResult;
