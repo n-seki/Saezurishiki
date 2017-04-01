@@ -47,7 +47,8 @@ public abstract class TimeLineFragment extends TweetListFragment {
         if ( mIsLoading ) return;
         mIsLoading = true;
 
-        new AsyncTwitterTask<>(getActivity(), this.getStatusesLoader(), TASK_AFTER_LOAD, getLoaderManager()).run();
+        //new AsyncTwitterTask<>(getActivity(), this.getStatusesLoader(), TASK_AFTER_LOAD, getLoaderManager()).run();
+        this.presenter.load(createLastPaging());
     }
 
 
