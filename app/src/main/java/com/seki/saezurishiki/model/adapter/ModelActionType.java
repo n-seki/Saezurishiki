@@ -3,9 +3,10 @@ package com.seki.saezurishiki.model.adapter;
 
 public enum ModelActionType {
     LOAD_TWEET,
-    LOAD_REPLY,
-    LOAD_TWEETS,
-    LOAD_FAVORITE,
+    LOAD_HOME_LIST,
+    LOAD_REPLY_LIST,
+    LOAD_TWEET_LIST,
+    LOAD_FAVORITE_LIST,
 
     RECEIVE_TWEET,
     RECEIVE_FAVORITE,

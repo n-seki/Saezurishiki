@@ -20,7 +20,7 @@ public class FavoriteListPresenter extends TweetListPresenter {
     @Override
     void dispatch(ModelMessage message) {
         switch (message.type) {
-            case LOAD_FAVORITE:
+            case LOAD_FAVORITE_LIST:
                 this.view.loadTweets((List<TweetEntity>)message.data);
                 break;
 

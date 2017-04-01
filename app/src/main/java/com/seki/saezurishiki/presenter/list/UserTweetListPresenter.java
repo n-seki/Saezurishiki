@@ -21,7 +21,7 @@ public class UserTweetListPresenter extends TweetListPresenter {
 
         switch (message.type) {
 
-            case LOAD_TWEETS:
+            case LOAD_TWEET_LIST:
                 this.view.loadTweets((List<TweetEntity>)message.data);
                 break;
 

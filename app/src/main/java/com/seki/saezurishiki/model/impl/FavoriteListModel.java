@@ -30,7 +30,7 @@ public class FavoriteListModel extends TweetListModelImp {
                     final ResponseList<Status> result = twitter.getFavorites(userId, paging);
                     final List<TweetEntity> tweets = twitterAccount.getRepository().map(result);
                     twitterAccount.getRepository().add(result);
-                    final ModelMessage message = ModelMessage.of(ModelActionType.LOAD_FAVORITE, tweets);
+                    final ModelMessage message = ModelMessage.of(ModelActionType.LOAD_FAVORITE_LIST, tweets);
                     observable.notifyObserver(message);
                 } catch (TwitterException e) {
                     final ModelMessage error = ModelMessage.error(e);

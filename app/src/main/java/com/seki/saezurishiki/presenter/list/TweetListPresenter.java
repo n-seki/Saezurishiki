@@ -141,7 +141,7 @@ public class TweetListPresenter implements ModelObserver {
             case DELETE_TWEET:
                 //this.view.deleteTweet((TweetEntity)message.data);
                 break;
-            case LOAD_TWEETS:
+            case LOAD_TWEET_LIST:
                 this.view.loadTweets((List<TweetEntity>)message.data);
                 break;
 
