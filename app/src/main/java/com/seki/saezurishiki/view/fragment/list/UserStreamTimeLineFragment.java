@@ -17,6 +17,7 @@ import com.seki.saezurishiki.entity.LoadButton;
 import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.network.ConnectionReceiver;
 import com.seki.saezurishiki.network.twitter.AsyncTwitterTask;
+import com.seki.saezurishiki.network.twitter.TwitterAccount;
 import com.seki.saezurishiki.network.twitter.TwitterTaskResult;
 import com.seki.saezurishiki.view.customview.NotificationListView;
 import com.seki.saezurishiki.view.control.RequestTabState;
@@ -65,18 +66,18 @@ public abstract class UserStreamTimeLineFragment extends TimeLineFragment
     private int tabPosition;
     TabViewControl tabViewControl;
 
-    public static Fragment getHomeTimeLine(int tabPosition) {
+    public static TweetListFragment getHomeTimeLine(int tabPosition) {
         Bundle data = new Bundle();
         data.putInt(TAB_POSITION, tabPosition);
-        Fragment home = HomeTimeLineFragment.getInstance();
+        TweetListFragment home = HomeTimeLineFragment.getInstance();
         home.setArguments(data);
         return home;
     }
 
-    public static Fragment getReplyTimeLine(int tabPosition) {
+    public static TweetListFragment getReplyTimeLine(int tabPosition) {
         Bundle data = new Bundle();
         data.putInt(TAB_POSITION, tabPosition);
-        Fragment fragment = ReplyTimeLineFragment.getInstance();
+        TweetListFragment fragment = ReplyTimeLineFragment.getInstance();
         fragment.setArguments(data);
         return fragment;
     }
