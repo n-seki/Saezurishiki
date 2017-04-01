@@ -4,6 +4,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
 import com.seki.saezurishiki.R;
+import com.seki.saezurishiki.entity.UserEntity;
+import com.seki.saezurishiki.view.fragment.Fragments;
 import com.seki.saezurishiki.view.fragment.editor.DirectMessageFragment;
 import com.seki.saezurishiki.view.fragment.editor.EditTweetFragment;
 import com.seki.saezurishiki.view.fragment.list.FavoritesFragment;
@@ -67,10 +69,10 @@ public final class FragmentController {
 
         switch (fragmentId) {
             case FRAGMENT_ID_TWEET:
-                return UserTweetFragment.getInstance(user.getId(), user.getStatusesCount());
+                return Fragments.createInjectUserTweetFragment(new UserEntity(user), user.getStatusesCount());
 
             case FRAGMENT_ID_FAVORITE:
-                return FavoritesFragment.getInstance(user.getId(), user.getFavouritesCount());
+                return Fragments.createInjectFavoritesFragment(new UserEntity(user), user.getFavouritesCount());
 
             case FRAGMENT_ID_FRIEND:
                 return FriendListFragment.newInstance(user.getId(), user.getFriendsCount());

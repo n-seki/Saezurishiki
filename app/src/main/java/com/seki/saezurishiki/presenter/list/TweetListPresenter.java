@@ -2,6 +2,7 @@ package com.seki.saezurishiki.presenter.list;
 
 
 import android.os.Handler;
+import android.os.Looper;
 
 import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.entity.UserEntity;
@@ -120,7 +121,7 @@ public class TweetListPresenter implements ModelObserver {
 
     @Override
     public void update(ModelObservable observable, final ModelMessage message) {
-        new Handler().post(new Runnable() {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
                 dispatch(message);

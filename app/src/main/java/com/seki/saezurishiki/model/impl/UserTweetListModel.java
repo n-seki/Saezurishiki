@@ -30,7 +30,7 @@ public class UserTweetListModel extends TweetListModelImp {
                     final ResponseList<Status> result = twitter.getUserTimeline(userId, paging);
                     final List<TweetEntity> tweets = twitterAccount.getRepository().map(result);
                     twitterAccount.getRepository().add(result);
-                    final ModelMessage message = ModelMessage.of(ModelActionType.LOAD_REPLY, tweets);
+                    final ModelMessage message = ModelMessage.of(ModelActionType.LOAD_TWEETS, tweets);
                     observable.notifyObserver(message);
                 } catch (TwitterException e) {
                     final ModelMessage error = ModelMessage.error(e);
