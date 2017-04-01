@@ -13,6 +13,8 @@ import com.seki.saezurishiki.view.fragment.dialog.adapter.DialogSelectAction;
 
 import java.util.List;
 
+import twitter4j.Paging;
+
 
 public class TweetListPresenter implements ModelObserver {
 
@@ -81,6 +83,10 @@ public class TweetListPresenter implements ModelObserver {
 
     public void onDeleteTweet(TweetEntity tweet) {
         this.view.completeDeleteTweet(tweet);
+    }
+
+    public void load(final Paging paging) {
+        this.tweetListModel.request(this.listOwner.getId(), paging);
     }
 
 
