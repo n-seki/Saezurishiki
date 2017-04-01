@@ -69,10 +69,10 @@ public final class FragmentController {
 
         switch (fragmentId) {
             case FRAGMENT_ID_TWEET:
-                return Fragments.createInjectUserTweetFragment(new UserEntity(user), user.getStatusesCount());
+                return Fragments.createInjectUserTweetFragment(user.getId(), user.getStatusesCount());
 
             case FRAGMENT_ID_FAVORITE:
-                return Fragments.createInjectFavoritesFragment(new UserEntity(user), user.getFavouritesCount());
+                return Fragments.createInjectFavoritesFragment(user.getId(), user.getFavouritesCount());
 
             case FRAGMENT_ID_FRIEND:
                 return FriendListFragment.newInstance(user.getId(), user.getFriendsCount());

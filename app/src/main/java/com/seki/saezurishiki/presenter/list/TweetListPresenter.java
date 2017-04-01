@@ -5,7 +5,6 @@ import android.os.Handler;
 import android.os.Looper;
 
 import com.seki.saezurishiki.entity.TweetEntity;
-import com.seki.saezurishiki.entity.UserEntity;
 import com.seki.saezurishiki.model.TweetListModel;
 import com.seki.saezurishiki.model.adapter.ModelMessage;
 import com.seki.saezurishiki.model.util.ModelObservable;
@@ -21,7 +20,7 @@ public class TweetListPresenter implements ModelObserver {
 
     final TweetListView view;
     private final TweetListModel tweetListModel;
-    private final UserEntity listOwner;
+    private final long listOwnerId;
 
     public interface TweetListView {
         void updateTweet(TweetEntity tweetEntity);
@@ -41,9 +40,9 @@ public class TweetListPresenter implements ModelObserver {
         this.tweetListModel.removeObserver(this);
     }
 
-    public TweetListPresenter(TweetListView view, UserEntity listOwner, TweetListModel listModel) {
+    public TweetListPresenter(TweetListView view, long listOwnerId, TweetListModel listModel) {
         this.view = view;
-        this.listOwner = listOwner;
+        this.listOwnerId = listOwnerId;
         this.tweetListModel = listModel;
 
         this.view.setPresenter(this);
@@ -88,7 +87,7 @@ public class TweetListPresenter implements ModelObserver {
     }
 
     public void load(final Paging paging) {
-        this.tweetListModel.request(this.listOwner.getId(), paging);
+        this.tweetListModel.request(this.listOwnerId, paging);
     }
 
 

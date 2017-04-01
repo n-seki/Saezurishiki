@@ -1,7 +1,6 @@
 package com.seki.saezurishiki.presenter.list;
 
 import com.seki.saezurishiki.entity.TweetEntity;
-import com.seki.saezurishiki.entity.UserEntity;
 import com.seki.saezurishiki.model.TweetListModel;
 import com.seki.saezurishiki.model.adapter.ModelMessage;
 
@@ -11,8 +10,8 @@ import java.util.List;
 public class FavoriteListPresenter extends TweetListPresenter {
 
 
-    public FavoriteListPresenter(TweetListView view, UserEntity listOwner, TweetListModel listModel) {
-        super(view, listOwner, listModel);
+    public FavoriteListPresenter(TweetListView view, long listOwnerId, TweetListModel listModel) {
+        super(view, listOwnerId, listModel);
     }
 
 

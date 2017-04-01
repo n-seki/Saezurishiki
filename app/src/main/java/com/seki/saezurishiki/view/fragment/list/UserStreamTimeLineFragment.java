@@ -217,8 +217,7 @@ public abstract class UserStreamTimeLineFragment extends TimeLineFragment
         if (mIsLoading) return;
         mIsLoading = true;
 
-        new AsyncTwitterTask<>(getActivity(), this.getStatusesLoader(), TASK_AFTER_LOAD, getLoaderManager()).run();
-
+        this.presenter.load(createLastPaging());
     }
 
     @Override

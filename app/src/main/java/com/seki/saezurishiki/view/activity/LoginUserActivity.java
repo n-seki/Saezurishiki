@@ -234,7 +234,7 @@ public class LoginUserActivity extends    AppCompatActivity
 
 
     private void setupTimeLine(int theme) {
-        TimeLinePager pagerAdapter = new TimeLinePager(getSupportFragmentManager(), new UserEntity(mLoginUser));
+        TimeLinePager pagerAdapter = new TimeLinePager(getSupportFragmentManager(), this.twitterAccount.getLoginUserId());
 
         mViewPager = (ViewPager) LoginUserActivity.this.findViewById(R.id.pager);
         mViewPager.addOnPageChangeListener(LoginUserActivity.this);

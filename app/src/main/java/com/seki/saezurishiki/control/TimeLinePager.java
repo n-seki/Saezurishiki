@@ -20,12 +20,12 @@ public class TimeLinePager extends FragmentPagerAdapter {
     public static final int POSITION_REPLY = 1;
     public static final int POSITION_MESSAGE = 2;
 
-    private final UserEntity loginUser;
+    private final long loginUserId;
 
-    public TimeLinePager(FragmentManager fragmentManager, UserEntity loginUser) {
+    public TimeLinePager(FragmentManager fragmentManager, long loginUserId) {
         super(fragmentManager);
 
-        this.loginUser = loginUser;
+        this.loginUserId = loginUserId;
     }
 
     @Override
@@ -40,11 +40,11 @@ public class TimeLinePager extends FragmentPagerAdapter {
 
         switch (position) {
             case POSITION_HOME:
-                fragment = Fragments.createInjectHomeTimeLineFragment(POSITION_HOME, this.loginUser);
+                fragment = Fragments.createInjectHomeTimeLineFragment(POSITION_HOME, this.loginUserId);
                 break;
 
             case POSITION_REPLY:
-                fragment = Fragments.createInjectReplyTimeLineFragment(POSITION_REPLY, this.loginUser);
+                fragment = Fragments.createInjectReplyTimeLineFragment(POSITION_REPLY, this.loginUserId);
                 break;
 
             case POSITION_MESSAGE:
