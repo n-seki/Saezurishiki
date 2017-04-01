@@ -9,7 +9,7 @@ import com.seki.saezurishiki.view.fragment.editor.EditTweetFragment;
 import com.seki.saezurishiki.view.fragment.list.FavoritesFragment;
 import com.seki.saezurishiki.view.fragment.list.FollowerListFragment;
 import com.seki.saezurishiki.view.fragment.list.FriendListFragment;
-import com.seki.saezurishiki.view.fragment.SettingFragment;
+import com.seki.saezurishiki.view.fragment.other.SettingFragment;
 import com.seki.saezurishiki.view.fragment.list.UserTweetFragment;
 
 import org.jetbrains.annotations.Contract;
