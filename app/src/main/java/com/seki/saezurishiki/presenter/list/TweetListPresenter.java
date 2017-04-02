@@ -40,7 +40,7 @@ public class TweetListPresenter implements ModelObserver {
         this.tweetListModel.removeObserver(this);
     }
 
-    public TweetListPresenter(TweetListView view, long listOwnerId, TweetListModel listModel) {
+    TweetListPresenter(TweetListView view, long listOwnerId, TweetListModel listModel) {
         this.view = view;
         this.listOwnerId = listOwnerId;
         this.tweetListModel = listModel;
