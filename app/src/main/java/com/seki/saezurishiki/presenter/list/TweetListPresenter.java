@@ -16,7 +16,7 @@ import java.util.List;
 import twitter4j.Paging;
 
 
-public class TweetListPresenter implements ModelObserver {
+public abstract class TweetListPresenter implements ModelObserver {
 
     final TweetListView view;
     private final TweetListModel tweetListModel;
@@ -129,31 +129,7 @@ public class TweetListPresenter implements ModelObserver {
         });
     }
 
-    @SuppressWarnings("unchecked")
-    void dispatch(ModelMessage message) {
-        switch (message.type) {
-            case LOAD_TWEET:
-                //this.view.showTweet((TweetEntity) message.data);
-                break;
-            case UPDATE_TWEET:
-                this.view.updateTweet((TweetEntity)message.data);
-                break;
-            case DELETE_TWEET:
-                //this.view.deleteTweet((TweetEntity)message.data);
-                break;
-            case LOAD_TWEET_LIST:
-                this.view.loadTweets((List<TweetEntity>)message.data);
-                break;
 
-            case RECEIVE_FAVORITE:
-            case RECEIVE_UN_FAVORITE:
-
-            case ERROR:
-                this.view.errorProcess(message.exception);
-                break;
-            default:
-                throw new IllegalArgumentException();
-        }
-    }
+    abstract void dispatch(ModelMessage message);
 
 }
