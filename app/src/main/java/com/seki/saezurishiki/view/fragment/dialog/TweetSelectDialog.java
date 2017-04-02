@@ -48,14 +48,6 @@ public class TweetSelectDialog extends DialogFragment {
         return dialog;
     }
 
-    public static DialogFragment newInstance(TweetEntity status) {
-        Bundle data = new Bundle();
-        data.putSerializable(DataType.STATUS, status);
-        DialogFragment dialog = new TweetSelectDialog();
-        dialog.setArguments(data);
-        return dialog;
-    }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
