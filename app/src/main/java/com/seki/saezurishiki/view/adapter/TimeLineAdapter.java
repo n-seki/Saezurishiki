@@ -469,6 +469,9 @@ public class TimeLineAdapter extends ArrayAdapter<AdapterItem> {
         add(new AdapterItem(status.getId()));
     }
 
+    public void add(long tweetId) {
+        add(new AdapterItem(tweetId));
+    }
 
     public void addSeenItem(Status status) {
         add(new AdapterItem(status.getId(), true));
