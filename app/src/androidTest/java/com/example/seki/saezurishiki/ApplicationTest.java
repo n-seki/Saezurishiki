@@ -1,4 +1,4 @@
-package com.seki.saezurishiki;
+package com.example.seki.saezurishiki;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
