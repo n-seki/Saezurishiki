@@ -64,6 +64,4 @@ public abstract class TimeLineFragment extends TweetListFragment {
         throw new IllegalStateException("this method shouldn't call!");
     }
 
-
-    abstract AsyncTwitterTask.AsyncTask<ResponseList<Status>> getStatusesLoader();
 }

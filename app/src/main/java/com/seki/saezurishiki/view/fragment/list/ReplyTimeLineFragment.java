@@ -29,13 +29,6 @@ public class ReplyTimeLineFragment extends UserStreamTimeLineFragment {
 
 
 
-
-    @Override
-    AsyncTwitterTask.AsyncTask<ResponseList<Status>> getStatusesLoader() {
-        return mTwitterWrapper.getMentionTimeLineLoader(createLastPaging());
-    }
-
-
     @Override
     void releaseSavedStatus() {
         if (mSavedStatuses.isEmpty()) {

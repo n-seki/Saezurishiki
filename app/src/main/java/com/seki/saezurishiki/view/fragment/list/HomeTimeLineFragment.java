@@ -29,11 +29,6 @@ public class HomeTimeLineFragment extends UserStreamTimeLineFragment {
     }
 
 
-    @Override
-    AsyncTwitterTask.AsyncTask<ResponseList<Status>> getStatusesLoader() {
-        return mTwitterWrapper.getHomeTimeLineLoader(createLastPaging());
-    }
-
 
     @Override
     void releaseSavedStatus() {
