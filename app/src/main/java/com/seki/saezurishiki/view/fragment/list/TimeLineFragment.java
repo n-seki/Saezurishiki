@@ -23,11 +23,6 @@ public abstract class TimeLineFragment extends TweetListFragment {
 
     protected boolean mIsLoading;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
 
     @Override
     public void onPause() {
