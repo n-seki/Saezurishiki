@@ -23,14 +23,6 @@ public abstract class TimeLineFragment extends TweetListFragment {
 
     protected boolean mIsLoading;
 
-    protected final AsyncTwitterTask.AfterTask<ResponseList<Status>> TASK_AFTER_LOAD =
-            new AsyncTwitterTask.AfterTask<ResponseList<Status>>() {
-                @Override
-                public void onLoadFinish(TwitterTaskResult<ResponseList<Status>> result) {
-                    TimeLineFragment.this.onLoadFinished(result);
-                }
-            };
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
