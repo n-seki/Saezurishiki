@@ -120,12 +120,9 @@ public class TweetSelectDialog extends DialogFragment {
             return;
         }
 
-
-        if (mStatus.inReplyToStatusId != -1 && mStatus.inReplyToScreenName != null && mStatus.inReplyToUserId != -1) {
-            final int icon = isThemeDark ? R.drawable.drawer_tweet_dark : R.drawable.drawer_tweet_light;
-            final DialogSelectAction action = DialogSelectAction.showTweet(mStatus);
-            adapter.add(new DialogItemAdapter.DialogItem(action, getString(R.string.show_convasation), icon));
-        }
+        final int showTweetIcon = isThemeDark ? R.drawable.drawer_tweet_dark : R.drawable.drawer_tweet_light;
+        final DialogSelectAction showTweet = DialogSelectAction.showTweet(mStatus);
+        adapter.add(new DialogItemAdapter.DialogItem(showTweet, getString(R.string.show_convasation), showTweetIcon));
 
         List<String> usersName = StatusUtil.getAllUserMentionName(mStatus, this.loginUserId);
         List<Long> usersId = StatusUtil.getAllUserMentionId(mStatus, this.loginUserId);
