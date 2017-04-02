@@ -40,6 +40,7 @@ import com.seki.saezurishiki.view.control.FragmentControl;
 
 import java.util.List;
 
+import twitter4j.Paging;
 import twitter4j.ResponseList;
 import twitter4j.Status;
 import twitter4j.TwitterException;
@@ -566,6 +567,29 @@ public abstract class TweetListFragment extends Fragment
     protected void openQuotedTweetEditor(TweetEntity status) {
         Fragment fragment = EditTweetFragment.newQuotedTweetEditor(status);
         this.fragmentControl.requestShowFragment(fragment);
+    }
+
+
+    protected Paging createLastPaging() {
+        long lastId = this.getLastId();
+
+        if (lastId != -1) {
+            return new Paging().maxId(lastId - 1).count(100); //lastIDのstatusは読み込まなくていい
+        }
+
+        //mLastIdが未設定の場合は
+        //statusが1つも読み込まれていないため
+        //無条件でただのPagingを返す
+        return new Paging().count(50);
+    }
+
+
+    protected long getLastId() {
+        if (mAdapter == null || mAdapter.getCount() == 0) {
+            return -1;
+        }
+
+        return mAdapter.getItemIdAtPosition(mAdapter.getCount() - 1);
     }
 
 

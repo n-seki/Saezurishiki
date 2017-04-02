@@ -47,32 +47,9 @@ public abstract class TimeLineFragment extends TweetListFragment {
         if ( mIsLoading ) return;
         mIsLoading = true;
 
-        //new AsyncTwitterTask<>(getActivity(), this.getStatusesLoader(), TASK_AFTER_LOAD, getLoaderManager()).run();
         this.presenter.load(createLastPaging());
     }
 
-
-    protected Paging createLastPaging() {
-        long lastId = this.getLastId();
-
-        if ( lastId != -1 ) {
-            return new Paging().maxId(lastId - 1).count(100); //lastIDのstatusは読み込まなくていい
-        }
-
-        //mLastIdが未設定の場合は
-        //statusが1つも読み込まれていないため
-        //無条件でただのPagingを返す
-        return new Paging().count(50);
-    }
-
-
-    protected long getLastId() {
-        if ( mAdapter == null || mAdapter.getCount() == 0 ) {
-            return -1;
-        }
-
-        return mAdapter.getItemIdAtPosition(mAdapter.getCount() - 1);
-    }
 
 
     @Override
