@@ -2,32 +2,38 @@ package com.seki.saezurishiki.model.adapter;
 
 
 public enum ModelActionType {
-    LOAD_TWEET,
-    LOAD_HOME_LIST,
-    LOAD_REPLY_LIST,
-    LOAD_TWEET_LIST,
-    LOAD_FAVORITE_LIST,
+    LOAD_TWEET(false, DisplayType.ADD),
+    LOAD_HOME_LIST(false, DisplayType.ADD),
+    LOAD_REPLY_LIST(false, DisplayType.ADD),
+    LOAD_TWEET_LIST(false, DisplayType.ADD),
+    LOAD_FAVORITE_LIST(false, DisplayType.ADD),
 
-    RECEIVE_TWEET,
-    RECEIVE_FAVORITE,
-    RECEIVE_UN_FAVORITE,
-    RECEIVE_DELETION,
+    RECEIVE_TWEET(true, DisplayType.ADD),
+    RECEIVE_FAVORITE(true, DisplayType.UPDATE_UNLESS_MAIN),
+    RECEIVE_UN_FAVORITE(true, DisplayType.UPDATE_UNLESS_MAIN),
+    RECEIVE_DELETION(true, DisplayType.UPDATE_UNLESS_MAIN),
 
-    POST_TWEET,
-    UPDATE_TWEET,
-    DELETE_TWEET,
+    COMPLETE_FAVORITE(false, DisplayType.UPDATE),
+    COMPLETE_UN_FAVORITE(false, DisplayType.UPDATE),
+    COMPLETE_RETWEET(false, DisplayType.UPDATE),
+    COMPLETE_DELETE_TWEET(false, DisplayType.DELETE),
 
-    LOAD_FOLLOWS,
-    LOAD_FOLLOWERS,
+    ERROR(false, DisplayType.NO_DISPLAY);
 
-    LOAD_MESSAGES,
 
-    SEND_MESSAGE,
+    enum DisplayType {
+        ADD,
+        UPDATE,
+        UPDATE_UNLESS_MAIN,
+        DELETE,
+        NO_DISPLAY,
+    }
 
-    COMPLETE_FAVORITE,
-    COMPLETE_UN_FAVORITE,
-    COMPLETE_RETWEET,
-    COMPLETE_DELETE_TWEET,
+    final public boolean isUserStream;
+    final public DisplayType displayType;
 
-    ERROR,
+    ModelActionType(boolean isUserStream, DisplayType displayType) {
+        this.isUserStream = isUserStream;
+        this.displayType = displayType;
+    }
 }

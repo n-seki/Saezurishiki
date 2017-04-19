@@ -1,6 +1,8 @@
 package com.seki.saezurishiki.model.impl;
 
 import com.seki.saezurishiki.entity.TweetEntity;
+import com.seki.saezurishiki.entity.UserEntity;
+import com.seki.saezurishiki.entity.mapper.EntityMapper;
 import com.seki.saezurishiki.model.TweetListModel;
 import com.seki.saezurishiki.model.adapter.ModelActionType;
 import com.seki.saezurishiki.model.adapter.ModelMessage;
@@ -26,32 +28,32 @@ abstract class TweetListModelImp extends ModelBaseImp implements TweetListModel 
     @Override
     public void onStatus(Status status) {
         final TweetEntity tweet = this.twitterAccount.getRepository().map(status);
-        this.twitterAccount.getRepository().addStatus(tweet);
         final ModelMessage message = ModelMessage.of(ModelActionType.RECEIVE_TWEET, tweet);
-        this.observable.notifyObserver(message);
+        observable.notifyObserver(message);
     }
 
     @Override
     public void onDeletionNotice(StatusDeletionNotice deletionNotice) {
-        this.twitterAccount.getRepository().addDeletionNotice(deletionNotice);
         final ModelMessage message = ModelMessage.of(ModelActionType.RECEIVE_DELETION, deletionNotice);
-        this.observable.notifyObserver(message);
+        observable.notifyObserver(message);
     }
 
     @Override
     public void onFavorite(User sourceUser, User targetUser, Status targetTweet) {
         final TweetEntity tweet = this.twitterAccount.getRepository().map(targetTweet);
-        this.twitterAccount.getRepository().addStatus(tweet);
-        final ModelMessage message = ModelMessage.of(ModelActionType.RECEIVE_FAVORITE, tweet);
-        this.observable.notifyObserver(message);
+        final UserEntity source = this.twitterAccount.getRepository().map(sourceUser);
+        final UserEntity target = this.twitterAccount.getRepository().map(targetUser);
+        final ModelMessage message = ModelMessage.of(ModelActionType.RECEIVE_FAVORITE, tweet, source, target);
+        observable.notifyObserver(message);
     }
 
     @Override
     public void onUnFavorite(User sourceUser, User targetUser, Status targetTweet) {
         final TweetEntity tweet = this.twitterAccount.getRepository().map(targetTweet);
-        this.twitterAccount.getRepository().addStatus(tweet);
-        final ModelMessage message = ModelMessage.of(ModelActionType.RECEIVE_UN_FAVORITE, tweet);
-        this.observable.notifyObserver(message);
+        final UserEntity source = this.twitterAccount.getRepository().map(sourceUser);
+        final UserEntity target = this.twitterAccount.getRepository().map(targetUser);
+        final ModelMessage message = ModelMessage.of(ModelActionType.RECEIVE_UN_FAVORITE, tweet, source, target);
+        observable.notifyObserver(message);
     }
 
     @Override
@@ -61,7 +63,9 @@ abstract class TweetListModelImp extends ModelBaseImp implements TweetListModel 
             public void run() {
                 try {
                     final Status result = twitterAccount.twitter.createFavorite(tweetEntity.getId());
-                    final ModelMessage message = ModelMessage.of(ModelActionType.COMPLETE_FAVORITE, result);
+                    final TweetEntity tweet = twitterAccount.getRepository().map(result);
+                    twitterAccount.getRepository().addStatus(tweet);
+                    final ModelMessage message = ModelMessage.of(ModelActionType.COMPLETE_FAVORITE, tweet);
                     observable.notifyObserver(message);
                 } catch (TwitterException e) {
                     observable.notifyObserver(ModelMessage.error(e));
@@ -77,7 +81,9 @@ abstract class TweetListModelImp extends ModelBaseImp implements TweetListModel 
             public void run() {
                 try {
                     final Status result = twitterAccount.twitter.destroyFavorite(tweetEntity.getId());
-                    final ModelMessage message = ModelMessage.of(ModelActionType.COMPLETE_UN_FAVORITE, result);
+                    final TweetEntity tweet = twitterAccount.getRepository().map(result);
+                    twitterAccount.getRepository().addStatus(tweet);
+                    final ModelMessage message = ModelMessage.of(ModelActionType.COMPLETE_UN_FAVORITE, tweet);
                     observable.notifyObserver(message);
                 } catch (TwitterException e) {
                     observable.notifyObserver(ModelMessage.error(e));

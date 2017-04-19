@@ -2,11 +2,21 @@ package com.seki.saezurishiki.entity;
 
 import java.util.Date;
 
+import twitter4j.User;
+
 public class UserEntity {
     final private twitter4j.User mUser;
+    final public boolean isLoginUser;
 
     public UserEntity(twitter4j.User user) {
         mUser = user;
+        this.isLoginUser = false;
+    }
+
+    public UserEntity(User user, boolean isLoginUser) {
+        mUser = user;
+        this.isLoginUser = isLoginUser;
+
     }
 
     public long getId() {

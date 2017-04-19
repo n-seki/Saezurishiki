@@ -6,6 +6,8 @@ import com.seki.saezurishiki.model.adapter.ModelMessage;
 
 import java.util.List;
 
+import twitter4j.StatusDeletionNotice;
+
 
 public class ReplyTimeLinePresenter extends TweetListPresenter {
 
@@ -22,14 +24,25 @@ public class ReplyTimeLinePresenter extends TweetListPresenter {
                 this.view.loadTweets((List<TweetEntity>)message.data);
                 break;
 
+            case COMPLETE_FAVORITE:
+            case COMPLETE_UN_FAVORITE:
+                this.view.updateTweet((TweetEntity)message.data);
+                break;
+
             case RECEIVE_TWEET:
                 this.view.catchNewTweet((TweetEntity)message.data);
                 break;
 
             case RECEIVE_FAVORITE :
             case RECEIVE_UN_FAVORITE :
-            case RECEIVE_DELETION:
+                if (message.source.isLoginUser) {
+                    break;
+                }
                 this.view.updateTweet((TweetEntity)message.data);
+                break;
+
+            case RECEIVE_DELETION:
+                this.view.deletionTweet(((StatusDeletionNotice)message.data).getStatusId());
                 break;
         }
     }

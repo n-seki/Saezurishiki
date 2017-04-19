@@ -6,6 +6,8 @@ import com.seki.saezurishiki.model.adapter.ModelMessage;
 
 import java.util.List;
 
+import twitter4j.StatusDeletionNotice;
+
 
 public class FavoriteListPresenter extends TweetListPresenter {
 
@@ -25,8 +27,14 @@ public class FavoriteListPresenter extends TweetListPresenter {
 
             case RECEIVE_FAVORITE :
             case RECEIVE_UN_FAVORITE :
-            case RECEIVE_DELETION:
+                if (message.source.isLoginUser) {
+                    break;
+                }
                 this.view.updateTweet((TweetEntity)message.data);
+                break;
+
+            case RECEIVE_DELETION:
+                this.view.deletionTweet(((StatusDeletionNotice)message.data).getStatusId());
                 break;
 
             default:

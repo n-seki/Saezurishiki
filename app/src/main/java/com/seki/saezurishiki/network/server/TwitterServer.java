@@ -1,5 +1,6 @@
 package com.seki.saezurishiki.network.server;
 
+import com.seki.saezurishiki.entity.UserEntity;
 import com.seki.saezurishiki.entity.mapper.EntityMapper;
 import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.entity.TwitterEntity;
@@ -207,6 +208,10 @@ public class TwitterServer  {
 
     public TweetEntity map(Status status) {
         return this.mapper.map(status);
+    }
+
+    public UserEntity map(User user) {
+        return this.mapper.map(user);
     }
 
     public List<TweetEntity> map(ResponseList<Status> statuses) {

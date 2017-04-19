@@ -28,6 +28,7 @@ public abstract class TweetListPresenter implements ModelObserver {
         void catchNewTweet(TweetEntity tweet);
         void completeDeleteTweet(TweetEntity tweet);
         void completeReTweet(TweetEntity tweet);
+        void deletionTweet(long deletedTweetId);
         void setPresenter(TweetListPresenter presenter);
         void errorProcess(Exception e);
     }

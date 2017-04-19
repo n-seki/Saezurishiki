@@ -428,37 +428,6 @@ public abstract class TweetListFragment extends Fragment
     }
 
 
-//    @Override
-//    public void onDeletionNotice(final StatusDeletionNotice deletionNotice) {
-//        if (deletionNotice.getUserId() == this.twitterAccount.getLoginUserId()) {
-//            mAdapter.remove(deletionNotice.getStatusId());
-//            return;
-//        }
-//
-//        this.updateTweet(deletionNotice.getStatusId());
-//    }
-//
-//    @Override
-//    public void onStatus(final Status status) {
-//        //do nothing
-//    }
-//
-//    @Override
-//    public void onFavorite(UserEntity sourceUser, UserEntity targetUser, Status status) {
-//        if (sourceUser.getId() == twitterAccount.getLoginUserId()) {
-//            return;
-//        }
-//        updateTweet(status.getId());
-//    }
-//    @Override
-//    public void onUnFavorite(UserEntity sourceUser, UserEntity targetUser, Status status) {
-//        if (sourceUser.getId() == twitterAccount.getLoginUserId()) {
-//            return;
-//        }
-//        updateTweet(status.getId());
-//    }
-
-
     public synchronized void updateTweet(long id) {
         if (this.mAdapter.isEmpty()) return;
         int visibleTop = mListView.getFirstVisiblePosition();
@@ -487,6 +456,11 @@ public abstract class TweetListFragment extends Fragment
         for (TweetEntity tweet : tweets) {
             mAdapter.add(tweet.getId());
         }
+    }
+
+    @Override
+    public void deletionTweet(long deletedTweetId) {
+        this.updateTweet(deletedTweetId);
     }
 
     @Override

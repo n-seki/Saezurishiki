@@ -13,19 +13,22 @@ import java.util.concurrent.Executors;
 abstract class ModelBaseImp implements ModelBase {
 
     final TwitterAccount twitterAccount;
-    final ModelObservable observable;
+    final static ModelObservable observable;
     final Executor executor = Executors.newCachedThreadPool();
+
+    static {
+        observable = new ModelObservable();
+    }
 
     ModelBaseImp(TwitterAccount twitterAccount) {
         this.twitterAccount = twitterAccount;
-        this.observable = new ModelObservable();
     }
 
     public void addObserver(ModelObserver observer){
-        this.observable.addObserver(observer);
+        observable.addObserver(observer);
     }
 
     public void removeObserver(ModelObserver observer){
-        this.observable.removeObserver(observer);
+        observable.removeObserver(observer);
     }
 }
