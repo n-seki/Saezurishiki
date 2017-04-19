@@ -21,19 +21,7 @@ public abstract class TimeLineFragment extends TweetListFragment {
 
     protected long mUserId       = 0;
 
-    protected boolean mIsLoading;
-
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mIsLoading = false;
-    }
-
     protected void loadTimeLine() {
-        if ( mIsLoading ) return;
-        mIsLoading = true;
-
         this.presenter.load(createLastPaging());
     }
 
@@ -42,7 +30,6 @@ public abstract class TimeLineFragment extends TweetListFragment {
     @Override
     protected void onLoadFinished(TwitterTaskResult<ResponseList<Status>> result) {
         this.isFirstOpen = false;
-        this.mIsLoading = false;
         ((TextView)mFooterView.findViewById(R.id.read_more)).setText(R.string.click_to_load);
         if (result.isException()) {
             TimeLineFragment.this.errorProcess(result.getException());

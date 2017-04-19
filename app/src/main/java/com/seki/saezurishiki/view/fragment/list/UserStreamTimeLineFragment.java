@@ -183,7 +183,7 @@ public abstract class UserStreamTimeLineFragment extends TimeLineFragment
         }
 
         if (previousFirstVisibleItem < firstVisibleItem) {
-            if (firstVisibleItem + visibleItemCount + 10 == totalItemCount && !mIsLoading) {
+            if (firstVisibleItem + visibleItemCount + 10 == totalItemCount) {
                 UserStreamTimeLineFragment.this.loadTimeLine();
             }
         }
@@ -214,9 +214,6 @@ public abstract class UserStreamTimeLineFragment extends TimeLineFragment
 
     @Override
     public void loadTimeLine() {
-        if (mIsLoading) return;
-        mIsLoading = true;
-
         this.presenter.load(createLastPaging());
     }
 
@@ -230,7 +227,6 @@ public abstract class UserStreamTimeLineFragment extends TimeLineFragment
     private AsyncTwitterTask.AfterTask<ResponseList<Status>> SWIPE_REFRESH_AFTER_TASK = new AsyncTwitterTask.AfterTask<ResponseList<Status>>() {
         @Override
         public void onLoadFinish(TwitterTaskResult<ResponseList<Status>> result) {
-            mIsLoading = false;
             mSwipeRefresher.setRefreshing(false);
 
             if(result.isException()) {
@@ -365,7 +361,6 @@ public abstract class UserStreamTimeLineFragment extends TimeLineFragment
     @Override
     protected void onLoadFinished(TwitterTaskResult<ResponseList<Status>> result) {
         isFirstOpen = false;
-        mIsLoading = false;
         ((TextView)mFooterView.findViewById(R.id.read_more)).setText(R.string.click_to_load);
 
         if ( result.isException() ) {
