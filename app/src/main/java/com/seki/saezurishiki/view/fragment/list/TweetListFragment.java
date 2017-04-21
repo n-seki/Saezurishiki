@@ -250,9 +250,9 @@ public abstract class TweetListFragment extends Fragment
             @Override
             public void onItemClick(TweetEntity tweet) {
                 if (status.isFavorited) {
-                    TweetListFragment.this.destroyFavorite(status);
+                    presenter.destroyFavorite(status);
                 } else {
-                    TweetListFragment.this.createFavorite(status);
+                    presenter.createFavorite(status);
                 }
             }
         };
@@ -262,35 +262,13 @@ public abstract class TweetListFragment extends Fragment
     }
 
 
-    //このメソッドはPresenterに処理移譲する必要があったため、移譲した。
-    /**
-     * 非同期でFavoriteを行う
-     * 正常時はToast表示後にListView更新メソッドを呼び出し,favorite_starを表示する
-     * ⇒ここではcreateFavoriteを叩くだけで、後はuserStreamのコールバックで行う
-     */
-    protected void createFavorite(TweetEntity tweet) {
-        this.presenter.createFavorite(tweet);
-    }
-
-
-
-    /**
-     * 非同期でUnFavoriteを行う
-     * 正常時はToast表示後にListView更新メソッドを呼び出し,favorite_starを非表示にする
-     * ⇒ここではunFavoriteをたたくだけで、あとはUserStreamのコールバックで行う
-     */
-    protected void destroyFavorite(TweetEntity tweet) {
-        this.presenter.destroyFavorite(tweet);
-    }
-
-
     @SuppressWarnings("unchecked")
     @Override
     public void showReTweetDialog(final TweetEntity tweet) {
         YesNoSelectDialog.Listener<TweetEntity> action = new YesNoSelectDialog.Listener<TweetEntity>() {
             @Override
-            public void onItemClick(TweetEntity item) {
-                TweetListFragment.this.reTweet(tweet);
+            public void onItemClick(TweetEntity tweet) {
+                presenter.reTweet(tweet);
             }
         };
 
@@ -305,12 +283,6 @@ public abstract class TweetListFragment extends Fragment
     }
 
 
-
-    protected void reTweet(TweetEntity tweet) {
-        this.presenter.reTweet(tweet);
-    }
-
-
     @Override
     public void completeDeleteTweet(TweetEntity tweet) {
         CustomToast.show(TweetListFragment.this.getActivity(), R.string.delete_tweet, Toast.LENGTH_SHORT);
@@ -321,9 +293,6 @@ public abstract class TweetListFragment extends Fragment
     public void catchNewTweet(TweetEntity tweetEntity) {
         this.mAdapter.insert(tweetEntity.getId(), 0);
     }
-
-
-
 
 
     /**
@@ -458,13 +427,6 @@ public abstract class TweetListFragment extends Fragment
         button.setLabelResId(labelResID);
 
         mAdapter.notifyDataSetChanged();
-    }
-
-
-    @SuppressWarnings("unused")
-    protected void openQuotedTweetEditor(TweetEntity status) {
-        Fragment fragment = EditTweetFragment.newQuotedTweetEditor(status);
-        this.fragmentControl.requestShowFragment(fragment);
     }
 
 
