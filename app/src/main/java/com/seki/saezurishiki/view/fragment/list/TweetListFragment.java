@@ -377,18 +377,6 @@ public abstract class TweetListFragment extends Fragment
     }
 
 
-
-    /**
-     * Statusのtextをコピーします
-     */
-    private void copyText(final TweetEntity status) {
-        ClipboardManager clipboardManager = (ClipboardManager)TweetListFragment.this.getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-        ClipData clip = ClipData.newPlainText("tweet", status.text);
-        clipboardManager.setPrimaryClip(clip);
-
-        CustomToast.show(getActivity(), R.string.copy_done, Toast.LENGTH_SHORT);
-    }
-
     //Activityの表示処理（暗示的Intent)なのでPresenterに処理移譲はしない。
     /**
      * TweetDialogFragmentでclickされたURLを表示する
