@@ -71,50 +71,6 @@ public abstract class TweetListFragment extends Fragment
     TweetListPresenter presenter;
 
 
-    protected final TimeLineAdapter.ViewListener listener = new TimeLineAdapter.ViewListener() {
-        @Override
-        public void onClickPicture(String pictureURL, TweetEntity status) {
-            Fragment picture = PictureFragment.getInstance(pictureURL, status);
-            fragmentControl.requestShowFragment(picture);
-        }
-
-        @Override
-        public void onClickUserIcon(User user) {
-            fragmentControl.requestShowUser(user.getId());
-        }
-
-        @Override
-        public void onClickReplyButton(TweetEntity status) {
-            TweetListFragment.this.openReplyEditor(status);
-        }
-
-        @Override
-        public void onClickReTweetButton(TweetEntity status, boolean isShowDialog) {
-            if (isShowDialog) {
-                TweetListFragment.this.showReTweetDialog(status);
-                return;
-            }
-
-            presenter.onClickRetweetButton(status);
-        }
-
-        @Override
-        public void onClickFavoriteButton(final TweetEntity status, final boolean isShowDialog) {
-            if (isShowDialog) {
-                TweetListFragment.this.showFavoriteDialog(status);
-                return;
-            }
-
-            presenter.onClickFavoriteButton(status);
-        }
-
-        @Override
-        public void onClickQuotedTweet(final TweetEntity status) {
-            TweetListFragment.this.displayDetailTweet(status);
-        }
-    };
-
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -147,7 +103,7 @@ public abstract class TweetListFragment extends Fragment
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mAdapter = new TimeLineAdapter(getActivity(), R.layout.tweet_layout_with_picture, listener, twitterAccount);
+        mAdapter = new TimeLineAdapter(getActivity(), R.layout.tweet_layout_with_picture, presenter, twitterAccount);
         mListView.setAdapter(mAdapter);
         mTwitterWrapper = new TwitterWrapper(getActivity(), getLoaderManager(), this.twitterAccount);
     }
@@ -278,7 +234,8 @@ public abstract class TweetListFragment extends Fragment
      * EditTweetFragmentを表示する
      * mStatusがreTweetである場合には元TweetのUserに対してのReplyとなる
      */
-    protected void openReplyEditor(TweetEntity status) {
+    @Override
+    public void openReplyEditor(TweetEntity status) {
         Fragment fragment = EditTweetFragment.newReplyEditorFromStatus(status);
         this.fragmentControl.requestShowFragment(fragment);
     }
@@ -286,7 +243,8 @@ public abstract class TweetListFragment extends Fragment
 
     //このメソッドはpresenterに移譲しない。Dialogの表示処理であるため。
     @SuppressWarnings("unchecked")
-    private void showFavoriteDialog(final TweetEntity status) {
+    @Override
+    public void showFavoriteDialog(final TweetEntity status) {
 
         YesNoSelectDialog.Listener<TweetEntity> action = new YesNoSelectDialog.Listener<TweetEntity>() {
             @Override
@@ -327,7 +285,8 @@ public abstract class TweetListFragment extends Fragment
 
 
     @SuppressWarnings("unchecked")
-    private void showReTweetDialog(final TweetEntity tweet) {
+    @Override
+    public void showReTweetDialog(final TweetEntity tweet) {
         YesNoSelectDialog.Listener<TweetEntity> action = new YesNoSelectDialog.Listener<TweetEntity>() {
             @Override
             public void onItemClick(TweetEntity item) {

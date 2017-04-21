@@ -3,22 +3,23 @@ package com.seki.saezurishiki.presenter.list;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.support.v4.app.Fragment;
 
 import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.model.TweetListModel;
 import com.seki.saezurishiki.model.adapter.ModelMessage;
 import com.seki.saezurishiki.model.util.ModelObservable;
 import com.seki.saezurishiki.model.util.ModelObserver;
+import com.seki.saezurishiki.view.adapter.TimeLineAdapter;
 import com.seki.saezurishiki.view.fragment.dialog.adapter.DialogSelectAction;
-import com.seki.saezurishiki.view.fragment.other.PictureFragment;
+import com.seki.saezurishiki.view.fragment.list.TweetListFragment;
 
 import java.util.List;
 
 import twitter4j.Paging;
+import twitter4j.User;
 
 
-public abstract class TweetListPresenter implements ModelObserver {
+public abstract class TweetListPresenter implements TimeLineAdapter.ViewListener, ModelObserver {
 
     final TweetListView view;
     private final TweetListModel tweetListModel;
@@ -35,7 +36,10 @@ public abstract class TweetListPresenter implements ModelObserver {
         void displayDetailTweet(TweetEntity tweet);
         void showUserActivity(long userID);
         void openLink(String url);
+        void openReplyEditor(TweetEntity tweet);
         void showPicture(TweetEntity tweet, String selectedMedia);
+        void showReTweetDialog(TweetEntity tweet);
+        void showFavoriteDialog(TweetEntity tweet);
         void errorProcess(Exception e);
     }
 
@@ -95,6 +99,46 @@ public abstract class TweetListPresenter implements ModelObserver {
 
     public void load(final Paging paging) {
         this.tweetListModel.request(this.listOwnerId, paging);
+    }
+
+    @Override
+    public void onClickPicture(String pictureURL, TweetEntity tweet) {
+        this.view.showPicture(tweet, pictureURL);
+    }
+
+    @Override
+    public void onClickUserIcon(User user) {
+        this.view.showUserActivity(user.getId());
+    }
+
+    @Override
+    public void onClickReplyButton(TweetEntity tweet) {
+        this.view.openReplyEditor(tweet);
+    }
+
+    @Override
+    public void onClickReTweetButton(TweetEntity tweet, boolean isShowDialog) {
+        if (isShowDialog) {
+            this.view.showReTweetDialog(tweet);
+            return;
+        }
+
+        onClickRetweetButton(tweet);
+    }
+
+    @Override
+    public void onClickFavoriteButton(final TweetEntity tweet, final boolean isShowDialog) {
+        if (isShowDialog) {
+            this.view.showFavoriteDialog(tweet);
+            return;
+        }
+
+        onClickFavoriteButton(tweet);
+    }
+
+    @Override
+    public void onClickQuotedTweet(final TweetEntity tweet) {
+        this.view.displayDetailTweet(tweet);
     }
 
 
