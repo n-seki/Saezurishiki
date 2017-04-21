@@ -1,7 +1,5 @@
 package com.seki.saezurishiki.view.fragment.list;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -328,17 +326,6 @@ public abstract class TweetListFragment extends Fragment
     }
 
 
-
-    /**
-     * ConversationFragment表示依頼
-     */
-    protected void displayDetailTweet(TweetEntity status) {
-        Fragment conversation = ConversationFragment.getInstance(status.getId());
-        this.fragmentControl.requestShowFragment(conversation);
-    }
-
-
-
     @SuppressWarnings("unchecked")
     private void showReTweetDialog(final TweetEntity tweet) {
         YesNoSelectDialog.Listener<TweetEntity> action = new YesNoSelectDialog.Listener<TweetEntity>() {
@@ -377,16 +364,7 @@ public abstract class TweetListFragment extends Fragment
     }
 
 
-    //Activityの表示処理（暗示的Intent)なのでPresenterに処理移譲はしない。
-    /**
-     * TweetDialogFragmentでclickされたURLを表示する
-     * URLをuriとして暗黙的Intentで外部アプリを起動する
-     * @param url 表示したいURL
-     */
-    private void openLink(String url) {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-        startActivity(intent);
-    }
+
 
 
     /**
@@ -466,33 +444,32 @@ public abstract class TweetListFragment extends Fragment
         throw new IllegalStateException(e);
     }
 
-
-
+    @Override
     public void onDialogItemClick(DialogSelectAction<TweetEntity> selectedItem) {
-        switch (selectedItem.action) {
-            case DialogSelectAction.SHOW_TWEET:
-                this.displayDetailTweet(selectedItem.targetItem);
-                break;
+       this.presenter.onClickDialogItem(selectedItem);
+    }
 
-            case DialogSelectAction.BIOGRAPHY:
-                final long targetUserId = (Long)selectedItem.item;
-                this.fragmentControl.requestShowUser(targetUserId);
-                break;
+    @Override
+    public void displayDetailTweet(TweetEntity status) {
+        Fragment conversation = ConversationFragment.getInstance(status.getId());
+        this.fragmentControl.requestShowFragment(conversation);
+    }
 
-            case DialogSelectAction.URL:
-                final String targetUrl = (String)selectedItem.item;
-                this.openLink(targetUrl);
-                break;
+    @Override
+    public void showUserActivity(long userID) {
+        this.fragmentControl.requestShowUser(userID);
+    }
 
-            case DialogSelectAction.MEDIA:
-                final String targetMedia = (String)selectedItem.item;
-                Fragment f = PictureFragment.getInstance(targetMedia, selectedItem.targetItem);
-                this.fragmentControl.requestShowFragment(f);
-                break;
+    @Override
+    public void openLink(String url) {
+        final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        startActivity(intent);
+    }
 
-            default:
-                throw new IllegalArgumentException("action is invalid! : " + selectedItem.action);
-        }
+    @Override
+    public void showPicture(TweetEntity tweet, String selectedMedia) {
+        final Fragment f = PictureFragment.getInstance(selectedMedia, tweet);
+        this.fragmentControl.requestShowFragment(f);
     }
 
     @Override

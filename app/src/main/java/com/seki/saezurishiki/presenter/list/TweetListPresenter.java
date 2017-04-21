@@ -3,6 +3,7 @@ package com.seki.saezurishiki.presenter.list;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.app.Fragment;
 
 import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.model.TweetListModel;
@@ -10,6 +11,7 @@ import com.seki.saezurishiki.model.adapter.ModelMessage;
 import com.seki.saezurishiki.model.util.ModelObservable;
 import com.seki.saezurishiki.model.util.ModelObserver;
 import com.seki.saezurishiki.view.fragment.dialog.adapter.DialogSelectAction;
+import com.seki.saezurishiki.view.fragment.other.PictureFragment;
 
 import java.util.List;
 
@@ -30,6 +32,10 @@ public abstract class TweetListPresenter implements ModelObserver {
         void completeReTweet(TweetEntity tweet);
         void deletionTweet(long deletedTweetId);
         void setPresenter(TweetListPresenter presenter);
+        void displayDetailTweet(TweetEntity tweet);
+        void showUserActivity(long userID);
+        void openLink(String url);
+        void showPicture(TweetEntity tweet, String selectedMedia);
         void errorProcess(Exception e);
     }
 
@@ -89,6 +95,30 @@ public abstract class TweetListPresenter implements ModelObserver {
 
     public void load(final Paging paging) {
         this.tweetListModel.request(this.listOwnerId, paging);
+    }
+
+
+    public void onClickDialogItem(DialogSelectAction<TweetEntity> selectedItem) {
+        switch (selectedItem.action) {
+            case DialogSelectAction.SHOW_TWEET:
+                this.view.displayDetailTweet(selectedItem.targetItem);
+                break;
+
+            case DialogSelectAction.BIOGRAPHY:
+                this.view.showUserActivity((Long)selectedItem.item);
+                break;
+
+            case DialogSelectAction.URL:
+                this.view.openLink((String)selectedItem.item);
+                break;
+
+            case DialogSelectAction.MEDIA:
+                this.view.showPicture(selectedItem.targetItem, (String)selectedItem.item);
+                break;
+
+            default:
+                throw new IllegalArgumentException("action is invalid! : " + selectedItem.action);
+        }
     }
 
 
