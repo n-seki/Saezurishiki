@@ -32,7 +32,7 @@ public abstract class TweetListPresenter implements TimeLineAdapter.ViewListener
         void completeReTweet(TweetEntity tweet);
         void deletionTweet(long deletedTweetId);
         void setPresenter(TweetListPresenter presenter);
-        void displayDetailTweet(TweetEntity tweet);
+        void displayDetailTweet(long userID, long tweetID);
         void showUserActivity(long userID);
         void openLink(String url);
         void openReplyEditor(TweetEntity tweet);
@@ -137,14 +137,14 @@ public abstract class TweetListPresenter implements TimeLineAdapter.ViewListener
 
     @Override
     public void onClickQuotedTweet(final TweetEntity tweet) {
-        this.view.displayDetailTweet(tweet);
+        this.view.displayDetailTweet(this.listOwnerId, tweet.getId());
     }
 
 
     public void onClickDialogItem(DialogSelectAction<TweetEntity> selectedItem) {
         switch (selectedItem.action) {
             case DialogSelectAction.SHOW_TWEET:
-                this.view.displayDetailTweet(selectedItem.targetItem);
+                this.view.displayDetailTweet(this.listOwnerId, selectedItem.targetItem.getId());
                 break;
 
             case DialogSelectAction.BIOGRAPHY:

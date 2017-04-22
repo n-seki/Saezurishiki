@@ -6,10 +6,11 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.seki.saezurishiki.R;
-import com.seki.saezurishiki.network.twitter.AsyncTwitterTask;
+import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.network.twitter.TwitterTaskResult;
 import com.seki.saezurishiki.view.fragment.util.DataType;
 
+import twitter4j.Paging;
 import twitter4j.ResponseList;
 import twitter4j.Status;
 
@@ -20,7 +21,7 @@ import twitter4j.Status;
  */
 public class ConversationFragment extends TweetListFragment {
 
-    private long mStatusId;
+    private long firstTweetId;
 
 
     public static ConversationFragment getInstance(long statusId) {
@@ -35,7 +36,7 @@ public class ConversationFragment extends TweetListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mStatusId = getArguments().getLong(DataType.STATUS_ID);
+        firstTweetId = getArguments().getLong(DataType.STATUS_ID);
     }
 
 
@@ -65,21 +66,15 @@ public class ConversationFragment extends TweetListFragment {
     }
 
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        if (this.isFirstOpen) {
-            this.loadStatus(mStatusId);
-            this.isFirstOpen = false;
-        }
-    }
-
-
 
     @Override
     protected void loadTimeLine() {
-        //do nothing
+        this.presenter.load(new Paging().maxId(firstTweetId));
+    }
+
+    @Override
+    public void catchNewTweet(TweetEntity tweetEntity) {
+        this.mAdapter.add(tweetEntity.getId());
     }
 
     @Override
@@ -87,38 +82,6 @@ public class ConversationFragment extends TweetListFragment {
         return "Conversation";
 }
 
-
-    private void loadReplyToStatus(final Status status) {
-        if (status.getInReplyToStatusId() == -1) return;
-        loadStatus(status.getInReplyToStatusId());
-    }
-
-
-    private void loadStatus(final long id) {
-        mTwitterWrapper.showStatus(id, new AsyncTwitterTask.AfterTask<Status>() {
-            @Override
-            public void onLoadFinish(TwitterTaskResult<Status> result) {
-                ConversationFragment.this.onLoadStatus(result);
-            }
-        });
-    }
-
-
-    void onLoadStatus(TwitterTaskResult<Status> result) {
-        if ( result.isException() ) {
-            this.errorProcess(result.getException());
-            return;
-        }
-
-        Status resultStatus = result.getResult();
-
-        if ( resultStatus == null ) {
-            throw new IllegalStateException("ResponseList is null");
-        }
-
-        mAdapter.add(resultStatus);
-        this.loadReplyToStatus(resultStatus);
-    }
 
     protected void onClickLoadButton(long buttonId) {
         throw new IllegalStateException("this method shouldn't call!");

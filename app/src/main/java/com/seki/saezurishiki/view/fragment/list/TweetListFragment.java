@@ -24,6 +24,7 @@ import com.seki.saezurishiki.control.UIControlUtil;
 import com.seki.saezurishiki.entity.LoadButton;
 import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.entity.TwitterEntity;
+import com.seki.saezurishiki.view.fragment.Fragments;
 import com.seki.saezurishiki.view.fragment.dialog.adapter.DialogSelectAction;
 import com.seki.saezurishiki.view.fragment.editor.EditTweetFragment;
 import com.seki.saezurishiki.view.fragment.other.PictureFragment;
@@ -378,8 +379,8 @@ public abstract class TweetListFragment extends Fragment
     }
 
     @Override
-    public void displayDetailTweet(TweetEntity status) {
-        Fragment conversation = ConversationFragment.getInstance(status.getId());
+    public void displayDetailTweet(long userID, long tweetID) {
+        Fragment conversation = Fragments.createInjectConversationFragment(userID, tweetID);
         this.fragmentControl.requestShowFragment(conversation);
     }
 

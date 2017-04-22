@@ -28,7 +28,6 @@ import android.widget.Toast;
 
 import com.seki.saezurishiki.application.SaezurishikiApp;
 import com.seki.saezurishiki.R;
-import com.seki.saezurishiki.entity.UserEntity;
 import com.seki.saezurishiki.model.impl.ModelContainer;
 import com.seki.saezurishiki.view.adapter.DrawerButtonListAdapter;
 import com.seki.saezurishiki.control.CustomToast;
@@ -302,7 +301,7 @@ public class LoginUserActivity extends    AppCompatActivity
 
 
     void applicationFinalizer() {
-        ModelContainer.destory();
+        ModelContainer.destroy();
         if (this.twitterAccount != null) {
             this.twitterAccount.removeListener(this);
             this.twitterAccount.onActivityDestroyed(this);

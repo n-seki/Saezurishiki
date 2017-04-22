@@ -22,17 +22,13 @@ public class ConversationPresenter extends TweetListPresenter {
                 final TweetEntity tweet = (TweetEntity)message.data;
                 this.view.catchNewTweet(tweet);
                 if (hasNextReply((TweetEntity)message.data)) {
-                    this.tweetListModel.request(-1, new Paging().maxId(tweet.getId()));
+                    this.tweetListModel.request(-1, new Paging().maxId(tweet.inReplyToStatusId));
                 }
                 break;
 
             case COMPLETE_FAVORITE:
             case COMPLETE_UN_FAVORITE:
                 this.view.updateTweet((TweetEntity)message.data);
-                break;
-
-            case RECEIVE_TWEET:
-                this.view.catchNewTweet((TweetEntity)message.data);
                 break;
 
             case RECEIVE_FAVORITE :

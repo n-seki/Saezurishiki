@@ -22,13 +22,4 @@ public interface TweetListModel extends ModelBase, StatusUserStreamListener {
     void addObserver(ModelObserver observer);
     @Override
     void removeObserver(ModelObserver observer);
-
-    @Override
-    void onStatus(Status tweet);
-    @Override
-    void onDeletionNotice(StatusDeletionNotice deletionNotice);
-    @Override
-    void onFavorite(User sourceUser, User targetUser, Status targetTweet);
-    @Override
-    void onUnFavorite(User sourceUser, User targetUser, Status targetTweet);
 }

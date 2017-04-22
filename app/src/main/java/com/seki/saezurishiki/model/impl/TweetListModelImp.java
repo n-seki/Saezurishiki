@@ -7,6 +7,7 @@ import com.seki.saezurishiki.model.TweetListModel;
 import com.seki.saezurishiki.model.adapter.ModelActionType;
 import com.seki.saezurishiki.model.adapter.ModelMessage;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
+import com.seki.saezurishiki.network.twitter.streamListener.StatusUserStreamListener;
 
 import twitter4j.Paging;
 import twitter4j.Status;
@@ -25,17 +26,18 @@ abstract class TweetListModelImp extends ModelBaseImp implements TweetListModel 
     @Override
     abstract public void request(long userId, Paging paging);
 
+
     @Override
     public void onStatus(Status status) {
         final TweetEntity tweet = this.twitterAccount.getRepository().map(status);
         final ModelMessage message = ModelMessage.of(ModelActionType.RECEIVE_TWEET, tweet);
-        observable.notifyObserver(message);
+        this.userStreamObservable.notifyObserver(message);
     }
 
     @Override
     public void onDeletionNotice(StatusDeletionNotice deletionNotice) {
         final ModelMessage message = ModelMessage.of(ModelActionType.RECEIVE_DELETION, deletionNotice);
-        observable.notifyObserver(message);
+        this.userStreamObservable.notifyObserver(message);
     }
 
     @Override
@@ -44,7 +46,7 @@ abstract class TweetListModelImp extends ModelBaseImp implements TweetListModel 
         final UserEntity source = this.twitterAccount.getRepository().map(sourceUser);
         final UserEntity target = this.twitterAccount.getRepository().map(targetUser);
         final ModelMessage message = ModelMessage.of(ModelActionType.RECEIVE_FAVORITE, tweet, source, target);
-        observable.notifyObserver(message);
+        this.userStreamObservable.notifyObserver(message);
     }
 
     @Override
@@ -53,8 +55,9 @@ abstract class TweetListModelImp extends ModelBaseImp implements TweetListModel 
         final UserEntity source = this.twitterAccount.getRepository().map(sourceUser);
         final UserEntity target = this.twitterAccount.getRepository().map(targetUser);
         final ModelMessage message = ModelMessage.of(ModelActionType.RECEIVE_UN_FAVORITE, tweet, source, target);
-        observable.notifyObserver(message);
+        this.userStreamObservable.notifyObserver(message);
     }
+
 
     @Override
     public void favorite(final TweetEntity tweetEntity) {
