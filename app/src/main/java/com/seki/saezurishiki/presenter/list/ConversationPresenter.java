@@ -5,6 +5,7 @@ import com.seki.saezurishiki.model.TweetListModel;
 import com.seki.saezurishiki.model.adapter.ModelMessage;
 
 import twitter4j.Paging;
+import twitter4j.StatusDeletionNotice;
 
 public class ConversationPresenter extends TweetListPresenter {
 
@@ -23,6 +24,27 @@ public class ConversationPresenter extends TweetListPresenter {
                 if (hasNextReply((TweetEntity)message.data)) {
                     this.tweetListModel.request(-1, new Paging().maxId(tweet.getId()));
                 }
+                break;
+
+            case COMPLETE_FAVORITE:
+            case COMPLETE_UN_FAVORITE:
+                this.view.updateTweet((TweetEntity)message.data);
+                break;
+
+            case RECEIVE_TWEET:
+                this.view.catchNewTweet((TweetEntity)message.data);
+                break;
+
+            case RECEIVE_FAVORITE :
+            case RECEIVE_UN_FAVORITE :
+                if (message.source.isLoginUser) {
+                    break;
+                }
+                this.view.updateTweet((TweetEntity)message.data);
+                break;
+
+            case RECEIVE_DELETION:
+                this.view.deletionTweet(((StatusDeletionNotice)message.data).getStatusId());
                 break;
         }
     }
