@@ -7,3 +7,5 @@
 
 .idea/*.xml
 .idea/misc.xml
+
+build.gradle
