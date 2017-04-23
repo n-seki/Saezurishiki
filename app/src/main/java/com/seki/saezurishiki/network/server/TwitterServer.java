@@ -214,7 +214,7 @@ public class TwitterServer  {
         return this.mapper.map(user);
     }
 
-    public List<TweetEntity> map(ResponseList<Status> statuses) {
+    public List<TweetEntity> map(List<Status> statuses) {
         final List<TweetEntity> tweets = new ArrayList<>(statuses.size());
         for (final Status status : statuses) {
             tweets.add(mapper.map(status));

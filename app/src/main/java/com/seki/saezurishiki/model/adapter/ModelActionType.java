@@ -7,6 +7,7 @@ public enum ModelActionType {
     LOAD_REPLY_LIST(false, DisplayType.ADD),
     LOAD_TWEET_LIST(false, DisplayType.ADD),
     LOAD_FAVORITE_LIST(false, DisplayType.ADD),
+    LOAD_SEARCH(false, DisplayType.ADD),
 
     RECEIVE_TWEET(true, DisplayType.ADD),
     RECEIVE_FAVORITE(true, DisplayType.UPDATE_UNLESS_MAIN),

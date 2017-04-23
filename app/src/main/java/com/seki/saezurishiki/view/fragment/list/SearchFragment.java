@@ -9,6 +9,7 @@ import android.view.MenuInflater;
 import android.widget.TextView;
 
 import com.seki.saezurishiki.R;
+import com.seki.saezurishiki.model.adapter.RequestInfo;
 import com.seki.saezurishiki.network.twitter.AsyncTwitterTask;
 import com.seki.saezurishiki.network.twitter.TwitterTaskResult;
 import com.seki.saezurishiki.view.fragment.util.DataType;
@@ -54,32 +55,8 @@ public class SearchFragment extends TweetListFragment {
 
     @Override
     protected void loadTimeLine() {
-        if (this.isLoading) return;
-        this.isLoading = true;
-        Query twitterQuery = new Query(mQuery);
-        if(mAdapter.getCount() > 1) {
-            twitterQuery.setMaxId(mAdapter.getItemIdAtPosition(mAdapter.getCount() - 1) - 1);
-        }
-
-        AsyncTwitterTask.AfterTask<QueryResult> afterTask = new AsyncTwitterTask.AfterTask<QueryResult>() {
-            @Override
-            public void onLoadFinish(TwitterTaskResult<QueryResult> result) {
-                isLoading = false;
-                if (result.isException()) {
-                    SearchFragment.this.errorProcess(result.getException());
-                    return;
-                }
-
-                for (Status status : result.getResult().getTweets()) {
-                    mAdapter.add(status);
-                }
-
-                ((TextView) mFooterView.findViewById(R.id.read_more)).setText(R.string.click_to_load);
-
-            }
-        };
-
-        mTwitterWrapper.search(twitterQuery, afterTask);
+        final long maxID = mAdapter.isEmpty() ? -1 : mAdapter.getItemIdAtPosition(mAdapter.getCount() - 1) -1;
+        final RequestInfo info = new RequestInfo().query(mQuery).mexID(maxID);
     }
 
     @Override
