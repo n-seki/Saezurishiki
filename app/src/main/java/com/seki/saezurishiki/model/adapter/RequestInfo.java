@@ -19,7 +19,7 @@ public class RequestInfo {
         return this;
     }
 
-    public RequestInfo mexID(long maxID) {
+    public RequestInfo maxID(long maxID) {
         this.maxID = maxID;
         return this;
     }
@@ -44,11 +44,36 @@ public class RequestInfo {
         return this;
     }
 
-    protected Paging toPaging() {
-        return new Paging().maxId(this.maxID).sinceId(this.sinceID).count(this.count);
+    public Paging toPaging() {
+        final Paging paging = new Paging();
+
+        if (this.maxID > 0) paging.setMaxId(this.maxID);
+        if (this.sinceID > 0) paging.setSinceId(this.sinceID);
+        if (this.count > 0) paging.setCount(this.count);
+
+        return paging;
     }
 
-    protected Query toQuery() {
-        return new Query().maxId(this.maxID).sinceId(this.sinceID).count(this.count).query(this.query);
+    public Query toQuery() {
+        final Query query = new Query();
+
+        if (this.query == null) {
+            throw new NullPointerException("Query is null");
+        }
+
+        query.setQuery(this.query);
+        if (this.maxID > 0) query.setMaxId(this.maxID);
+        if (this.sinceID > 0) query.setSinceId(this.sinceID);
+        if (this.count > 0) query.setCount(this.count);
+
+        return query;
+    }
+
+    public long toTargetID() {
+        return this.targetID;
+    }
+
+    public long getUserID() {
+        return this.userID;
     }
 }

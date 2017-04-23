@@ -3,8 +3,8 @@ package com.seki.saezurishiki.presenter.list;
 import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.model.TweetListModel;
 import com.seki.saezurishiki.model.adapter.ModelMessage;
+import com.seki.saezurishiki.model.adapter.RequestInfo;
 
-import twitter4j.Paging;
 import twitter4j.StatusDeletionNotice;
 
 public class ConversationPresenter extends TweetListPresenter {
@@ -22,7 +22,7 @@ public class ConversationPresenter extends TweetListPresenter {
                 final TweetEntity tweet = (TweetEntity)message.data;
                 this.view.catchNewTweet(tweet);
                 if (hasNextReply((TweetEntity)message.data)) {
-                    this.tweetListModel.request(-1, new Paging().maxId(tweet.inReplyToStatusId));
+                    this.tweetListModel.request(new RequestInfo().targetID(tweet.inReplyToStatusId));
                 }
                 break;
 

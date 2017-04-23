@@ -7,6 +7,7 @@ import android.widget.ListView;
 
 import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.entity.TweetEntity;
+import com.seki.saezurishiki.model.adapter.RequestInfo;
 import com.seki.saezurishiki.network.twitter.TwitterTaskResult;
 import com.seki.saezurishiki.view.fragment.util.DataType;
 
@@ -69,7 +70,7 @@ public class ConversationFragment extends TweetListFragment {
 
     @Override
     protected void loadTimeLine() {
-        this.presenter.load(new Paging().maxId(firstTweetId));
+        this.presenter.load(new RequestInfo().targetID(firstTweetId));
     }
 
     @Override

@@ -10,6 +10,7 @@ public final class ModelContainer {
     private static TweetListModel favoriteListModel;
     private static TweetListModel userTweetListModel;
     private static TweetListModel conversationModel;
+    private static TweetListModel searchTweetModel;
 
     private ModelContainer() {
         //no instance
@@ -21,6 +22,7 @@ public final class ModelContainer {
         favoriteListModel = new FavoriteListModel(account);
         userTweetListModel = new UserTweetListModel(account);
         conversationModel = new ConversationModel(account);
+        searchTweetModel = new SearchTweetModel(account);
     }
 
     public static void destroy() {
@@ -29,6 +31,7 @@ public final class ModelContainer {
         favoriteListModel = null;
         userTweetListModel = null;
         conversationModel = null;
+        searchTweetModel = null;
     }
 
     public static TweetListModel getHomeTweetListModel() {
@@ -50,4 +53,6 @@ public final class ModelContainer {
     public static TweetListModel getConversationModel() {
         return conversationModel;
     }
+
+    public static TweetListModel getSearchTweetModel() { return searchTweetModel;}
 }

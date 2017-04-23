@@ -5,6 +5,7 @@ import android.widget.TextView;
 
 import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.entity.TwitterEntity;
+import com.seki.saezurishiki.model.adapter.RequestInfo;
 import com.seki.saezurishiki.network.twitter.AsyncTwitterTask;
 import com.seki.saezurishiki.network.twitter.TwitterTaskResult;
 
@@ -22,7 +23,8 @@ public abstract class TimeLineFragment extends TweetListFragment {
     protected long mUserId       = 0;
 
     protected void loadTimeLine() {
-        this.presenter.load(createLastPaging());
+        final long maxID = this.getLastId();
+        this.presenter.load(new RequestInfo().maxID(maxID == -1 ? 0 : maxID).count(50));
     }
 
 

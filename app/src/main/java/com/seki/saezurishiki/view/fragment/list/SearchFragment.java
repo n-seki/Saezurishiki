@@ -6,16 +6,11 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.widget.TextView;
 
-import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.model.adapter.RequestInfo;
-import com.seki.saezurishiki.network.twitter.AsyncTwitterTask;
 import com.seki.saezurishiki.network.twitter.TwitterTaskResult;
 import com.seki.saezurishiki.view.fragment.util.DataType;
 
-import twitter4j.Query;
-import twitter4j.QueryResult;
 import twitter4j.ResponseList;
 import twitter4j.Status;
 
@@ -27,12 +22,11 @@ import twitter4j.Status;
 public class SearchFragment extends TweetListFragment {
 
     private String mQuery;
-    private boolean isLoading;
 
-    public static Fragment getInstance(String query) {
+    public static SearchFragment getInstance(String query) {
         Bundle data = new Bundle();
         data.putString(DataType.QUERY, query);
-        Fragment fragment = new SearchFragment();
+        SearchFragment fragment = new SearchFragment();
         fragment.setArguments(data);
         return fragment;
     }
@@ -56,7 +50,8 @@ public class SearchFragment extends TweetListFragment {
     @Override
     protected void loadTimeLine() {
         final long maxID = mAdapter.isEmpty() ? -1 : mAdapter.getItemIdAtPosition(mAdapter.getCount() - 1) -1;
-        final RequestInfo info = new RequestInfo().query(mQuery).mexID(maxID);
+        final RequestInfo info = new RequestInfo().query(mQuery).maxID(maxID);
+        this.presenter.load(info);
     }
 
     @Override

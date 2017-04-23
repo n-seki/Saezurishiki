@@ -11,7 +11,7 @@ import twitter4j.StatusDeletionNotice;
 
 public class SearchPresenter extends TweetListPresenter {
 
-    SearchPresenter(TweetListView view, long listOwnerId, TweetListModel listModel) {
+    public SearchPresenter(TweetListView view, long listOwnerId, TweetListModel listModel) {
         super(view, listOwnerId, listModel);
     }
 

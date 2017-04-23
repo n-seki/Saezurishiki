@@ -38,6 +38,7 @@ import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.file.CachManager;
 import com.seki.saezurishiki.file.EncryptUtil;
 import com.seki.saezurishiki.file.Serializer;
+import com.seki.saezurishiki.view.fragment.Fragments;
 import com.seki.saezurishiki.view.fragment.editor.DirectMessageFragment;
 import com.seki.saezurishiki.view.fragment.editor.EditTweetFragment;
 import com.seki.saezurishiki.view.fragment.other.LicenseFragment;
@@ -539,7 +540,7 @@ public class LoginUserActivity extends    AppCompatActivity
 
         @Override
         public boolean onQueryTextSubmit(String query) {
-            Fragment searcher = SearchFragment.getInstance(query);
+            Fragment searcher = Fragments.createInjectSearchFragment(mLoginUser.getId(), query);
             LoginUserActivity.this.addFragment(R.id.home_container, searcher);
 
             ActionBar actionBar = getSupportActionBar();

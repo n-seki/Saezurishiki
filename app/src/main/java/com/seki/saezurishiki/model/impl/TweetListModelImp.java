@@ -2,14 +2,12 @@ package com.seki.saezurishiki.model.impl;
 
 import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.entity.UserEntity;
-import com.seki.saezurishiki.entity.mapper.EntityMapper;
 import com.seki.saezurishiki.model.TweetListModel;
 import com.seki.saezurishiki.model.adapter.ModelActionType;
 import com.seki.saezurishiki.model.adapter.ModelMessage;
+import com.seki.saezurishiki.model.adapter.RequestInfo;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
-import com.seki.saezurishiki.network.twitter.streamListener.StatusUserStreamListener;
 
-import twitter4j.Paging;
 import twitter4j.Status;
 import twitter4j.StatusDeletionNotice;
 import twitter4j.TwitterException;
@@ -24,7 +22,7 @@ abstract class TweetListModelImp extends ModelBaseImp implements TweetListModel 
     }
 
     @Override
-    abstract public void request(long userId, Paging paging);
+    abstract public void request(final RequestInfo info);
 
 
     @Override

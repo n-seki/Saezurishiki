@@ -5,7 +5,6 @@ import com.seki.saezurishiki.model.ModelBase;
 import com.seki.saezurishiki.model.util.ModelObservable;
 import com.seki.saezurishiki.model.util.ModelObserver;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
-import com.seki.saezurishiki.repository.Repository;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;

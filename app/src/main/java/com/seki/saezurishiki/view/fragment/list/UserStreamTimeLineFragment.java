@@ -213,11 +213,6 @@ public abstract class UserStreamTimeLineFragment extends TimeLineFragment
 
 
     @Override
-    public void loadTimeLine() {
-        this.presenter.load(createLastPaging());
-    }
-
-    @Override
     public void onPause() {
         super.onPause();
         mSwipeRefresher.setRefreshing(false); //loadがcancelされるのでくるくるマークを消す

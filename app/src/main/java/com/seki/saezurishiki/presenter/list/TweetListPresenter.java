@@ -7,6 +7,7 @@ import android.os.Looper;
 import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.model.TweetListModel;
 import com.seki.saezurishiki.model.adapter.ModelMessage;
+import com.seki.saezurishiki.model.adapter.RequestInfo;
 import com.seki.saezurishiki.model.util.ModelObservable;
 import com.seki.saezurishiki.model.util.ModelObserver;
 import com.seki.saezurishiki.view.adapter.TimeLineAdapter;
@@ -96,8 +97,8 @@ public abstract class TweetListPresenter implements TimeLineAdapter.ViewListener
         this.view.completeDeleteTweet(tweet);
     }
 
-    public void load(final Paging paging) {
-        this.tweetListModel.request(this.listOwnerId, paging);
+    public void load(final RequestInfo info) {
+        this.tweetListModel.request(info.userID(this.listOwnerId));
     }
 
     @Override

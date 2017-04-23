@@ -3,15 +3,19 @@ package com.seki.saezurishiki.view.fragment;
 
 import android.support.v4.app.Fragment;
 
+import com.seki.saezurishiki.model.TweetListModel;
 import com.seki.saezurishiki.model.impl.ModelContainer;
+import com.seki.saezurishiki.model.util.ModelObservable;
 import com.seki.saezurishiki.presenter.list.ConversationPresenter;
 import com.seki.saezurishiki.presenter.list.FavoriteListPresenter;
 import com.seki.saezurishiki.presenter.list.HomeTimeLinePresenter;
 import com.seki.saezurishiki.presenter.list.ReplyTimeLinePresenter;
+import com.seki.saezurishiki.presenter.list.SearchPresenter;
 import com.seki.saezurishiki.presenter.list.TweetListPresenter;
 import com.seki.saezurishiki.presenter.list.UserTweetListPresenter;
 import com.seki.saezurishiki.view.fragment.list.ConversationFragment;
 import com.seki.saezurishiki.view.fragment.list.FavoritesFragment;
+import com.seki.saezurishiki.view.fragment.list.SearchFragment;
 import com.seki.saezurishiki.view.fragment.list.TweetListFragment;
 import com.seki.saezurishiki.view.fragment.list.UserStreamTimeLineFragment;
 import com.seki.saezurishiki.view.fragment.list.UserTweetFragment;
@@ -50,5 +54,11 @@ public final class Fragments {
         final TweetListFragment fragment = ConversationFragment.getInstance(selectedTweetID);
         new ConversationPresenter(fragment, userID, ModelContainer.getConversationModel());
         return fragment;
+    }
+
+    public static Fragment createInjectSearchFragment(final long userID, final String query) {
+        final TweetListFragment fragment = SearchFragment.getInstance(query);
+        new SearchPresenter(fragment, userID, ModelContainer.getSearchTweetModel());
+        return  fragment;
     }
 }
