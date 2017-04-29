@@ -18,6 +18,7 @@ public class HomeTimeLinePresenter extends TweetListPresenter {
     }
 
 
+
     @SuppressWarnings("unchecked")
     @Override
     void dispatch(ModelMessage message) {

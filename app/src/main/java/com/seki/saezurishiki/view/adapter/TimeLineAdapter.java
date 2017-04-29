@@ -21,9 +21,15 @@ import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.entity.TwitterEntity;
 import com.seki.saezurishiki.network.server.TwitterServer;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
+import com.seki.saezurishiki.view.fragment.list.SearchFragment;
 import com.squareup.picasso.Picasso;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 import twitter4j.Status;
 import twitter4j.User;
@@ -464,6 +470,44 @@ public class TimeLineAdapter extends ArrayAdapter<AdapterItem> {
         return -1;
     }
 
+    public void addAll(List<TweetEntity> tweets) {
+        Collections.sort(tweets);
+
+        if (this.isEmpty()) {
+            addAll(tweets, 0);
+            return;
+        }
+
+        final long oldestTweetID = tweets.get(tweets.size() - 1).getId();
+
+        if (oldestTweetID >= getItemIdAtPosition(0)) {
+            addAll(tweets, 0);
+            return;
+        }
+
+        final long latestTweetID = tweets.get(0).getId();
+
+        if (latestTweetID <= getItemIdAtPosition(getCount() - 1)) {
+            addAll(tweets, getCount());
+            return;
+        }
+
+        for (int position = 0; position < getCount(); position++) {
+            final long tweetID = getItemIdAtPosition(position);
+            if (latestTweetID <= tweetID) {
+                addAll(tweets, position);
+                return;
+            }
+        }
+    }
+
+    private void addAll(List<TweetEntity> tweets, int position) {
+        int insertPosition = position;
+
+        for (TweetEntity tweetEntity : tweets) {
+            insert(tweetEntity.getId(), insertPosition++);
+        }
+    }
 
     public void add(Status status) {
         add(new AdapterItem(status.getId()));

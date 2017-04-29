@@ -14,28 +14,28 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.seki.saezurishiki.application.SaezurishikiApp;
 import com.seki.saezurishiki.R;
-import com.seki.saezurishiki.presenter.list.TweetListPresenter;
-import com.seki.saezurishiki.view.adapter.AdapterItem;
-import com.seki.saezurishiki.view.adapter.TimeLineAdapter;
+import com.seki.saezurishiki.application.SaezurishikiApp;
 import com.seki.saezurishiki.control.CustomToast;
 import com.seki.saezurishiki.control.UIControlUtil;
 import com.seki.saezurishiki.entity.LoadButton;
 import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.entity.TwitterEntity;
-import com.seki.saezurishiki.view.fragment.Fragments;
-import com.seki.saezurishiki.view.fragment.dialog.adapter.DialogSelectAction;
-import com.seki.saezurishiki.view.fragment.editor.EditTweetFragment;
-import com.seki.saezurishiki.view.fragment.other.PictureFragment;
-import com.seki.saezurishiki.view.fragment.dialog.TweetLongClickDialog;
-import com.seki.saezurishiki.view.fragment.dialog.TweetSelectDialog;
-import com.seki.saezurishiki.view.fragment.dialog.YesNoSelectDialog;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
 import com.seki.saezurishiki.network.twitter.TwitterError;
 import com.seki.saezurishiki.network.twitter.TwitterTaskResult;
 import com.seki.saezurishiki.network.twitter.TwitterWrapper;
+import com.seki.saezurishiki.presenter.list.TweetListPresenter;
+import com.seki.saezurishiki.view.adapter.AdapterItem;
+import com.seki.saezurishiki.view.adapter.TimeLineAdapter;
 import com.seki.saezurishiki.view.control.FragmentControl;
+import com.seki.saezurishiki.view.fragment.Fragments;
+import com.seki.saezurishiki.view.fragment.dialog.TweetLongClickDialog;
+import com.seki.saezurishiki.view.fragment.dialog.TweetSelectDialog;
+import com.seki.saezurishiki.view.fragment.dialog.YesNoSelectDialog;
+import com.seki.saezurishiki.view.fragment.dialog.adapter.DialogSelectAction;
+import com.seki.saezurishiki.view.fragment.editor.EditTweetFragment;
+import com.seki.saezurishiki.view.fragment.other.PictureFragment;
 
 import java.util.List;
 
@@ -43,7 +43,6 @@ import twitter4j.Paging;
 import twitter4j.ResponseList;
 import twitter4j.Status;
 import twitter4j.TwitterException;
-import twitter4j.User;
 
 /**
  * StatusをListViewで表示するFragmentの既定クラス

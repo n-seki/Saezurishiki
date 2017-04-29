@@ -1,5 +1,7 @@
 package com.seki.saezurishiki.entity;
 
+import android.support.annotation.NonNull;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -11,7 +13,7 @@ import twitter4j.URLEntity;
 import twitter4j.User;
 import twitter4j.UserMentionEntity;
 
-public class TweetEntity implements TwitterEntity, Serializable {
+public class TweetEntity implements TwitterEntity, Serializable, Comparable<TweetEntity> {
 
     private boolean isSeen;
     private boolean isDelete;
@@ -100,5 +102,17 @@ public class TweetEntity implements TwitterEntity, Serializable {
 
     public boolean isDeleted() {
         return this.isDelete;
+    }
+
+    @Override
+    public int compareTo(@NonNull TweetEntity o) {
+        final long diff = getId() - o.getId();
+        if (diff == 0) {
+            return 0;
+        } else if (diff < 0) {
+            return 1;
+        } else {
+            return -1;
+        }
     }
 }

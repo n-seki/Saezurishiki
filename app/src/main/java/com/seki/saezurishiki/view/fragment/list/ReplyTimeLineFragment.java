@@ -65,12 +65,6 @@ public class ReplyTimeLineFragment extends UserStreamTimeLineFragment {
 //        }
 //    }
 
-    @Override
-    protected AsyncTwitterTask.AsyncTask<ResponseList<Status>> getSwipeTask() {
-        final int count = isFirstOpen ? 50 : 200;
-        return mTwitterWrapper.getMentionTimeLineLoader(new Paging().count(count));
-    }
-
 
     @Override
     protected long readLastID() {

@@ -15,6 +15,7 @@ import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.control.UIControlUtil;
 import com.seki.saezurishiki.entity.LoadButton;
 import com.seki.saezurishiki.entity.TweetEntity;
+import com.seki.saezurishiki.model.adapter.RequestInfo;
 import com.seki.saezurishiki.network.ConnectionReceiver;
 import com.seki.saezurishiki.network.twitter.AsyncTwitterTask;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
@@ -48,19 +49,9 @@ public abstract class UserStreamTimeLineFragment extends TimeLineFragment
     //UserStreamの更新は行いたいので、デフォルトをtrueにする
     protected boolean mListTopVisible = true;
 
-    private SwipeRefreshLayout mSwipeRefresher;
+    SwipeRefreshLayout mSwipeRefresher;
 
     protected long mLastReadId = 0L;
-
-    //protected boolean isSwipeRefreshing = false;
-
-    //SwipeRefreshによる更新が必要かどうか
-    //初回起動時はロードを許可するがSwipeRefreshでは最新のStatusから取得するため
-    //基本的に一度Swipeでロードしたら、その後の更新はUserStreamに任せる
-    //UserStreamの切断⇒復旧時にはUserStreamによる反映がされるまではSwipeによるロードを
-    //有効とするが、UserStreamによって先頭に最新Statusが追加された場合には無効として、
-    //未取得Statusの取得についてはLoadButtonで行う.
-    private boolean isNeedSwipeLoad = true;
 
     private static final String TAB_POSITION = "tab-position";
     private int tabPosition;
@@ -184,7 +175,7 @@ public abstract class UserStreamTimeLineFragment extends TimeLineFragment
 
         if (previousFirstVisibleItem < firstVisibleItem) {
             if (firstVisibleItem + visibleItemCount + 10 == totalItemCount) {
-                UserStreamTimeLineFragment.this.loadTimeLine();
+                loadTimeLine();
             }
         }
 
@@ -198,19 +189,8 @@ public abstract class UserStreamTimeLineFragment extends TimeLineFragment
 
 
     protected void onRefresh() {
-        if ( !isNeedSwipeLoad ) {
-            mSwipeRefresher.setRefreshing(false);
-            return;
-        }
-
-        swipeRefreshTimeLine();
+        this.presenter.load(new RequestInfo().count(50));
     }
-
-
-    void swipeRefreshTimeLine() {
-        new AsyncTwitterTask<>(getActivity(), this.getSwipeTask(), SWIPE_REFRESH_AFTER_TASK, getLoaderManager()).run();
-    }
-
 
     @Override
     public void onPause() {
@@ -218,94 +198,10 @@ public abstract class UserStreamTimeLineFragment extends TimeLineFragment
         mSwipeRefresher.setRefreshing(false); //loadがcancelされるのでくるくるマークを消す
     }
 
-
-    private AsyncTwitterTask.AfterTask<ResponseList<Status>> SWIPE_REFRESH_AFTER_TASK = new AsyncTwitterTask.AfterTask<ResponseList<Status>>() {
-        @Override
-        public void onLoadFinish(TwitterTaskResult<ResponseList<Status>> result) {
-            mSwipeRefresher.setRefreshing(false);
-
-            if(result.isException()) {
-                UserStreamTimeLineFragment.this.errorProcess(result.getException());
-                return;
-            }
-
-            isNeedSwipeLoad = false; //一度でもSwipeでロード成功したら次回以降は無効
-            UserStreamTimeLineFragment.this.computeSwipeRefreshedStatus(result.getResult());
-        }
-    };
-
-
-    protected void computeSwipeRefreshedStatus(ResponseList<Status> statuses) {
-        isNeedLoadButton = false;
-
-        if(statuses.size() < 1) {
-            return;
-        }
-
-        //Statusの反映が初めてなら何も考えずに全てをListの先頭に反映
-        if ( mAdapter.getCount() == 0 ) {
-            setStatusToTop(statuses);
-            return;
-        }
-
-        final Status loadOldestStatus = statuses.get(statuses.size()-1);
-        final TweetEntity listTopStatus = this.twitterAccount.getRepository().getStatus(mAdapter.getItemIdAtPosition(0));
-
-        //取得したStatusのListの最後（一番古いStatus）がListの先頭のStatusよりも古い場合は,
-        //取得漏れしているStatusはないため,Listの内容と重複するStatusをremoveして先頭に反映
-        if ( loadOldestStatus.getCreatedAt().compareTo(listTopStatus.createdAt) <= 0 ) {
-            final List<Status> nonOverlapStatues = removeOverlapStatus(statuses);
-            setStatusToTop(nonOverlapStatues);
-            return;
-        }
-
-        //読み込んだもっとも古いStatusがListの先頭より新しい場合は取得漏れしているStatusがある
-        //よってLoadButtonをListに設定する.設定後は何も考えずに先頭に反映すればいい（重複がないので）
-        addLoadButton();
-        setStatusToTop(statuses);
-    }
-
-
-    /**
-     * Statusのリストから既にAdapterが保持しているStatusを取り除いた新しいリストを作って返す.
-     * 順番は変えない. ⇒ ViewUtilityみたいなクラスを作って移動
-     * @param statuses StatusのList
-     * @return mAdapterとの重複を除いたStatusのList
-     */
-    List<Status> removeOverlapStatus(ResponseList<Status> statuses) {
-        final List<Status> list = new ArrayList<>();
-
-        final ListIterator<Status> itr = statuses.listIterator(0);
-        final TweetEntity listTopStatus = this.twitterAccount.getRepository().getStatus(mAdapter.getItemIdAtPosition(0));
-
-        while(itr.hasNext()) {
-            final Status status = itr.next();
-            if (listTopStatus.getId() >= status.getId()) {
-                continue;
-            }
-
-            list.add(status);
-        }
-
-        return list;
-    }
-
-
-    /**
-     * StatusのListをAdapterの先頭にinsertする ⇒ Adapterに移動
-     * @param statuses StatusのList
-     */
-    void setStatusToTop(List<Status> statuses) {
-        ListIterator<Status> itr = statuses.listIterator(statuses.size());
-
-        while(itr.hasPrevious()) {
-            Status status = itr.previous();
-            if (status.getId() <= mLastReadId) {
-                mAdapter.insertSeenItem(status, 0);
-            } else {
-                mAdapter.insert(status.getId(), 0);
-            }
-        }
+    @Override
+    public void loadTweets(List<TweetEntity> tweets) {
+        mSwipeRefresher.setRefreshing(false);
+        mAdapter.addAll(tweets);
     }
 
 
@@ -348,7 +244,6 @@ public abstract class UserStreamTimeLineFragment extends TimeLineFragment
 
     public void onDisconnect() {
         isNeedLoadButton = true;
-        isNeedSwipeLoad = true; //ネットワーク接続が発生したらSwipeロードを有効に
     }
 
 
@@ -448,6 +343,5 @@ public abstract class UserStreamTimeLineFragment extends TimeLineFragment
 
 
     abstract long readLastID();
-    abstract AsyncTwitterTask.AsyncTask<ResponseList<Status>> getSwipeTask();
     abstract void runLoadButtonClickedTask(Paging paging, AsyncTwitterTask.AfterTask<ResponseList<Status>> afterTask);
 }

@@ -75,18 +75,10 @@ public class HomeTimeLineFragment extends UserStreamTimeLineFragment {
 //        }
 //    }
 
-    @Override
-    protected AsyncTwitterTask.AsyncTask<ResponseList<Status>> getSwipeTask() {
-        final int count = 50;
-        return mTwitterWrapper.getHomeTimeLineLoader(new Paging().count(count));
-    }
-
-
 
     void runLoadButtonClickedTask(Paging paging, AsyncTwitterTask.AfterTask<ResponseList<Status>> afterTask) {
         mTwitterWrapper.getHomeTimeLine(paging, afterTask);
     }
-
 }
 
 
