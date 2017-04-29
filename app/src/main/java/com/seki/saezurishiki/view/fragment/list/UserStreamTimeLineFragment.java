@@ -2,7 +2,6 @@ package com.seki.saezurishiki.view.fragment.list;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,22 +17,18 @@ import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.model.adapter.RequestInfo;
 import com.seki.saezurishiki.network.ConnectionReceiver;
 import com.seki.saezurishiki.network.twitter.AsyncTwitterTask;
-import com.seki.saezurishiki.network.twitter.TwitterAccount;
 import com.seki.saezurishiki.network.twitter.TwitterTaskResult;
-import com.seki.saezurishiki.view.customview.NotificationListView;
 import com.seki.saezurishiki.view.control.RequestTabState;
 import com.seki.saezurishiki.view.control.TabManagedView;
 import com.seki.saezurishiki.view.control.TabViewControl;
+import com.seki.saezurishiki.view.customview.NotificationListView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 
 import twitter4j.Paging;
 import twitter4j.ResponseList;
 import twitter4j.Status;
-
-//import com.seki.saezurishiki.network.server.TwitterItem;
 
 /**
  * ユーザーストリームタイムライン既定クラス<br>
