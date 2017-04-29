@@ -24,13 +24,6 @@ public class HomeTimeLineFragment extends UserStreamTimeLineFragment {
 
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-
-
-    @Override
     void releaseSavedStatus() {
         if (mSavedStatuses.isEmpty()) {
             return;

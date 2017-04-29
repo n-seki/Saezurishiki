@@ -22,12 +22,6 @@ public class ReplyTimeLineFragment extends UserStreamTimeLineFragment {
         return new ReplyTimeLineFragment();
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-
 
     @Override
     void releaseSavedStatus() {
