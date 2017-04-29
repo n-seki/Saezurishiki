@@ -430,19 +430,6 @@ public abstract class TweetListFragment extends Fragment
     }
 
 
-    protected Paging createLastPaging() {
-        long lastId = this.getLastId();
-
-        if (lastId != -1) {
-            return new Paging().maxId(lastId - 1).count(100); //lastIDのstatusは読み込まなくていい
-        }
-
-        //mLastIdが未設定の場合は
-        //statusが1つも読み込まれていないため
-        //無条件でただのPagingを返す
-        return new Paging().count(50);
-    }
-
 
     protected long getLastId() {
         if (mAdapter == null || mAdapter.getCount() == 0) {
