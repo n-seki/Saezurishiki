@@ -347,9 +347,7 @@ public abstract class TweetListFragment extends Fragment
 
     @Override
     public void loadTweets(List<TweetEntity> tweets) {
-        for (TweetEntity tweet : tweets) {
-            mAdapter.add(tweet.getId());
-        }
+        mAdapter.addAll(tweets);
     }
 
     @Override
