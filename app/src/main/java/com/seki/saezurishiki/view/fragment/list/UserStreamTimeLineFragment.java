@@ -272,32 +272,16 @@ public abstract class UserStreamTimeLineFragment extends TimeLineFragment
      * @param buttonID 選択されたLoadButtonのID
      */
     protected void onClickLoadButton(final long buttonID) {
-        final Paging paging = new Paging().count(200);
 
         final int buttonPosition = mAdapter.getLoadButtonPosition(buttonID);
 
-        if (buttonPosition != -1) {
-            //ボタンの前後のstatusはロードしない
-            paging.maxId(mAdapter.getItemIdAtPosition(buttonPosition-1) - 1)
-                    .sinceId(mAdapter.getItemIdAtPosition(buttonPosition+1) + 1);
-        }
-
         changeLoadButtonText(buttonID, true);
 
-        AsyncTwitterTask.AfterTask<ResponseList<Status>> AFTER_TASK = new AsyncTwitterTask.AfterTask<ResponseList<Status>>() {
-            @Override
-            public void onLoadFinish(TwitterTaskResult<ResponseList<Status>> result) {
-                if (result.isException()) {
-                    changeLoadButtonText(buttonID, false);
-                    UserStreamTimeLineFragment.this.errorProcess(result.getException());
-                    return;
-                }
+        final RequestInfo info = new RequestInfo().count(200)
+                                                  .maxID(mAdapter.getItemIdAtPosition(buttonPosition-1) - 1)
+                                                  .sinceID(mAdapter.getItemIdAtPosition(buttonPosition+1) + 1);
 
-                UserStreamTimeLineFragment.this.setStatusIntoList(result.getResult(), buttonID);
-            }
-        };
-
-        runLoadButtonClickedTask(paging, AFTER_TASK);
+        this.presenter.load(info);
     }
 
     @Override
