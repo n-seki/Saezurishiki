@@ -184,7 +184,7 @@ public abstract class UserStreamTimeLineFragment extends TimeLineFragment
 
 
     protected void onRefresh() {
-        this.presenter.load(new RequestInfo().count(50));
+        this.presenter.load(new RequestInfo().count(50).sinceID(mAdapter.getItemIdAtPosition(0)));
     }
 
     @Override
@@ -219,6 +219,16 @@ public abstract class UserStreamTimeLineFragment extends TimeLineFragment
 //
 //        addLoadButton();
 //    }
+
+    @Override
+    public void catchNewTweet(TweetEntity tweet) {
+
+        if (isNeedLoadButton) {
+            addLoadButton();
+        }
+
+        super.catchNewTweet(tweet);
+    }
 
 
     boolean isNeedLoadButton = false;

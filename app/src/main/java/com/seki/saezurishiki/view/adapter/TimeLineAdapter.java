@@ -470,7 +470,7 @@ public class TimeLineAdapter extends ArrayAdapter<AdapterItem> {
         return -1;
     }
 
-    public void addAll(List<TweetEntity> tweets) {
+    synchronized public void addAll(List<TweetEntity> tweets) {
         Collections.sort(tweets);
 
         if (this.isEmpty()) {
@@ -559,6 +559,7 @@ public class TimeLineAdapter extends ArrayAdapter<AdapterItem> {
 
 
     public long getItemIdAtPosition(int position) {
+        if (this.isEmpty()) return -1;
         return getItem(position).itemID;
     }
 
