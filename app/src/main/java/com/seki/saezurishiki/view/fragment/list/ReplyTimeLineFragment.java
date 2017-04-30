@@ -73,11 +73,4 @@ public class ReplyTimeLineFragment extends UserStreamTimeLineFragment {
 
         super.onStop();
     }
-
-
-    void runLoadButtonClickedTask(Paging paging, AsyncTwitterTask.AfterTask<ResponseList<Status>> afterTask) {
-        mTwitterWrapper.getMentionTimeLine(paging, afterTask);
-    }
-
-
 }

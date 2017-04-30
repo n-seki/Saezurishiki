@@ -67,11 +67,6 @@ public class HomeTimeLineFragment extends UserStreamTimeLineFragment {
 //            this.tabViewControl.requestChangeTabState(this);
 //        }
 //    }
-
-
-    void runLoadButtonClickedTask(Paging paging, AsyncTwitterTask.AfterTask<ResponseList<Status>> afterTask) {
-        mTwitterWrapper.getHomeTimeLine(paging, afterTask);
-    }
 }
 
 

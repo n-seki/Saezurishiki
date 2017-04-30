@@ -332,5 +332,4 @@ public abstract class UserStreamTimeLineFragment extends TimeLineFragment
 
 
     abstract long readLastID();
-    abstract void runLoadButtonClickedTask(Paging paging, AsyncTwitterTask.AfterTask<ResponseList<Status>> afterTask);
 }
