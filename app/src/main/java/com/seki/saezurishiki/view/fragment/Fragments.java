@@ -3,15 +3,12 @@ package com.seki.saezurishiki.view.fragment;
 
 import android.support.v4.app.Fragment;
 
-import com.seki.saezurishiki.model.TweetListModel;
 import com.seki.saezurishiki.model.impl.ModelContainer;
-import com.seki.saezurishiki.model.util.ModelObservable;
 import com.seki.saezurishiki.presenter.list.ConversationPresenter;
 import com.seki.saezurishiki.presenter.list.FavoriteListPresenter;
 import com.seki.saezurishiki.presenter.list.HomeTimeLinePresenter;
 import com.seki.saezurishiki.presenter.list.ReplyTimeLinePresenter;
 import com.seki.saezurishiki.presenter.list.SearchPresenter;
-import com.seki.saezurishiki.presenter.list.TweetListPresenter;
 import com.seki.saezurishiki.presenter.list.UserTweetListPresenter;
 import com.seki.saezurishiki.view.fragment.list.ConversationFragment;
 import com.seki.saezurishiki.view.fragment.list.FavoritesFragment;
@@ -20,6 +17,9 @@ import com.seki.saezurishiki.view.fragment.list.TweetListFragment;
 import com.seki.saezurishiki.view.fragment.list.UserStreamTimeLineFragment;
 import com.seki.saezurishiki.view.fragment.list.UserTweetFragment;
 
+import static com.seki.saezurishiki.file.SharedPreferenceUtil.HOME;
+import static com.seki.saezurishiki.file.SharedPreferenceUtil.REPLY;
+
 public final class Fragments {
 
     private Fragments() {
@@ -27,13 +27,13 @@ public final class Fragments {
     }
 
     public static Fragment createInjectHomeTimeLineFragment(final int tabPosition, final long userId) {
-        final TweetListFragment fragment = UserStreamTimeLineFragment.getHomeTimeLine(tabPosition);
+        final TweetListFragment fragment = UserStreamTimeLineFragment.getHomeTimeLine(tabPosition, HOME);
         new HomeTimeLinePresenter(fragment, userId, ModelContainer.getHomeTweetListModel());
         return fragment;
     }
 
     public static Fragment createInjectReplyTimeLineFragment(final int tabPosition, final long userId) {
-        final TweetListFragment fragment = UserStreamTimeLineFragment.getReplyTimeLine(tabPosition);
+        final TweetListFragment fragment = UserStreamTimeLineFragment.getReplyTimeLine(tabPosition, REPLY);
         new ReplyTimeLinePresenter(fragment, userId, ModelContainer.getReplyTweetListModel());
         return fragment;
     }

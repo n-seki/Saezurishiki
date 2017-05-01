@@ -6,9 +6,9 @@ import android.util.AttributeSet;
 
 import com.seki.saezurishiki.view.control.RequestTabState;
 
-import static com.seki.saezurishiki.control.TimeLinePager.POSITION_HOME;
-import static com.seki.saezurishiki.control.TimeLinePager.POSITION_MESSAGE;
-import static com.seki.saezurishiki.control.TimeLinePager.POSITION_REPLY;
+import static com.seki.saezurishiki.view.adapter.TimeLinePager.POSITION_HOME;
+import static com.seki.saezurishiki.view.adapter.TimeLinePager.POSITION_MESSAGE;
+import static com.seki.saezurishiki.view.adapter.TimeLinePager.POSITION_REPLY;
 import static com.seki.saezurishiki.control.UIControlUtil.getTabBackground;
 import static com.seki.saezurishiki.control.UIControlUtil.getTabUnreadBackground;
 

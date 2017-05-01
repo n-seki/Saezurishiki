@@ -14,6 +14,7 @@ import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.control.UIControlUtil;
 import com.seki.saezurishiki.entity.LoadButton;
 import com.seki.saezurishiki.entity.TweetEntity;
+import com.seki.saezurishiki.file.SharedPreferenceUtil;
 import com.seki.saezurishiki.model.adapter.RequestInfo;
 import com.seki.saezurishiki.network.ConnectionReceiver;
 import com.seki.saezurishiki.network.twitter.AsyncTwitterTask;
@@ -35,7 +36,7 @@ import twitter4j.Status;
  * Home, replyタイムラインの親クラスです
  * @author seki
  */
-public abstract class UserStreamTimeLineFragment extends TimeLineFragment
+public class UserStreamTimeLineFragment extends TimeLineFragment
                                         implements ConnectionReceiver.Observer, TabManagedView {
 
     protected List<Long> mSavedStatuses;
@@ -49,21 +50,25 @@ public abstract class UserStreamTimeLineFragment extends TimeLineFragment
     protected long mLastReadId = 0L;
 
     private static final String TAB_POSITION = "tab-position";
+    private static final String LIST_NAME = "list-name";
     private int tabPosition;
+    private String listName;
     TabViewControl tabViewControl;
 
-    public static TweetListFragment getHomeTimeLine(int tabPosition) {
+    public static TweetListFragment getHomeTimeLine(int tabPosition, String listName) {
         Bundle data = new Bundle();
         data.putInt(TAB_POSITION, tabPosition);
-        TweetListFragment home = HomeTimeLineFragment.getInstance();
+        data.putString(LIST_NAME, listName);
+        TweetListFragment home = new UserStreamTimeLineFragment();
         home.setArguments(data);
         return home;
     }
 
-    public static TweetListFragment getReplyTimeLine(int tabPosition) {
+    public static TweetListFragment getReplyTimeLine(int tabPosition, String listName) {
         Bundle data = new Bundle();
         data.putInt(TAB_POSITION, tabPosition);
-        TweetListFragment fragment = ReplyTimeLineFragment.getInstance();
+        data.putString(LIST_NAME, listName);
+        TweetListFragment fragment = new UserStreamTimeLineFragment();
         fragment.setArguments(data);
         return fragment;
     }
@@ -73,6 +78,7 @@ public abstract class UserStreamTimeLineFragment extends TimeLineFragment
         super.onAttach(context);
 
         this.tabPosition = getArguments().getInt(TAB_POSITION);
+        this.listName = getArguments().getString(LIST_NAME);
 
         if (getActivity() instanceof TabViewControl) {
             this.tabViewControl = (TabViewControl)getActivity();
@@ -200,8 +206,6 @@ public abstract class UserStreamTimeLineFragment extends TimeLineFragment
     }
 
 
-    abstract void releaseSavedStatus();
-
 
 //    @Override
 //    public void onStatus(final Status status){
@@ -322,5 +326,31 @@ public abstract class UserStreamTimeLineFragment extends TimeLineFragment
     }
 
 
-    abstract long readLastID();
+    void releaseSavedStatus() {
+        if (mSavedStatuses.isEmpty()) {
+            return;
+        }
+
+        for (long statusId : mSavedStatuses) {
+            mAdapter.insert(statusId, 0);
+        }
+
+        mAdapter.notifyDataSetChanged();
+        mSavedStatuses.clear();
+    }
+
+
+    @Override
+    public void onStop() {
+        if (!mAdapter.isEmpty()) {
+            SharedPreferenceUtil.writeLatestID(getActivity(), this.listName, mAdapter.lastReadId());
+        }
+        super.onStop();
+    }
+
+
+    protected long readLastID() {
+        return SharedPreferenceUtil.readLatestID(getActivity(), this.listName);
+    }
+
 }
