@@ -9,14 +9,13 @@ import com.seki.saezurishiki.view.fragment.util.DataType;
  * ユーザーのお気に入りTweetを時系列順に表示します
  * @author seki
  */
-public class FavoritesFragment extends TimeLineFragment {
+public class FavoritesFragment extends TweetListFragment {
 
     int mCount;
 
-    public static TimeLineFragment getInstance(long userID, int count) {
-        TimeLineFragment fragment = new FavoritesFragment();
+    public static TweetListFragment getInstance(int count) {
+        TweetListFragment fragment = new FavoritesFragment();
         Bundle data = new Bundle();
-        data.putLong(DataType.USER_ID, userID);
         data.putInt(DataType.COUNT, count);
         fragment.setArguments(data);
         return fragment;
@@ -33,7 +32,6 @@ public class FavoritesFragment extends TimeLineFragment {
             throw new IllegalStateException("Argument is null");
         }
 
-        mUserId = data.getLong(DataType.USER_ID);
         mCount = data.getInt(DataType.COUNT);
     }
 

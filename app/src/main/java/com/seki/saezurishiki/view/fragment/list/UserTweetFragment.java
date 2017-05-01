@@ -9,14 +9,13 @@ import com.seki.saezurishiki.view.fragment.util.DataType;
  * ユーザーのTweetを時系列順に表示します
  * @author seki
  */
-public class UserTweetFragment extends TimeLineFragment {
+public class UserTweetFragment extends TweetListFragment {
 
     int mCount;
 
-    public static TimeLineFragment getInstance(long userID, int count) {
-        TimeLineFragment fragment = new UserTweetFragment();
+    public static TweetListFragment getInstance(int count) {
+        TweetListFragment fragment = new UserTweetFragment();
         Bundle data = new Bundle();
-        data.putLong(DataType.USER_ID, userID);
         data.putInt(DataType.COUNT, count);
         fragment.setArguments(data);
         return fragment;
@@ -32,7 +31,6 @@ public class UserTweetFragment extends TimeLineFragment {
             throw new IllegalStateException("Argument is null");
         }
 
-        mUserId = data.getLong(DataType.USER_ID);
         mCount = data.getInt(DataType.COUNT);
     }
 

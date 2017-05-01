@@ -49,11 +49,6 @@ public class SearchFragment extends TweetListFragment {
         this.presenter.load(info);
     }
 
-    @Override
-    protected void onClickLoadButton(long buttonId) {
-        throw new IllegalStateException("this method shouldn't called!");
-    }
-
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {

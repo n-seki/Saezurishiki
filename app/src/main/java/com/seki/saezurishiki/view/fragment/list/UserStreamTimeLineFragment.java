@@ -2,6 +2,7 @@ package com.seki.saezurishiki.view.fragment.list;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.control.UIControlUtil;
 import com.seki.saezurishiki.entity.LoadButton;
 import com.seki.saezurishiki.entity.TweetEntity;
+import com.seki.saezurishiki.entity.TwitterEntity;
 import com.seki.saezurishiki.file.SharedPreferenceUtil;
 import com.seki.saezurishiki.model.adapter.RequestInfo;
 import com.seki.saezurishiki.network.ConnectionReceiver;
@@ -29,7 +31,7 @@ import java.util.List;
  * Home, replyタイムラインの親クラスです
  * @author seki
  */
-public class UserStreamTimeLineFragment extends TimeLineFragment
+public class UserStreamTimeLineFragment extends TweetListFragment
                                         implements ConnectionReceiver.Observer, TabManagedView {
 
     protected List<TweetEntity> mSavedStatuses;
@@ -176,6 +178,17 @@ public class UserStreamTimeLineFragment extends TimeLineFragment
         this.previousFirstVisibleItem = firstVisibleItem;
     }
 
+
+    @Override
+    void onItemClick(int position) {
+        final TwitterEntity entity = mAdapter.getEntity(position);
+        if (entity.getItemType() == TwitterEntity.Type.LoadButton) {
+            onClickLoadButton(entity.getId());
+            return;
+        }
+
+        showDialog((TweetEntity)entity);
+    }
 
     void changeTweetBackground(int firstVisibleItem, int visibleItemCount) {
         ((NotificationListView)this.mListView).changeItemBackground(firstVisibleItem, visibleItemCount);

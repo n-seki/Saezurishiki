@@ -8,12 +8,7 @@ import android.widget.ListView;
 import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.model.adapter.RequestInfo;
-import com.seki.saezurishiki.network.twitter.TwitterTaskResult;
 import com.seki.saezurishiki.view.fragment.util.DataType;
-
-import twitter4j.Paging;
-import twitter4j.ResponseList;
-import twitter4j.Status;
 
 /**
  * 会話表示Fragment<BR>
@@ -82,9 +77,4 @@ public class ConversationFragment extends TweetListFragment {
     public String toString() {
         return "Conversation";
 }
-
-
-    protected void onClickLoadButton(long buttonId) {
-        throw new IllegalStateException("this method shouldn't call!");
-    }
 }

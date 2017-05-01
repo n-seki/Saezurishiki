@@ -21,6 +21,7 @@ import com.seki.saezurishiki.control.UIControlUtil;
 import com.seki.saezurishiki.entity.LoadButton;
 import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.entity.TwitterEntity;
+import com.seki.saezurishiki.model.adapter.RequestInfo;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
 import com.seki.saezurishiki.network.twitter.TwitterError;
 import com.seki.saezurishiki.network.twitter.TwitterWrapper;
@@ -167,11 +168,6 @@ public abstract class TweetListFragment extends Fragment
 
     void onItemClick(int position) {
         final TwitterEntity entity = mAdapter.getEntity(position);
-        if (entity.getItemType() == TwitterEntity.Type.LoadButton) {
-            TweetListFragment.this.onClickLoadButton(entity.getId());
-            return;
-        }
-
         TweetListFragment.this.showDialog((TweetEntity)entity);
     }
 
@@ -406,13 +402,9 @@ public abstract class TweetListFragment extends Fragment
     }
 
 
-
-    /**
-     * タイムラインロード処理
-     * このメソッド内でTwitterAsyncTaskによってStatus等のTwitter情報を取得する
-     * このクラスを継承するクラスでは当メソッドをOverrideする必要がある
-     */
-    protected abstract void loadTimeLine();
-    protected abstract void onClickLoadButton(long buttonId);
+    protected void loadTimeLine() {
+        final long maxID = this.getLastId();
+        this.presenter.load(new RequestInfo().maxID(maxID == -1 ? 0 : maxID).count(50));
+    }
 
 }
