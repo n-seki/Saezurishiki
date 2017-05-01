@@ -299,15 +299,6 @@ public abstract class UserStreamTimeLineFragment extends TimeLineFragment
         return this.tabPosition;
     }
 
-//    @Override
-//    public void notifySelectedTabChange() {
-//        if (this.mAdapter.isEmpty()) return;
-//
-//        final int first = this.mListView.getFirstVisiblePosition();
-//        final int last = this.mListView.getLastVisiblePosition();
-//        this.changeTweetBackground(first, last-1);
-//        tabViewControl.requestChangeTabState(this);
-//    }
 
     @Override
     public void setUserVisibleHint(boolean isUserVisible) {
