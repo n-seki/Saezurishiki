@@ -7,12 +7,11 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ListView;
 
-import com.seki.saezurishiki.view.adapter.AdapterItem;
 import com.seki.saezurishiki.control.UIControlUtil;
+import com.seki.saezurishiki.entity.TwitterEntity;
+import com.seki.saezurishiki.view.adapter.TimeLineAdapter;
 
-/**
- * Created by seki on 2016/10/01.
- */
+
 public class NotificationListView extends ListView {
 
     public NotificationListView(Context context) {
@@ -36,13 +35,14 @@ public class NotificationListView extends ListView {
     public boolean changeItemBackground(int firstVisibleItem, int visibleItemCount) {
         boolean isChangedColor = false;
         for (int position = firstVisibleItem; position < firstVisibleItem + visibleItemCount - 1; position++) {
-            AdapterItem item = (AdapterItem) getItemAtPosition(position);
+            @SuppressWarnings("unchecked")
+            TimeLineAdapter.Item<TwitterEntity> item = (TimeLineAdapter.Item) getItemAtPosition(position);
 
             if (item == null) {
                 continue;
             }
 
-            if (!item.isSeen) {
+            if (!item.isSeen()) {
                 item.see();
                 View v = getChildAt(position - firstVisibleItem);
                 if (v == null) {
@@ -54,10 +54,5 @@ public class NotificationListView extends ListView {
         }
 
         return isChangedColor;
-    }
-
-
-    public void update(long item) {
-
     }
 }

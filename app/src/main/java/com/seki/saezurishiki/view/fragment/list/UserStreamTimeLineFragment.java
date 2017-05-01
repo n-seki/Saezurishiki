@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.control.UIControlUtil;
@@ -17,8 +16,6 @@ import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.file.SharedPreferenceUtil;
 import com.seki.saezurishiki.model.adapter.RequestInfo;
 import com.seki.saezurishiki.network.ConnectionReceiver;
-import com.seki.saezurishiki.network.twitter.AsyncTwitterTask;
-import com.seki.saezurishiki.network.twitter.TwitterTaskResult;
 import com.seki.saezurishiki.view.control.RequestTabState;
 import com.seki.saezurishiki.view.control.TabManagedView;
 import com.seki.saezurishiki.view.control.TabViewControl;
@@ -26,10 +23,6 @@ import com.seki.saezurishiki.view.customview.NotificationListView;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import twitter4j.Paging;
-import twitter4j.ResponseList;
-import twitter4j.Status;
 
 /**
  * ユーザーストリームタイムライン既定クラス<br>
@@ -39,7 +32,7 @@ import twitter4j.Status;
 public class UserStreamTimeLineFragment extends TimeLineFragment
                                         implements ConnectionReceiver.Observer, TabManagedView {
 
-    protected List<Long> mSavedStatuses;
+    protected List<TweetEntity> mSavedStatuses;
 
     //アプリ起動時にタイムラインをスクロールせずに放置していても
     //UserStreamの更新は行いたいので、デフォルトをtrueにする
@@ -205,30 +198,15 @@ public class UserStreamTimeLineFragment extends TimeLineFragment
         mAdapter.addAll(tweets);
     }
 
-
-
-//    @Override
-//    public void onStatus(final Status status){
-//
-//        isNeedSwipeLoad = false; //UserStreamの更新があれば無条件にSwipeロードを無効
-//
-//        //AdapterにStatusがない場合はなにもしない
-//        if (mAdapter.getCount() == 0) return;
-//
-//        //listの先頭Statusと同一だったらなにもしない
-//        if (status.getId() == getListTopStatusID()) return;
-//
-//        //LoadButtonが不要だったら何もしない
-//        if (!isNeedLoadButton) return;
-//
-//        addLoadButton();
-//    }
-
     @Override
     public void catchNewTweet(TweetEntity tweet) {
 
         if (isNeedLoadButton) {
             addLoadButton();
+        }
+
+        if (mListView.getFirstVisiblePosition() != 0) {
+            mSavedStatuses.add(tweet);
         }
 
         super.catchNewTweet(tweet);
@@ -240,8 +218,7 @@ public class UserStreamTimeLineFragment extends TimeLineFragment
 
     void addLoadButton() {
         final LoadButton button = new LoadButton();
-        this.twitterAccount.getRepository().addStatus(button);
-        mAdapter.insertButton(button.getId(), 0);
+        mAdapter.insertButton(button, 0);
         isNeedLoadButton = false;
     }
 
@@ -256,27 +233,27 @@ public class UserStreamTimeLineFragment extends TimeLineFragment
     }
 
 
-    //TODO super classの処理を全部コピーしたので問題はないが、リファクタリングで必ず修正すること
-    @Override
-    protected void onLoadFinished(TwitterTaskResult<ResponseList<Status>> result) {
-        isFirstOpen = false;
-        ((TextView)mFooterView.findViewById(R.id.read_more)).setText(R.string.click_to_load);
-
-        if ( result.isException() ) {
-            this.errorProcess(result.getException());
-            ((TextView)mFooterView.findViewById(R.id.read_more)).setText(R.string.click_to_load);
-            return;
-        }
-
-        for (Status status : result.getResult()) {
-            if (status.getId() <= mLastReadId) {
-                mAdapter.addSeenItem(status);
-            } else {
-                mAdapter.add(status);
-            }
-
-        }
-    }
+//    //TODO super classの処理を全部コピーしたので問題はないが、リファクタリングで必ず修正すること
+//    @Override
+//    protected void onLoadFinished(TwitterTaskResult<ResponseList<Status>> result) {
+//        isFirstOpen = false;
+//        ((TextView)mFooterView.findViewById(R.id.read_more)).setText(R.string.click_to_load);
+//
+//        if ( result.isException() ) {
+//            this.errorProcess(result.getException());
+//            ((TextView)mFooterView.findViewById(R.id.read_more)).setText(R.string.click_to_load);
+//            return;
+//        }
+//
+//        for (Status status : result.getResult()) {
+//            if (status.getId() <= mLastReadId) {
+//                mAdapter.addSeenItem(status);
+//            } else {
+//                mAdapter.add(status);
+//            }
+//
+//        }
+//    }
 
 
     /**
@@ -327,14 +304,13 @@ public class UserStreamTimeLineFragment extends TimeLineFragment
 
 
     void releaseSavedStatus() {
-        if (mSavedStatuses.isEmpty()) {
+        //内容が変更していないにも関わらずnotifyDataSetChangeをコールすると問題があるため、
+        //セーブデータがない場合には処理を終える
+        if (mSavedStatuses == null || mSavedStatuses.isEmpty()) {
             return;
         }
 
-        for (long statusId : mSavedStatuses) {
-            mAdapter.insert(statusId, 0);
-        }
-
+        mAdapter.addAll(mSavedStatuses);
         mAdapter.notifyDataSetChanged();
         mSavedStatuses.clear();
     }

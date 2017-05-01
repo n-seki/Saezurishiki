@@ -23,7 +23,6 @@ import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.entity.TwitterEntity;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
 import com.seki.saezurishiki.network.twitter.TwitterError;
-import com.seki.saezurishiki.network.twitter.TwitterTaskResult;
 import com.seki.saezurishiki.network.twitter.TwitterWrapper;
 import com.seki.saezurishiki.presenter.list.TweetListPresenter;
 import com.seki.saezurishiki.view.adapter.AdapterItem;
@@ -39,9 +38,6 @@ import com.seki.saezurishiki.view.fragment.other.PictureFragment;
 
 import java.util.List;
 
-import twitter4j.Paging;
-import twitter4j.ResponseList;
-import twitter4j.Status;
 import twitter4j.TwitterException;
 
 /**
@@ -170,27 +166,27 @@ public abstract class TweetListFragment extends Fragment
 
 
     void onItemClick(int position) {
-        TwitterEntity item = this.twitterAccount.getRepository().getTwitterEntity(mAdapter.getItemIdAtPosition(position));
-        if (item.getItemType() == TwitterEntity.Type.LoadButton) {
-            TweetListFragment.this.onClickLoadButton(item.getId());
+        final TwitterEntity entity = mAdapter.getEntity(position);
+        if (entity.getItemType() == TwitterEntity.Type.LoadButton) {
+            TweetListFragment.this.onClickLoadButton(entity.getId());
             return;
         }
 
-        TweetListFragment.this.showDialog((TweetEntity)item);
+        TweetListFragment.this.showDialog((TweetEntity)entity);
     }
 
 
     boolean onItemLongClick(int position) {
-        TwitterEntity item = this.twitterAccount.getRepository().getStatus(mAdapter.getItemIdAtPosition(position));
-        if (mAdapter.getItem(position).isButton()) {
+        final TwitterEntity entity = mAdapter.getEntity(position);
+        if (entity.getItemType() == TwitterEntity.Type.LoadButton) {
             return true;
         }
 
-        if (this.twitterAccount.getRepository().hasDeletionNotice(item.getId())) {
+        if (this.twitterAccount.getRepository().hasDeletionNotice(entity.getId())) {
             return true;
         }
 
-        TweetListFragment.this.showLongClickDialog((TweetEntity)item);
+        TweetListFragment.this.showLongClickDialog((TweetEntity)entity);
         return true;
     }
 
@@ -239,20 +235,20 @@ public abstract class TweetListFragment extends Fragment
     //このメソッドはpresenterに移譲しない。Dialogの表示処理であるため。
     @SuppressWarnings("unchecked")
     @Override
-    public void showFavoriteDialog(final TweetEntity status) {
+    public void showFavoriteDialog(final TweetEntity tweet) {
 
         YesNoSelectDialog.Listener<TweetEntity> action = new YesNoSelectDialog.Listener<TweetEntity>() {
             @Override
             public void onItemClick(TweetEntity tweet) {
-                if (status.isFavorited) {
-                    presenter.destroyFavorite(status);
+                if (tweet.isFavorited) {
+                    presenter.destroyFavorite(tweet);
                 } else {
-                    presenter.createFavorite(status);
+                    presenter.createFavorite(tweet);
                 }
             }
         };
 
-        DialogFragment dialogFragment = YesNoSelectDialog.newFavoriteDialog(status,action);
+        DialogFragment dialogFragment = YesNoSelectDialog.newFavoriteDialog(tweet,action);
         dialogFragment.show(getChildFragmentManager(), "YesNoSelectDialog");
     }
 
@@ -286,31 +282,8 @@ public abstract class TweetListFragment extends Fragment
 
     @Override
     public void catchNewTweet(TweetEntity tweetEntity) {
-        this.mAdapter.insert(tweetEntity.getId(), 0);
+        this.mAdapter.insert(tweetEntity, 0);
     }
-
-
-    /**
-     * loadTimeLineでの非同期通信の結果が正常だった場合に
-     * どのFragmentでも行う共通の処理
-     */
-    abstract void onLoadFinished(TwitterTaskResult<ResponseList<Status>> result);
-
-
-    /**
-     * LoadButtonの押下でロードしたStatusをAdapterにセットする
-     * @param statusList StatusのList
-     * @param buttonID 選択されたLoad ButtonのID
-     */
-    void setStatusIntoList(List<Status> statusList, long buttonID) {
-        final boolean allLoaded = mAdapter.setStatusIntoList(statusList, buttonID, 200);
-        if (allLoaded) {
-            removeLoadButton(buttonID);
-        } else {
-            changeLoadButtonText(buttonID, false);
-        }
-    }
-
 
     void removeLoadButton(long buttonID) {
         mAdapter.remove(buttonID);

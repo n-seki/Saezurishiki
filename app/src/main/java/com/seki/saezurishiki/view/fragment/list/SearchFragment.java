@@ -1,18 +1,13 @@
 package com.seki.saezurishiki.view.fragment.list;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 
 import com.seki.saezurishiki.model.adapter.RequestInfo;
-import com.seki.saezurishiki.network.twitter.TwitterTaskResult;
 import com.seki.saezurishiki.view.fragment.util.DataType;
-
-import twitter4j.ResponseList;
-import twitter4j.Status;
 
 /**
  * 検索結果一覧表示Fragment<br>
@@ -70,13 +65,4 @@ public class SearchFragment extends TweetListFragment {
     public String toString() {
         return "\"" + mQuery + "\"";
     }
-
-
-    @Override
-    public void onLoadFinished(TwitterTaskResult<ResponseList<Status>> result) {
-        //do nothing
-    }
-
-
-
 }

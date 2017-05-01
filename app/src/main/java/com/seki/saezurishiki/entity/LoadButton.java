@@ -35,13 +35,6 @@ public class LoadButton implements TwitterEntity {
         return this.id;
     }
 
-    @Override
-    public boolean isSeenByUser() {
-        return false;
-    }
-
-    @Override
-    public void userSee() {}
 
     @Override
     public boolean equals(Object obj) {

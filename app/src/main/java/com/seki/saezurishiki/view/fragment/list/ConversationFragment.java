@@ -75,7 +75,7 @@ public class ConversationFragment extends TweetListFragment {
 
     @Override
     public void catchNewTweet(TweetEntity tweetEntity) {
-        this.mAdapter.add(tweetEntity.getId());
+        this.mAdapter.add(tweetEntity);
     }
 
     @Override
@@ -86,10 +86,5 @@ public class ConversationFragment extends TweetListFragment {
 
     protected void onClickLoadButton(long buttonId) {
         throw new IllegalStateException("this method shouldn't call!");
-    }
-
-    @Override
-    protected void onLoadFinished(TwitterTaskResult<ResponseList<Status>> result) {
-        throw  new IllegalStateException(("this method shouldn't call!"));
     }
 }

@@ -86,16 +86,6 @@ public class TweetEntity implements TwitterEntity, Serializable, Comparable<Twee
         return this.id;
     }
 
-    @Override
-    public boolean isSeenByUser() {
-        return this.isSeen;
-    }
-
-    @Override
-    public void userSee() {
-        this.isSeen = true;
-    }
-
     public void onDelete() {
         this.isDelete = true;
     }

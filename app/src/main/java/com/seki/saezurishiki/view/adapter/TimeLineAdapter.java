@@ -14,33 +14,29 @@ import android.widget.TextView;
 import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.control.Setting;
 import com.seki.saezurishiki.control.UIControlUtil;
-import com.seki.saezurishiki.view.adapter.viewholder.ViewHolder;
-import com.seki.saezurishiki.view.adapter.viewholder.ViewHolderWithPicture;
 import com.seki.saezurishiki.entity.LoadButton;
 import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.entity.TwitterEntity;
 import com.seki.saezurishiki.network.server.TwitterServer;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
-import com.seki.saezurishiki.view.fragment.list.SearchFragment;
+import com.seki.saezurishiki.view.adapter.viewholder.ViewHolder;
+import com.seki.saezurishiki.view.adapter.viewholder.ViewHolderWithPicture;
 import com.squareup.picasso.Picasso;
 
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.List;
-import java.util.ListIterator;
+import java.util.Map;
 
-import twitter4j.Status;
 import twitter4j.User;
 
-import static com.seki.saezurishiki.control.UIControlUtil.formatDate;
 import static com.seki.saezurishiki.control.UIControlUtil.createMediaURLList;
+import static com.seki.saezurishiki.control.UIControlUtil.formatDate;
 
 /**
  * BaseAdapterでいいのなら後で変更する
  */
-public class TimeLineAdapter extends ArrayAdapter<AdapterItem> {
+public class TimeLineAdapter extends ArrayAdapter<TimeLineAdapter.Item<TwitterEntity>> {
 
     //getView()内でnewする良い方法を思いつけないので、
     //とりあえずフィールドとして保持
@@ -57,15 +53,29 @@ public class TimeLineAdapter extends ArrayAdapter<AdapterItem> {
     private final Setting.ButtonActionPattern FAVORITE_BUTTON_ACTION;
     private final Setting.ButtonActionPattern RETWEET_BUTTON_ACTION;
 
-    public boolean hasUnreadItem() {
-        for (int i = 0; i < getCount(); i++) {
-            AdapterItem item = getItem(i);
-            if (!item.isSeen) {
-                return true;
-            }
+    private Map<Long, Item<TwitterEntity>> buttons;
+
+
+    public static class Item<T extends TwitterEntity> {
+        public final T entity;
+        boolean isSeen;
+
+        private Item(T entity, boolean isSeen) {
+            this.entity = entity;
+            this.isSeen = isSeen;
         }
 
-        return false;
+        static <T extends TwitterEntity> Item<T> of(T entity) {
+            return new Item<>(entity, false);
+        }
+
+        public void see() {
+            this.isSeen = true;
+        }
+
+        public boolean isSeen() {
+            return this.isSeen;
+        }
     }
 
     public interface ViewListener {
@@ -93,14 +103,6 @@ public class TimeLineAdapter extends ArrayAdapter<AdapterItem> {
         }
     }
 
-    public TimeLineAdapter(Context context, int resourceId, ViewListener listener) {
-        super(context, resourceId);
-        TEXT_SIZE = 0;
-        SHOW_THUMBNAIL = false;
-        FAVORITE_BUTTON_ACTION = Setting.ButtonActionPattern.ONE_TAP;
-        RETWEET_BUTTON_ACTION = Setting.ButtonActionPattern.ONE_TAP;
-    }
-
     public TimeLineAdapter(Context context, int resourceId, ViewListener listener, TwitterAccount account) {
         super(context, resourceId);
 
@@ -112,6 +114,8 @@ public class TimeLineAdapter extends ArrayAdapter<AdapterItem> {
         SHOW_THUMBNAIL = account.setting.isShowThumbnail();
         FAVORITE_BUTTON_ACTION = account.setting.getFavoriteButtonAction();
         RETWEET_BUTTON_ACTION = account.setting.getReTweetButtonAction();
+
+        buttons = new HashMap<>();
     }
 
 
@@ -123,23 +127,19 @@ public class TimeLineAdapter extends ArrayAdapter<AdapterItem> {
     @Override
     @NonNull
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-        final TwitterEntity entity = repository.getTwitterEntity(getItemIdAtPosition(position));
+        final Item<TwitterEntity> item =  getItem(position);
 
-        if (entity == null) {
-            return mLayoutInflater.inflate(R.layout.read_more_tweet, null);
-        }
-
-        if (entity.getItemType() == TwitterEntity.Type.LoadButton) {
+        if (item.entity.getItemType() == TwitterEntity.Type.LoadButton) {
             View view = createLoadButtonView();
             TextView text = (TextView)view.findViewById(R.id.read_more);
-            text.setText(((LoadButton) entity).getLabelResId());
+            text.setText(((LoadButton) item.entity).getLabelResId());
             return view;
         }
 
-        View view = this.setStatusInformationToView((TweetEntity)entity, convertView);
+        View view = this.setStatusInformationToView((TweetEntity)item.entity, convertView);
 
         if (backgroundChange) {
-            if (getItem(position).isSeen) {
+            if (item.isSeen) {
                 view.setBackgroundColor(UIControlUtil.backgroundColor(mContext));
             } else {
                 view.setBackgroundColor(ContextCompat.getColor(mContext, R.color.blue_889FD9F6));
@@ -461,16 +461,42 @@ public class TimeLineAdapter extends ArrayAdapter<AdapterItem> {
 
 
     public int getLoadButtonPosition(long buttonID) {
-        for( int i = 0; i < getCount(); i++ ) {
-           if (getItem(i).itemID == buttonID) {
-               return i;
-           }
+        final Item<TwitterEntity> item = this.buttons.get(buttonID);
+        if (item == null) {
+            throw new IllegalStateException("button is no registered, id : " + buttonID);
         }
 
-        return -1;
+        return getPosition(item);
+    }
+
+    @Override
+    @NonNull
+    public Item<TwitterEntity> getItem(int position) {
+        final Item<TwitterEntity> item = super.getItem(position);
+        if (item == null) {
+            throw new IllegalStateException("item is null, position : " + position);
+        }
+
+        return item;
+    }
+
+    public TwitterEntity getEntity(int position) {
+        return getItem(position).entity;
+    }
+
+    public void add(TweetEntity tweet) {
+        add(Item.<TwitterEntity>of(tweet));
+    }
+
+    public void insert(TweetEntity tweet, int position) {
+        insert(Item.<TwitterEntity>of(tweet), position);
     }
 
     synchronized public void addAll(List<TweetEntity> tweets) {
+        if (tweets == null || tweets.isEmpty()) {
+            return;
+        }
+
         Collections.sort(tweets);
 
         if (this.isEmpty()) {
@@ -505,26 +531,14 @@ public class TimeLineAdapter extends ArrayAdapter<AdapterItem> {
         int insertPosition = position;
 
         for (TweetEntity tweetEntity : tweets) {
-            insert(tweetEntity.getId(), insertPosition++);
+            insert(Item.<TwitterEntity>of(tweetEntity), insertPosition++);
         }
-    }
-
-    public void add(Status status) {
-        add(new AdapterItem(status.getId()));
-    }
-
-    public void add(long tweetId) {
-        add(new AdapterItem(tweetId));
-    }
-
-    public void addSeenItem(Status status) {
-        add(new AdapterItem(status.getId(), true));
     }
 
 
     public boolean containsUnreadItem(int first, int last) {
         for (int i = first; i < last; i++) {
-            AdapterItem item = getItem(i);
+            final Item item = getItem(i);
             if (!item.isSeen) {
                 return true;
             }
@@ -533,11 +547,15 @@ public class TimeLineAdapter extends ArrayAdapter<AdapterItem> {
         return false;
     }
 
+    public boolean hasUnreadItem() {
+        return containsUnreadItem(0, getCount());
+    }
+
 
     public boolean remove(long itemId) {
         for (int i = 0; i < getCount(); i++) {
-            AdapterItem item = getItem(i);
-            if (item.itemID == itemId) {
+            Item<TwitterEntity> item = getItem(i);
+            if (item.entity.getId() == itemId) {
                 remove(item);
                 return true;
             }
@@ -546,55 +564,29 @@ public class TimeLineAdapter extends ArrayAdapter<AdapterItem> {
         return false;
     }
 
-
-    public void insertSeenItem(Status status, int position) {
-        insert(new AdapterItem(status.getId(), true), position);
-    }
-
-
-    public void insert(long statusId, int position) {
-        AdapterItem item = new AdapterItem(statusId);
+    public void insertButton(LoadButton button, int position) {
+        final Item<TwitterEntity> item = Item.<TwitterEntity>of(button);
+        buttons.put(button.getId(), item);
         insert(item, position);
     }
 
 
     public long getItemIdAtPosition(int position) {
         if (this.isEmpty()) return -1;
-        return getItem(position).itemID;
+        final Item<TwitterEntity> item = getItem(position);
+        return item.entity.getId();
     }
 
 
     public long lastReadId() {
         for (int i = 0; i < getCount(); i++) {
-            if (getItem(i).isSeen) {
-                return getItem(i).itemID;
+            final Item<TwitterEntity> item = getItem(i);
+            if (item.isSeen) {
+                return item.entity.getId();
             }
         }
 
         return 0L;
     }
-
-
-    public void insertButton(long id, int position) {
-        AdapterItem button = AdapterItem.newButton(id);
-        insert(button, position);
-    }
-
-
-    public boolean setStatusIntoList(List<Status> list, long buttonID, int maxSize) {
-        if (list.isEmpty()) {
-            return true;
-        }
-
-        int buttonPosition = getLoadButtonPosition(buttonID);
-
-        for (Status status : list) {
-            insert(status.getId(), buttonPosition++);
-        }
-
-        return list.size() < maxSize;
-
-    }
-
 
 }

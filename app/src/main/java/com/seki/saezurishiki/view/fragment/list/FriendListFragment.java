@@ -5,9 +5,6 @@ import com.seki.saezurishiki.network.twitter.AsyncTwitterTask;
 import twitter4j.PagableResponseList;
 import twitter4j.User;
 
-/**
- * Created by seki on 2016/07/18.
- */
 public class FriendListFragment extends UsersListFragment {
 
 
