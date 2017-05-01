@@ -1,13 +1,6 @@
 package com.seki.saezurishiki.view.fragment.list;
 
-import android.os.Bundle;
-
 import com.seki.saezurishiki.file.SharedPreferenceUtil;
-import com.seki.saezurishiki.network.twitter.AsyncTwitterTask;
-
-import twitter4j.Paging;
-import twitter4j.ResponseList;
-import twitter4j.Status;
 
 
 /**
