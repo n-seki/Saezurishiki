@@ -13,7 +13,6 @@ import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.control.UIControlUtil;
 import com.seki.saezurishiki.entity.LoadButton;
 import com.seki.saezurishiki.entity.TweetEntity;
-import com.seki.saezurishiki.entity.TwitterEntity;
 import com.seki.saezurishiki.file.SharedPreferenceUtil;
 import com.seki.saezurishiki.model.adapter.RequestInfo;
 import com.seki.saezurishiki.network.ConnectionReceiver;
@@ -25,19 +24,11 @@ import com.seki.saezurishiki.view.customview.NotificationListView;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * ユーザーストリームタイムライン既定クラス<br>
- * Home, replyタイムラインの親クラスです
- * @author seki
- */
+
 public class UserStreamTimeLineFragment extends TweetListFragment
                                         implements ConnectionReceiver.Observer, TabManagedView {
 
     protected List<TweetEntity> mSavedStatuses;
-
-    //アプリ起動時にタイムラインをスクロールせずに放置していても
-    //UserStreamの更新は行いたいので、デフォルトをtrueにする
-    protected boolean mListTopVisible = true;
 
     SwipeRefreshLayout mSwipeRefresher;
 
@@ -140,10 +131,6 @@ public class UserStreamTimeLineFragment extends TweetListFragment
         });
     }
 
-    private void requestTabChange() {
-        this.tabViewControl.requestChangeTabState(this);
-    }
-
 
     private int previousFirstVisibleItem;
 
@@ -157,9 +144,6 @@ public class UserStreamTimeLineFragment extends TweetListFragment
 
         if (firstVisibleItem == 0) {
             UserStreamTimeLineFragment.this.releaseSavedStatus();
-            mListTopVisible = true;
-        } else {
-            mListTopVisible = false;
         }
 
         //表示されているアイテム中に未読tweetがある場合には背景色を変更する
@@ -170,24 +154,14 @@ public class UserStreamTimeLineFragment extends TweetListFragment
 
         if (previousFirstVisibleItem < firstVisibleItem) {
             if (firstVisibleItem + visibleItemCount + 10 == totalItemCount) {
-                loadTimeLine();
+                //フッターの読み込みボタンをクリックしたことにする
+                clickReadMoreButton();
             }
         }
 
         this.previousFirstVisibleItem = firstVisibleItem;
     }
 
-
-    @Override
-    void onItemClick(int position) {
-        final TwitterEntity entity = mAdapter.getEntity(position);
-        if (entity.getItemType() == TwitterEntity.Type.LoadButton) {
-            onClickLoadButton(entity.getId());
-            return;
-        }
-
-        showDialog((TweetEntity)entity);
-    }
 
     void changeTweetBackground(int firstVisibleItem, int visibleItemCount) {
         ((NotificationListView)this.mListView).changeItemBackground(firstVisibleItem, visibleItemCount);
@@ -207,19 +181,14 @@ public class UserStreamTimeLineFragment extends TweetListFragment
     @Override
     public void loadTweets(List<TweetEntity> tweets) {
         mSwipeRefresher.setRefreshing(false);
-        mAdapter.addAll(tweets);
+        super.loadTweets(tweets);
     }
 
     @Override
     public void catchNewTweet(TweetEntity tweet) {
-
-        // FIXME: 2017/05/02
-//        if (isNeedLoadButton) {
-//            addLoadButton();
-//        }
-
         if (mListView.getFirstVisiblePosition() != 0) {
             mSavedStatuses.add(tweet);
+            return;
         }
 
         super.catchNewTweet(tweet);
@@ -267,12 +236,7 @@ public class UserStreamTimeLineFragment extends TweetListFragment
 //    }
 
 
-    /**
-     * LoadButtonを押した際のLoad処理
-     * LoadButtonがListの先頭にあった場合には最新のTweetから200
-     * 先頭ではない場合には,LoadButtonの真上のTweet以前の古いTweetをロードする
-     * @param buttonID 選択されたLoadButtonのID
-     */
+    @SuppressWarnings("unused")
     protected void onClickLoadButton(final long buttonID) {
 
         final int buttonPosition = mAdapter.getLoadButtonPosition(buttonID);
@@ -294,6 +258,11 @@ public class UserStreamTimeLineFragment extends TweetListFragment
         button.setLabelResId(labelResID);
 
         mAdapter.notifyDataSetChanged();
+    }
+
+
+    private void requestTabChange() {
+        this.tabViewControl.requestChangeTabState(this);
     }
 
     @Override

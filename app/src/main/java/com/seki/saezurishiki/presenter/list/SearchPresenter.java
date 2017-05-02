@@ -20,11 +20,16 @@ public class SearchPresenter extends TweetListPresenter {
     void dispatch(ModelMessage message) {
         switch (message.type) {
             case LOAD_SEARCH:
-                this.view.loadTweets((List<TweetEntity>)message.data);
+                final List<TweetEntity> result = ((List<TweetEntity>)message.data);
+                this.view.loadTweets(result);
+                if (result.isEmpty()) {
+                    this.view.hideFooterLoadButton();
+                }
                 break;
 
             case COMPLETE_FAVORITE:
             case COMPLETE_UN_FAVORITE:
+            case COMPLETE_DELETE_TWEET:
                 this.view.updateTweet((TweetEntity)message.data);
                 break;
 

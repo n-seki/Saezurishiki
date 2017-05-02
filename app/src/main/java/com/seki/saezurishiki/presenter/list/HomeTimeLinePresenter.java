@@ -27,6 +27,7 @@ public class HomeTimeLinePresenter extends TweetListPresenter {
 
             case COMPLETE_FAVORITE:
             case COMPLETE_UN_FAVORITE:
+            case COMPLETE_DELETE_TWEET:
                 this.view.updateTweet((TweetEntity)message.data);
                 break;
 

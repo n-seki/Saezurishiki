@@ -192,7 +192,6 @@ public abstract class TweetListFragment extends Fragment
     }
 
 
-    //このメソッドはpresenterに移譲しない。Dialogの表示処理であるため。
     @SuppressWarnings("unchecked")
     @Override
     public void showFavoriteDialog(final TweetEntity tweet) {
@@ -258,6 +257,11 @@ public abstract class TweetListFragment extends Fragment
         TextView footerText = (TextView)mFooterView.findViewById(R.id.read_more);
         footerText.setText(R.string.click_to_load);
         mFooterView.setTag(NEW_LOADING, false);
+    }
+
+    @Override
+    public void hideFooterLoadButton() {
+        mFooterView.setVisibility(View.GONE);
     }
 
     @Override

@@ -44,6 +44,7 @@ public abstract class TweetListPresenter implements TimeLineAdapter.ViewListener
         void showFavoriteDialog(TweetEntity tweet);
         void showLongClickDialog(TweetEntity tweet);
         void errorProcess(Exception e);
+        void hideFooterLoadButton();
     }
 
     public void onResume() {
@@ -85,7 +86,7 @@ public abstract class TweetListPresenter implements TimeLineAdapter.ViewListener
     }
 
 
-    void deleteTweet(TweetEntity tweet) {
+    private void deleteTweet(TweetEntity tweet) {
         this.tweetListModel.delete(tweet);
     }
 
@@ -94,10 +95,6 @@ public abstract class TweetListPresenter implements TimeLineAdapter.ViewListener
         this.tweetListModel.reTweet(tweet);
     }
 
-
-    public void onDeleteTweet(TweetEntity tweet) {
-        this.view.completeDeleteTweet(tweet);
-    }
 
     public void load(final RequestInfo info) {
         this.tweetListModel.request(info.userID(this.listOwnerId));

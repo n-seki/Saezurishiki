@@ -29,6 +29,7 @@ public class UserTweetListPresenter extends TweetListPresenter {
 
             case COMPLETE_FAVORITE:
             case COMPLETE_UN_FAVORITE:
+            case COMPLETE_DELETE_TWEET:
                 this.view.updateTweet((TweetEntity)message.data);
                 break;
 
@@ -44,9 +45,6 @@ public class UserTweetListPresenter extends TweetListPresenter {
                 this.view.deletionTweet(((StatusDeletionNotice)message.data).getStatusId());
                 break;
 
-            case ERROR:
-                this.view.errorProcess(message.exception);
-                break;
             default:
                 //no operation
         }
