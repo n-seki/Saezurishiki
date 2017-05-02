@@ -59,68 +59,56 @@ abstract class TweetListModelImp extends ModelBaseImp implements TweetListModel 
 
     @Override
     public void favorite(final TweetEntity tweetEntity) {
-        this.executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    final Status result = twitterAccount.twitter.createFavorite(tweetEntity.getId());
-                    final TweetEntity tweet = twitterAccount.getRepository().map(result);
-                    twitterAccount.getRepository().addStatus(tweet);
-                    final ModelMessage message = ModelMessage.of(ModelActionType.COMPLETE_FAVORITE, tweet);
-                    observable.notifyObserver(message);
-                } catch (TwitterException e) {
-                    observable.notifyObserver(ModelMessage.error(e));
-                }
+        this.executor.execute(() -> {
+            try {
+                final Status result = twitterAccount.twitter.createFavorite(tweetEntity.getId());
+                final TweetEntity tweet = twitterAccount.getRepository().map(result);
+                twitterAccount.getRepository().addStatus(tweet);
+                final ModelMessage message = ModelMessage.of(ModelActionType.COMPLETE_FAVORITE, tweet);
+                observable.notifyObserver(message);
+            } catch (TwitterException e) {
+                observable.notifyObserver(ModelMessage.error(e));
             }
         });
     }
 
     @Override
     public void unFavorite(final TweetEntity tweetEntity) {
-        this.executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    final Status result = twitterAccount.twitter.destroyFavorite(tweetEntity.getId());
-                    final TweetEntity tweet = twitterAccount.getRepository().map(result);
-                    twitterAccount.getRepository().addStatus(tweet);
-                    final ModelMessage message = ModelMessage.of(ModelActionType.COMPLETE_UN_FAVORITE, tweet);
-                    observable.notifyObserver(message);
-                } catch (TwitterException e) {
-                    observable.notifyObserver(ModelMessage.error(e));
-                }
+        this.executor.execute(() -> {
+            try {
+                final Status result = twitterAccount.twitter.destroyFavorite(tweetEntity.getId());
+                final TweetEntity tweet = twitterAccount.getRepository().map(result);
+                twitterAccount.getRepository().addStatus(tweet);
+                final ModelMessage message = ModelMessage.of(ModelActionType.COMPLETE_UN_FAVORITE, tweet);
+                observable.notifyObserver(message);
+            } catch (TwitterException e) {
+                observable.notifyObserver(ModelMessage.error(e));
             }
         });
     }
 
     @Override
     public void reTweet(final TweetEntity tweetEntity) {
-        this.executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    final Status result = twitterAccount.twitter.retweetStatus(tweetEntity.getId());
-                    final ModelMessage message = ModelMessage.of(ModelActionType.COMPLETE_RETWEET, result);
-                    observable.notifyObserver(message);
-                } catch (TwitterException e) {
-                    observable.notifyObserver(ModelMessage.error(e));
-                }
+        this.executor.execute(() -> {
+            try {
+                final Status result = twitterAccount.twitter.retweetStatus(tweetEntity.getId());
+                final ModelMessage message = ModelMessage.of(ModelActionType.COMPLETE_RETWEET, result);
+                observable.notifyObserver(message);
+            } catch (TwitterException e) {
+                observable.notifyObserver(ModelMessage.error(e));
             }
         });
     }
 
     @Override
     public void delete(final TweetEntity tweetEntity) {
-        this.executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    final Status result = twitterAccount.twitter.destroyStatus(tweetEntity.getId());
-                    final ModelMessage message = ModelMessage.of(ModelActionType.COMPLETE_DELETE_TWEET, result);
-                    observable.notifyObserver(message);
-                } catch (TwitterException e) {
-                    observable.notifyObserver(ModelMessage.error(e));
-                }
+        this.executor.execute(() -> {
+            try {
+                final Status result = twitterAccount.twitter.destroyStatus(tweetEntity.getId());
+                final ModelMessage message = ModelMessage.of(ModelActionType.COMPLETE_DELETE_TWEET, result);
+                observable.notifyObserver(message);
+            } catch (TwitterException e) {
+                observable.notifyObserver(ModelMessage.error(e));
             }
         });
     }

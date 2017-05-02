@@ -23,21 +23,20 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.seki.saezurishiki.application.SaezurishikiApp;
 import com.seki.saezurishiki.R;
-import com.seki.saezurishiki.view.adapter.BioHeaderPageAdapter;
-import com.seki.saezurishiki.view.adapter.DrawerButtonListAdapter;
+import com.seki.saezurishiki.application.SaezurishikiApp;
 import com.seki.saezurishiki.control.CustomToast;
 import com.seki.saezurishiki.control.FragmentController;
 import com.seki.saezurishiki.control.RelationshipModel;
-import com.seki.saezurishiki.view.fragment.editor.EditTweetFragment;
-import com.seki.saezurishiki.view.fragment.dialog.YesNoSelectDialog;
-import com.seki.saezurishiki.network.twitter.AsyncTwitterTask;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
 import com.seki.saezurishiki.network.twitter.TwitterError;
 import com.seki.saezurishiki.network.twitter.TwitterTaskResult;
 import com.seki.saezurishiki.network.twitter.TwitterWrapper;
+import com.seki.saezurishiki.view.adapter.BioHeaderPageAdapter;
+import com.seki.saezurishiki.view.adapter.DrawerButtonListAdapter;
 import com.seki.saezurishiki.view.control.FragmentControl;
+import com.seki.saezurishiki.view.fragment.dialog.YesNoSelectDialog;
+import com.seki.saezurishiki.view.fragment.editor.EditTweetFragment;
 
 import java.io.Serializable;
 
@@ -148,12 +147,7 @@ public class UserActivity extends    AppCompatActivity
 
     private void asyncLoadUser() {
         final long userID = getIntent().getExtras().getLong(USER_ID);
-        mTwitterTask.showUser(userID, new AsyncTwitterTask.AfterTask<User>() {
-            @Override
-            public void onLoadFinish(TwitterTaskResult<User> result) {
-                UserActivity.this.onLoadUser(result, userID);
-            }
-        });
+        mTwitterTask.showUser(userID, result -> UserActivity.this.onLoadUser(result, userID));
     }
 
 
@@ -173,12 +167,7 @@ public class UserActivity extends    AppCompatActivity
 
         mUser = result.getResult();
 
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-                UserActivity.this.setupUserInformation();
-            }
-        });
+        new Handler().post(UserActivity.this::setupUserInformation);
     }
 
 
@@ -190,28 +179,13 @@ public class UserActivity extends    AppCompatActivity
         headerPage.setCurrentItem(1);
 
         Button replyButton = (Button)findViewById(R.id.bio_reply_button);
-        replyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                UserActivity.this.displayFragment(FragmentController.FRAGMENT_ID_TWEET_EDITOR);
-            }
-        });
+        replyButton.setOnClickListener(view -> UserActivity.this.displayFragment(FragmentController.FRAGMENT_ID_TWEET_EDITOR));
 
         Button messageButton = (Button)findViewById(R.id.bio_message_button);
-        messageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                UserActivity.this.displayFragment(FragmentController.FRAGMENT_ID_DIRECT_MESSAGE_EDITOR);
-            }
-        });
+        messageButton.setOnClickListener(view -> UserActivity.this.displayFragment(FragmentController.FRAGMENT_ID_DIRECT_MESSAGE_EDITOR));
 
         Button followButton = (Button)findViewById(R.id.bio_follow_button);
-        followButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                UserActivity.this.showFollowDialog();
-            }
-        });
+        followButton.setOnClickListener(view -> UserActivity.this.showFollowDialog());
 
         ListView drawerList = (ListView)findViewById(R.id.bio_drawer_list);
         mListAdapter.setUserItem(user);
@@ -318,12 +292,7 @@ public class UserActivity extends    AppCompatActivity
     }
 
     private void showRelationship() {
-        mTwitterTask.showRelationShip(mUser.getId(), new AsyncTwitterTask.AfterTask<Relationship>() {
-            @Override
-            public void onLoadFinish(TwitterTaskResult<Relationship> result) {
-                UserActivity.this.onShowRelationship(result);
-            }
-        });
+        mTwitterTask.showRelationShip(mUser.getId(), UserActivity.this::onShowRelationship);
     }
 
 
@@ -383,12 +352,7 @@ public class UserActivity extends    AppCompatActivity
             return;
         }
 
-        mTwitterTask.createRelationShip(mUser.getId(), new AsyncTwitterTask.AfterTask<User>() {
-            @Override
-            public void onLoadFinish(TwitterTaskResult<User> result) {
-                UserActivity.this.onFollow(result);
-            }
-        });
+        mTwitterTask.createRelationShip(mUser.getId(), UserActivity.this::onFollow);
     }
 
 
@@ -405,12 +369,7 @@ public class UserActivity extends    AppCompatActivity
 
 
     private void remove() {
-        mTwitterTask.destroyRelationShip(mUser.getId(), new AsyncTwitterTask.AfterTask<User>() {
-            @Override
-            public void onLoadFinish(TwitterTaskResult<User> result) {
-                UserActivity.this.onRemove(result);
-            }
-        });
+        mTwitterTask.destroyRelationShip(mUser.getId(), UserActivity.this::onRemove);
     }
 
 
@@ -449,20 +408,14 @@ public class UserActivity extends    AppCompatActivity
                 new YesNoSelectDialog.Builder<User>()
                         .setItem(mUser)
                         .setSummary(mUser.getScreenName() + (follow ? "をリムーブしますか？" : "をフォローしますか？"))
-                        .setPositiveAction(new YesNoSelectDialog.Listener<User>() {
-                            @Override
-                            public void onItemClick(User item) {
-                                if (follow)
-                                    UserActivity.this.remove();
-                                else
-                                    UserActivity.this.follow();
-                            }
+                        .setPositiveAction((YesNoSelectDialog.Listener<User>) item -> {
+                            if (follow)
+                                UserActivity.this.remove();
+                            else
+                                UserActivity.this.follow();
                         })
-                        .setNegativeAction(new YesNoSelectDialog.Listener<User>() {
-                            @Override
-                            public void onItemClick(User item) {
-                                //do nothing
-                            }
+                        .setNegativeAction((YesNoSelectDialog.Listener<User>) item -> {
+                            //do nothing
                         })
                         .build();
 
@@ -479,12 +432,7 @@ public class UserActivity extends    AppCompatActivity
 
     @Override
     public void postTweet(StatusUpdate status) {
-        mTwitterTask.post(status, new AsyncTwitterTask.AfterTask<Status>() {
-            @Override
-            public void onLoadFinish(TwitterTaskResult<Status> result) {
-                UserActivity.this.onPostTweet(result);
-            }
-        });
+        mTwitterTask.post(status, UserActivity.this::onPostTweet);
     }
 
 
@@ -566,17 +514,9 @@ public class UserActivity extends    AppCompatActivity
                         .setItem(mUser)
                         .setTitle(R.string.follow_request)
                         .setSummary(mUser.getScreenName() + "にフォローリクエストを送信しますか？")
-                        .setPositiveAction(new YesNoSelectDialog.Listener<User>() {
-                            @Override
-                            public void onItemClick(User item) {
-                                UserActivity.this.sendFollowRequest();
-                            }
-                        })
-                        .setNegativeAction(new YesNoSelectDialog.Listener<User>() {
-                            @Override
-                            public void onItemClick(User item) {
-                                //do nothing
-                            }
+                        .setPositiveAction((YesNoSelectDialog.Listener<User>) item -> UserActivity.this.sendFollowRequest())
+                        .setNegativeAction((YesNoSelectDialog.Listener<User>) item -> {
+                            //do nothing
                         })
                         .build();
 
@@ -585,12 +525,7 @@ public class UserActivity extends    AppCompatActivity
 
 
     public void sendFollowRequest() {
-        mTwitterTask.follow(mUser, new AsyncTwitterTask.AfterTask<User>() {
-            @Override
-            public void onLoadFinish(TwitterTaskResult<User> result) {
-                UserActivity.this.onSendFollowRequest(result);
-            }
-        });
+        mTwitterTask.follow(mUser, UserActivity.this::onSendFollowRequest);
     }
 
 
@@ -612,17 +547,9 @@ public class UserActivity extends    AppCompatActivity
                         .setItem(mUser)
                         .setTitle(R.string.action_block)
                         .setSummary(mUser.getScreenName() + "をブロックしますか？")
-                        .setPositiveAction(new YesNoSelectDialog.Listener<User>() {
-                            @Override
-                            public void onItemClick(User item) {
-                                UserActivity.this.blockUser();
-                            }
-                        })
-                        .setNegativeAction(new YesNoSelectDialog.Listener<User>() {
-                            @Override
-                            public void onItemClick(User item) {
-                                //do nothing
-                            }
+                        .setPositiveAction((YesNoSelectDialog.Listener<User>) item -> UserActivity.this.blockUser())
+                        .setNegativeAction((YesNoSelectDialog.Listener<User>) item -> {
+                            //do nothing
                         })
                         .build();
 
@@ -631,12 +558,7 @@ public class UserActivity extends    AppCompatActivity
 
 
     public void blockUser() {
-        mTwitterTask.block(mUser, new AsyncTwitterTask.AfterTask<User>() {
-            @Override
-            public void onLoadFinish(TwitterTaskResult<User> result) {
-                UserActivity.this.onBlock(result);
-            }
-        });
+        mTwitterTask.block(mUser, UserActivity.this::onBlock);
     }
 
 
@@ -654,12 +576,7 @@ public class UserActivity extends    AppCompatActivity
 
     @SuppressWarnings("unchecked")
     private void showReleaseBlockDialog() {
-        YesNoSelectDialog.Listener<User> action = new YesNoSelectDialog.Listener<User>() {
-            @Override
-            public void onItemClick(User item) {
-                UserActivity.this.releaseBlock();
-            }
-        };
+        YesNoSelectDialog.Listener<User> action = (YesNoSelectDialog.Listener<User>) item -> UserActivity.this.releaseBlock();
 
         DialogFragment dialog = YesNoSelectDialog.newReleaseBlockDialog(mUser, action);
         dialog.show(getSupportFragmentManager(), "YesNoSelectDialog");
@@ -667,12 +584,7 @@ public class UserActivity extends    AppCompatActivity
 
 
     private void releaseBlock() {
-        mTwitterTask.destroyBlock(mUser, new AsyncTwitterTask.AfterTask<User>() {
-            @Override
-            public void onLoadFinish(TwitterTaskResult<User> result) {
-                UserActivity.this.onReleaseBlock(result);
-            }
-        });
+        mTwitterTask.destroyBlock(mUser, UserActivity.this::onReleaseBlock);
     }
 
 

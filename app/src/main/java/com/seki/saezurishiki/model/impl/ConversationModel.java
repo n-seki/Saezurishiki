@@ -19,19 +19,16 @@ class ConversationModel extends TweetListModelImp {
     @Override
     public void request(final RequestInfo info) {
         final Twitter twitter = this.twitterAccount.twitter;
-        this.executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    final Status status = twitter.showStatus(info.toTargetID());
-                    final TweetEntity tweet = twitterAccount.getRepository().map(status);
-                    twitterAccount.getRepository().addStatus(tweet);
-                    final ModelMessage message = ModelMessage.of(ModelActionType.LOAD_TWEET, tweet);
-                    observable.notifyObserver(message);
-                } catch (TwitterException e) {
-                    final ModelMessage error = ModelMessage.error(e);
-                    observable.notifyObserver(error);
-                }
+        this.executor.execute(() -> {
+            try {
+                final Status status = twitter.showStatus(info.toTargetID());
+                final TweetEntity tweet = twitterAccount.getRepository().map(status);
+                twitterAccount.getRepository().addStatus(tweet);
+                final ModelMessage message = ModelMessage.of(ModelActionType.LOAD_TWEET, tweet);
+                observable.notifyObserver(message);
+            } catch (TwitterException e) {
+                final ModelMessage error = ModelMessage.error(e);
+                observable.notifyObserver(error);
             }
         });
     }

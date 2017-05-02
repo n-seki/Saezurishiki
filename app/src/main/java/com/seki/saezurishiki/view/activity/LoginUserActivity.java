@@ -169,13 +169,10 @@ public class LoginUserActivity extends    AppCompatActivity
     }
 
     private void setExceptionHandle() {
-        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-            @Override
-            public void uncaughtException(Thread thread, Throwable throwable) {
-                Toast.makeText(LoginUserActivity.this, "問題が発生しました" + throwable.getMessage(), Toast.LENGTH_LONG).show();
-                LoginUserActivity.this.applicationFinalizer();
-                LoginUserActivity.this.finish();
-            }
+        Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {
+            Toast.makeText(LoginUserActivity.this, "問題が発生しました" + throwable.getMessage(), Toast.LENGTH_LONG).show();
+            LoginUserActivity.this.applicationFinalizer();
+            LoginUserActivity.this.finish();
         });
     }
 
@@ -195,14 +192,11 @@ public class LoginUserActivity extends    AppCompatActivity
 
     private void setupTweetButton(int theme) {
         FloatingActionButton editTweetButton = (FloatingActionButton) findViewById(R.id.edit_tweet_button);
-        editTweetButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Fragment fragment = mHashTagEntities == null ? EditTweetFragment.newNormalEditor()
-                        : EditTweetFragment.newEditorWithHashTag(mHashTagEntities);
+        editTweetButton.setOnClickListener(v -> {
+            Fragment fragment = mHashTagEntities == null ? EditTweetFragment.newNormalEditor()
+                    : EditTweetFragment.newEditorWithHashTag(mHashTagEntities);
 
-                LoginUserActivity.this.addFragment(R.id.home_container, fragment);
-            }
+            LoginUserActivity.this.addFragment(R.id.home_container, fragment);
         });
         editTweetButton.setBackgroundTintList(UIControlUtil.buttonTint(this, theme));
     }
@@ -382,21 +376,13 @@ public class LoginUserActivity extends    AppCompatActivity
 
 
     protected void loadUser() {
-        AsyncTwitterTask.AfterTask<User> afterTask = new AsyncTwitterTask.AfterTask<User>() {
-            @Override
-            public void onLoadFinish(TwitterTaskResult<User> result) {
-                LoginUserActivity.this.onLoadUser(result);
-            }
-        };
+        AsyncTwitterTask.AfterTask<User> afterTask = LoginUserActivity.this::onLoadUser;
 
-        AsyncTwitterTask.OnCancelTask cancelTask = new AsyncTwitterTask.OnCancelTask() {
-            @Override
-            public void onLoadCancel() {
-                User user = Serializer.loadUser(LoginUserActivity.this);
-                if (user == null) return;
-                mLoginUser = user;
-                userDrawerView.updateUser(mLoginUser);
-            }
+        AsyncTwitterTask.OnCancelTask cancelTask = () -> {
+            User user = Serializer.loadUser(LoginUserActivity.this);
+            if (user == null) return;
+            mLoginUser = user;
+            userDrawerView.updateUser(mLoginUser);
         };
 
         mTwitterTask.showUser(this.twitterAccount.getLoginUserId(), afterTask, cancelTask);
@@ -600,17 +586,9 @@ public class LoginUserActivity extends    AppCompatActivity
                 new YesNoSelectDialog.Builder<User>()
                         .setItem(mLoginUser)
                         .setSummary("ログアウトしますか？")
-                        .setPositiveAction(new YesNoSelectDialog.Listener<User>() {
-                            @Override
-                            public void onItemClick(User item) {
-                                LoginUserActivity.this.logout();
-                            }
-                        })
-                        .setNegativeAction(new YesNoSelectDialog.Listener<User>() {
-                            @Override
-                            public void onItemClick(User item) {
-                                //do nothing
-                            }
+                        .setPositiveAction((YesNoSelectDialog.Listener<User>) item -> LoginUserActivity.this.logout())
+                        .setNegativeAction((YesNoSelectDialog.Listener<User>) item -> {
+                            //do nothing
                         })
                         .build();
 
@@ -673,12 +651,7 @@ public class LoginUserActivity extends    AppCompatActivity
 
 
     public void postTweet(StatusUpdate status) {
-        mTwitterTask.post(status, new AsyncTwitterTask.AfterTask<Status>() {
-            @Override
-            public void onLoadFinish(TwitterTaskResult<Status> result) {
-                LoginUserActivity.this.onPostTweet(result);
-            }
-        });
+        mTwitterTask.post(status, LoginUserActivity.this::onPostTweet);
     }
 
 

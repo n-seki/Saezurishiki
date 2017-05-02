@@ -88,14 +88,11 @@ public class TweetSelectDialog extends DialogFragment {
 
     void initDialog(Dialog dialog) {
         ListView listView = (ListView) dialog.findViewById(R.id.list);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                @SuppressWarnings("unchecked")
-                final DialogSelectAction<TweetEntity> action = (DialogSelectAction)view.getTag();
-                mListener.onDialogItemClick(action);
-                dismiss();
-            }
+        listView.setOnItemClickListener((adapterView, view, i, l) -> {
+            @SuppressWarnings("unchecked")
+            final DialogSelectAction<TweetEntity> action = (DialogSelectAction)view.getTag();
+            mListener.onDialogItemClick(action);
+            dismiss();
         });
 
         DialogItemAdapter adapter =

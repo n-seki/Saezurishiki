@@ -4,10 +4,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.seki.saezurishiki.entity.UserEntity;
 import com.seki.saezurishiki.view.fragment.Fragments;
 import com.seki.saezurishiki.view.fragment.list.RecentlyDirectMessageListFragment;
-import com.seki.saezurishiki.view.fragment.list.UserStreamTimeLineFragment;
 
 
 /**

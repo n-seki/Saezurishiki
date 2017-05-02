@@ -35,12 +35,7 @@ public class TwitterOauthActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_pre_login);
 
-        findViewById(R.id.start_oauth).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TwitterOauthActivity.this.startAuthorize();
-            }
-        });
+        findViewById(R.id.start_oauth).setOnClickListener(v -> TwitterOauthActivity.this.startAuthorize());
 
         mCallback = getString(R.string.callback_url);
 
@@ -48,25 +43,19 @@ public class TwitterOauthActivity extends AppCompatActivity {
     }
 
     public void startAuthorize() {
-        final AsyncTwitterTask.AsyncTask<String> TASK = new AsyncTwitterTask.AsyncTask<String>() {
-            @Override
-            public String doInBackground() throws TwitterException {
-                mRequestToken = TwitterUtil.getUnauthorizedTwitter(TwitterOauthActivity.this).getOAuthRequestToken(mCallback);
-                return mRequestToken.getAuthorizationURL();
-            }
+        final AsyncTwitterTask.AsyncTask<String> TASK = () -> {
+            mRequestToken = TwitterUtil.getUnauthorizedTwitter(TwitterOauthActivity.this).getOAuthRequestToken(mCallback);
+            return mRequestToken.getAuthorizationURL();
         };
 
-        final AsyncTwitterTask.AfterTask<String> AFTER_TASK = new AsyncTwitterTask.AfterTask<String>() {
-            @Override
-            public void onLoadFinish(TwitterTaskResult<String> result) {
-                if (result.isException()) {
-                    return;
-                }
+        final AsyncTwitterTask.AfterTask<String> AFTER_TASK = result -> {
+            if (result.isException()) {
+                return;
+            }
 
-                if (result.getResult() != null) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(result.getResult()));
-                    TwitterOauthActivity.this.startActivity(intent);
-                }
+            if (result.getResult() != null) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(result.getResult()));
+                TwitterOauthActivity.this.startActivity(intent);
             }
         };
 
@@ -89,17 +78,14 @@ public class TwitterOauthActivity extends AppCompatActivity {
 
 
     public void oauthAccess(final String verifier) {
-        final AsyncTwitterTask.AfterTask<AccessToken> AFTER_TASK = new AsyncTwitterTask.AfterTask<AccessToken>() {
-            @Override
-            public void onLoadFinish(TwitterTaskResult<AccessToken> result) {
-                if (result.isException()) {
-                    return;
-                }
+        final AsyncTwitterTask.AfterTask<AccessToken> AFTER_TASK = result -> {
+            if (result.isException()) {
+                return;
+            }
 
-                if (result.getResult() != null) {
-                    Toast.makeText(TwitterOauthActivity.this, R.string.oauth_done, Toast.LENGTH_SHORT).show();
-                    TwitterOauthActivity.this.successOauth(result.getResult());
-                }
+            if (result.getResult() != null) {
+                Toast.makeText(TwitterOauthActivity.this, R.string.oauth_done, Toast.LENGTH_SHORT).show();
+                TwitterOauthActivity.this.successOauth(result.getResult());
             }
         };
 

@@ -107,12 +107,7 @@ public class DirectMessageFragment extends Fragment implements DirectMessageUser
         setupDirectMessageList(rootView);
 
         Button sendButton = (Button)rootView.findViewById(R.id.send_button);
-        sendButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DirectMessageFragment.this.onClickSendButton(rootView);
-            }
-        });
+        sendButton.setOnClickListener(v -> DirectMessageFragment.this.onClickSendButton(rootView));
 
 
     }
@@ -154,16 +149,13 @@ public class DirectMessageFragment extends Fragment implements DirectMessageUser
 
 
     private void sendDirectMessage(final String message) {
-        AsyncTwitterTask.AfterTask<DirectMessage> afterTask = new AsyncTwitterTask.AfterTask<DirectMessage>() {
-            @Override
-            public void onLoadFinish(TwitterTaskResult<DirectMessage> result) {
-                if (result.isException()) {
-                    TwitterError.showText(DirectMessageFragment.this.getActivity(), result.getException());
-                    return;
-                }
-
-                CustomToast.show(DirectMessageFragment.this.getActivity(), R.string.sendDM_complete, Toast.LENGTH_SHORT);
+        AsyncTwitterTask.AfterTask<DirectMessage> afterTask = result -> {
+            if (result.isException()) {
+                TwitterError.showText(DirectMessageFragment.this.getActivity(), result.getException());
+                return;
             }
+
+            CustomToast.show(DirectMessageFragment.this.getActivity(), R.string.sendDM_complete, Toast.LENGTH_SHORT);
         };
 
         mTwitterTask.sendDirectMessage(mUserID, message, afterTask);

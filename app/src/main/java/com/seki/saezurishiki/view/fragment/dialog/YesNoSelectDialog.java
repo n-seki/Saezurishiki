@@ -108,19 +108,13 @@ public class YesNoSelectDialog<T extends Serializable> extends DialogFragment {
         }
 
         dialogBuiler.setMessage(summary)
-                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        positiveAction.onItemClick(item);
-                        dismiss();
-                    }
+                .setPositiveButton(R.string.yes, (dialogInterface, i) -> {
+                    positiveAction.onItemClick(item);
+                    dismiss();
                 })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        negativeAction.onItemClick(item);
-                        dismiss();
-                    }
+                .setNegativeButton(R.string.cancel, (dialogInterface, i) -> {
+                    negativeAction.onItemClick(item);
+                    dismiss();
                 });
 
         return dialogBuiler.create();
@@ -134,11 +128,8 @@ public class YesNoSelectDialog<T extends Serializable> extends DialogFragment {
                 .setTitle(tweet.isFavorited ? R.string.do_you_un_favorite : R.string.do_you_favorite)
                 .setSummary(tweet.user.getName() + "\n" + tweet.text)
                 .setPositiveAction(positiveAction)
-                .setNegativeAction(new YesNoSelectDialog.Listener<TweetEntity>() {
-                    @Override
-                    public void onItemClick(TweetEntity item) {
-                        //do nothing
-                    }
+                .setNegativeAction((Listener<TweetEntity>) item -> {
+                    //do nothing
                 })
                 .build();
     }
@@ -150,11 +141,8 @@ public class YesNoSelectDialog<T extends Serializable> extends DialogFragment {
                 .setTitle(R.string.do_you_retweet)
                 .setSummary(tweet.user.getName() + "\n" + tweet.text)
                 .setPositiveAction(action)
-                .setNegativeAction(new YesNoSelectDialog.Listener<TweetEntity>() {
-                    @Override
-                    public void onItemClick(TweetEntity item) {
-                        //do nothing
-                    }
+                .setNegativeAction((Listener<TweetEntity>) item -> {
+                    //do nothing
                 })
                 .build();
     }
@@ -167,10 +155,7 @@ public class YesNoSelectDialog<T extends Serializable> extends DialogFragment {
                         .setTitle(R.string.action_destroy_block)
                         .setSummary(user.getScreenName() + "のブロックを解除しますか？")
                         .setPositiveAction(action)
-                        .setNegativeAction(new YesNoSelectDialog.Listener<User>() {
-                            @Override
-                            public void onItemClick(User item) {//do nothing
-                            }
+                        .setNegativeAction((Listener<User>) item -> {//do nothing
                         })
                         .build();
     }

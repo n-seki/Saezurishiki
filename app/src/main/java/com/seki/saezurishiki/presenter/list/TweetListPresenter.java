@@ -200,12 +200,7 @@ public abstract class TweetListPresenter implements TimeLineAdapter.ViewListener
 
     @Override
     public void update(ModelObservable observable, final ModelMessage message) {
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                dispatch(message);
-            }
-        });
+        new Handler(Looper.getMainLooper()).post(() -> dispatch(message));
     }
 
 

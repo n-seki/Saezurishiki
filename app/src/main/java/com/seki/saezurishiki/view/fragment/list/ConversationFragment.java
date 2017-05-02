@@ -2,7 +2,6 @@ package com.seki.saezurishiki.view.fragment.list;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.seki.saezurishiki.R;
@@ -40,20 +39,12 @@ public class ConversationFragment extends TweetListFragment {
     protected void initComponents(View rootView) {
         //this.setActionBarTitle();
         mListView = (ListView) rootView.findViewById(R.id.list);
-        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                ConversationFragment.this.showLongClickDialog(twitterAccount.getRepository().getTweet(mAdapter.getItemIdAtPosition(i)));
-                return false;
-            }
+        mListView.setOnItemLongClickListener((adapterView, view, i, l) -> {
+            ConversationFragment.this.showLongClickDialog(twitterAccount.getRepository().getTweet(mAdapter.getItemIdAtPosition(i)));
+            return false;
         });
 
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                ConversationFragment.this.showDialog(twitterAccount.getRepository().getTweet(mAdapter.getItemIdAtPosition(i)));
-            }
-        });
+        mListView.setOnItemClickListener((adapterView, view, i, l) -> ConversationFragment.this.showDialog(twitterAccount.getRepository().getTweet(mAdapter.getItemIdAtPosition(i))));
 
 
         mListView.setSmoothScrollbarEnabled(true);

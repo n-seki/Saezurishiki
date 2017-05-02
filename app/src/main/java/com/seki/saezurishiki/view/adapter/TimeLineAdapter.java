@@ -341,12 +341,7 @@ public class TimeLineAdapter extends ArrayAdapter<TimeLineAdapter.ListElement> {
             view.setEnabled(false);
             User user = (User)view.getTag();
             mListener.onClickUserIcon(user);
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    view.setEnabled(true);
-                }
-            }, 1000L);
+            new Handler().postDelayed(() -> view.setEnabled(true), 1000L);
         }
     };
 
@@ -386,12 +381,7 @@ public class TimeLineAdapter extends ArrayAdapter<TimeLineAdapter.ListElement> {
         holder.mStatusBar.setReTweetColor(mContext);
 
         holder.mReTweeter_info.setVisibility(View.VISIBLE);
-        holder.mReTweeter_info.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mListener.onClickUserIcon(status.user);
-            }
-        });
+        holder.mReTweeter_info.setOnClickListener(view -> mListener.onClickUserIcon(status.user));
         Picasso.with(mContext).load(status.user.getBiggerProfileImageURL()).into(holder.mReTweeter_icon);
         holder.mReTweeter_name.setText(status.user.getName());
         holder.mReTweeter_name.setTextSize(TEXT_SIZE - 2);

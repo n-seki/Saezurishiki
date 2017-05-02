@@ -102,12 +102,7 @@ public abstract class UsersListFragment extends Fragment implements UserStreamUs
 
     protected void initComponents(View rootView) {
         mListView = (ListView) rootView.findViewById(R.id.list);
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                UsersListFragment.this.onUserItemClick(mAdapter.getItem(position));
-            }
-        });
+        mListView.setOnItemClickListener((parent, view, position, id) -> UsersListFragment.this.onUserItemClick(mAdapter.getItem(position)));
 
         mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
@@ -122,12 +117,7 @@ public abstract class UsersListFragment extends Fragment implements UserStreamUs
         });
 
         mListFooter = getActivity().getLayoutInflater().inflate(R.layout.read_more_tweet, null);
-        mListFooter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                UsersListFragment.this.loadUsers();
-            }
-        });
+        mListFooter.setOnClickListener(v -> UsersListFragment.this.loadUsers());
 
         mListView.addFooterView(mListFooter, null ,true);
         mListView.setFooterDividersEnabled(false);

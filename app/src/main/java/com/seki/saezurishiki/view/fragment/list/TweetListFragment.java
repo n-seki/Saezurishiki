@@ -123,27 +123,12 @@ public abstract class TweetListFragment extends Fragment
 
     protected void initComponents(View rootView) {
         mListView = (ListView) rootView.findViewById(R.id.list);
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                TweetListFragment.this.onItemClick(position);
-            }
-        });
+        mListView.setOnItemClickListener((parent, view, position, id) -> TweetListFragment.this.onItemClick(position));
 
-        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long l) {
-                return TweetListFragment.this.onItemLongClick(position);
-            }
-        });
+        mListView.setOnItemLongClickListener((adapterView, view, position, l) -> TweetListFragment.this.onItemLongClick(position));
 
         mFooterView = getActivity().getLayoutInflater().inflate(R.layout.read_more_tweet, null);
-        mFooterView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View footer) {
-                TweetListFragment.this.clickReadMoreButton();
-            }
-        });
+        mFooterView.setOnClickListener(footer -> TweetListFragment.this.clickReadMoreButton());
 
         mFooterView.setTag(NEW_LOADING, false);
         mListView.addFooterView(mFooterView, null, true);
@@ -196,14 +181,11 @@ public abstract class TweetListFragment extends Fragment
     @Override
     public void showFavoriteDialog(final TweetEntity tweet) {
 
-        YesNoSelectDialog.Listener<TweetEntity> action = new YesNoSelectDialog.Listener<TweetEntity>() {
-            @Override
-            public void onItemClick(TweetEntity tweet) {
-                if (tweet.isFavorited) {
-                    presenter.destroyFavorite(tweet);
-                } else {
-                    presenter.createFavorite(tweet);
-                }
+        YesNoSelectDialog.Listener<TweetEntity> action = (YesNoSelectDialog.Listener<TweetEntity>) tweet1 -> {
+            if (tweet1.isFavorited) {
+                presenter.destroyFavorite(tweet1);
+            } else {
+                presenter.createFavorite(tweet1);
             }
         };
 
@@ -215,12 +197,7 @@ public abstract class TweetListFragment extends Fragment
     @SuppressWarnings("unchecked")
     @Override
     public void showReTweetDialog(final TweetEntity tweet) {
-        YesNoSelectDialog.Listener<TweetEntity> action = new YesNoSelectDialog.Listener<TweetEntity>() {
-            @Override
-            public void onItemClick(TweetEntity tweet) {
-                presenter.reTweet(tweet);
-            }
-        };
+        YesNoSelectDialog.Listener<TweetEntity> action = (YesNoSelectDialog.Listener<TweetEntity>) tweet1 -> presenter.reTweet(tweet1);
 
         DialogFragment dialogFragment = YesNoSelectDialog.newRetweetDialog(tweet, action);
         dialogFragment.show(getChildFragmentManager(), "YesNoSelectDialog");

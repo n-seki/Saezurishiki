@@ -21,18 +21,15 @@ class SearchTweetModel extends TweetListModelImp {
     @Override
     public void request(final RequestInfo info) {
         final Twitter twitter = this.twitterAccount.twitter;
-        this.executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    final QueryResult result = twitter.search(info.toQuery());
-                    final List<TweetEntity> tweets = twitterAccount.getRepository().map(result.getTweets());
-                    twitterAccount.getRepository().add(result.getTweets());
-                    final ModelMessage message = ModelMessage.of(ModelActionType.LOAD_SEARCH, tweets);
-                    observable.notifyObserver(message);
-                } catch (TwitterException e) {
-                    observable.notifyObserver(ModelMessage.error(e));
-                }
+        this.executor.execute(() -> {
+            try {
+                final QueryResult result = twitter.search(info.toQuery());
+                final List<TweetEntity> tweets = twitterAccount.getRepository().map(result.getTweets());
+                twitterAccount.getRepository().add(result.getTweets());
+                final ModelMessage message = ModelMessage.of(ModelActionType.LOAD_SEARCH, tweets);
+                observable.notifyObserver(message);
+            } catch (TwitterException e) {
+                observable.notifyObserver(ModelMessage.error(e));
             }
         });
     }

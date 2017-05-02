@@ -123,12 +123,7 @@ public class UserStreamTimeLineFragment extends TweetListFragment
 
         mSwipeRefresher = (SwipeRefreshLayout)rootView.findViewById(R.id.swipe_refresh);
         mSwipeRefresher.setColorSchemeColors(UIControlUtil.colorAccent(getActivity(), twitterAccount.setting.getTheme()));
-        mSwipeRefresher.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                UserStreamTimeLineFragment.this.onRefresh();
-            }
-        });
+        mSwipeRefresher.setOnRefreshListener(this::onRefresh);
     }
 
 
@@ -284,12 +279,7 @@ public class UserStreamTimeLineFragment extends TweetListFragment
 
     @Override
     public RequestTabState getRequestTabState() {
-        return new RequestTabState() {
-            @Override
-            public boolean hasUnreadItem() {
-                return UserStreamTimeLineFragment.this.mAdapter.hasUnreadItem() || !UserStreamTimeLineFragment.this.mSavedStatuses.isEmpty();
-            }
-        };
+        return () -> UserStreamTimeLineFragment.this.mAdapter.hasUnreadItem() || !UserStreamTimeLineFragment.this.mSavedStatuses.isEmpty();
     }
 
 

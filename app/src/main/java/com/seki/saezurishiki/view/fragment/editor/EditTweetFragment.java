@@ -260,12 +260,7 @@ public class EditTweetFragment extends Fragment {
     private void uploadMultiMedia(final Intent data) {
         try {
             final InputStream media = getContext().getContentResolver().openInputStream(data.getData());
-            final AsyncTwitterTask.AfterTask<UploadedMedia> afterTask = new AsyncTwitterTask.AfterTask<UploadedMedia>() {
-                @Override
-                public void onLoadFinish(TwitterTaskResult<UploadedMedia> result) {
-                    EditTweetFragment.this.onUploadMediaFinished(result);
-                }
-            };
+            final AsyncTwitterTask.AfterTask<UploadedMedia> afterTask = EditTweetFragment.this::onUploadMediaFinished;
 
             mTwitterWrapper.uploadImage(data.toString(), media, afterTask);
 
@@ -296,12 +291,7 @@ public class EditTweetFragment extends Fragment {
     private void setupNormalView(final View rootView) {
         final EditText tweetEditor = (EditText) rootView.findViewById(R.id.tweet_editor);
         Button tweetButton = (Button) rootView.findViewById(R.id.tweet_button);
-        tweetButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                EditTweetFragment.this.executeTweetButton(tweetEditor.getText().toString());
-            }
-        });
+        tweetButton.setOnClickListener(v -> EditTweetFragment.this.executeTweetButton(tweetEditor.getText().toString()));
 
 
         final TextView counter = (TextView) rootView.findViewById(R.id.counter);
@@ -332,12 +322,9 @@ public class EditTweetFragment extends Fragment {
         });
 
         ImageButton imageUploadButton = (ImageButton)rootView.findViewById(R.id.image_upload_button);
-        imageUploadButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = EditTweetFragment.this.createShowGalleryIntent();
-                EditTweetFragment.this.showGallery(intent);
-            }
+        imageUploadButton.setOnClickListener(view -> {
+            Intent intent = EditTweetFragment.this.createShowGalleryIntent();
+            EditTweetFragment.this.showGallery(intent);
         });
     }
 
