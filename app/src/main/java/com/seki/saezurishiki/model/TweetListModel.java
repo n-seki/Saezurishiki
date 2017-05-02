@@ -18,6 +18,7 @@ public interface TweetListModel extends ModelBase, StatusUserStreamListener {
     void unFavorite(TweetEntity tweetEntity);
     void reTweet(TweetEntity tweetEntity);
     void delete(TweetEntity tweetEntity);
+    boolean isDelete(TweetEntity tweetEntity);
 
     @Override
     void addObserver(ModelObserver observer);

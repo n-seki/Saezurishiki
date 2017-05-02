@@ -125,4 +125,9 @@ abstract class TweetListModelImp extends ModelBaseImp implements TweetListModel 
         });
     }
 
+    @Override
+    public boolean isDelete(final TweetEntity tweetEntity) {
+        return this.twitterAccount.getRepository().hasDeletionNotice(tweetEntity.getId());
+    }
+
 }

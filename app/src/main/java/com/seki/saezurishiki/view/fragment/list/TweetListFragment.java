@@ -174,39 +174,17 @@ public abstract class TweetListFragment extends Fragment
 
     boolean onItemLongClick(int position) {
         final TwitterEntity entity = mAdapter.getEntity(position);
-        if (entity.getItemType() == TwitterEntity.Type.LoadButton) {
-            return true;
-        }
-
-        if (this.twitterAccount.getRepository().hasDeletionNotice(entity.getId())) {
-            return true;
-        }
-
-        TweetListFragment.this.showLongClickDialog((TweetEntity)entity);
+        this.presenter.onLongClickListItem(entity);
         return true;
     }
 
 
 
-    void showLongClickDialog(TweetEntity status) {
+    @Override
+    public void showLongClickDialog(TweetEntity status) {
         DialogFragment dialog = TweetLongClickDialog.newInstance(status);
         dialog.setTargetFragment(this, 0);
         dialog.show(getChildFragmentManager(), "TweetLongClickDialog");
-    }
-
-
-    /**
-     * Fragmentが初回表示か否かのフラグ
-     * より正確にはonResumeを通るのが初回か否かを示す
-     * onResumeでtweetsの読み込みを行うため、このフラグがtrueの場合にはmAdapterの要素が
-     * 0以上であることを示す。このフラグがfalseになるのはisFirstOpenがtrue時のloadTimeLine
-     * 呼び出しで、非同期通信の結果が正常だった時である。
-     */
-    protected boolean isFirstOpen = true;
-
-
-    public void errorProcess( TwitterException twitterException ) {
-        TwitterError.showText(getActivity(), twitterException);
     }
 
 
@@ -286,27 +264,23 @@ public abstract class TweetListFragment extends Fragment
     }
 
 
-    public synchronized void updateTweet(long id) {
-        if (this.mAdapter.isEmpty()) return;
-        int visibleTop = mListView.getFirstVisiblePosition();
-        int visibleLast = mListView.getLastVisiblePosition();
-
-        for (int position = visibleTop; position <= visibleLast; position++) {
-            long itemId = ((AdapterItem)mListView.getItemAtPosition(position)).itemID;
-            if (id == itemId) {
-                View view = mListView.getChildAt(position - visibleTop);
-                mAdapter.getView(position, view, null);
-                return;
-            }
-        }
-
-        mListView.getAdapter();
-    }
-
-
     @Override
     public void updateTweet(TweetEntity tweet) {
-        this.updateTweet(tweet.getId());
+//        if (this.mAdapter.isEmpty()) return;
+//        int visibleTop = mListView.getFirstVisiblePosition();
+//        int visibleLast = mListView.getLastVisiblePosition();
+//
+//        for (int position = visibleTop; position <= visibleLast; position++) {
+//            long itemId = ((TimeLineAdapter.Item)mListView.getItemAtPosition(position)).entity.getId();
+//            if (tweet.getId() == itemId) {
+//                View view = mListView.getChildAt(position - visibleTop);
+//                mAdapter.getView(position, view, null);
+//                return;
+//            }
+//        }
+
+        mAdapter.searchInsertIfPresence(tweet);
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -316,7 +290,7 @@ public abstract class TweetListFragment extends Fragment
 
     @Override
     public void deletionTweet(long deletedTweetId) {
-        this.updateTweet(deletedTweetId);
+        //this.updateTweet(deletedTweetId);
     }
 
     @Override

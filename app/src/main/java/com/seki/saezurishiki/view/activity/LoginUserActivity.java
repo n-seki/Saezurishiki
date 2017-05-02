@@ -544,7 +544,7 @@ public class LoginUserActivity extends    AppCompatActivity
 
             ActionBar actionBar = getSupportActionBar();
             if ( actionBar != null ) {
-                actionBar.collapseActionView();
+                //actionBar.collapseActionView();
             }
 
             mSearchView.clearFocus();

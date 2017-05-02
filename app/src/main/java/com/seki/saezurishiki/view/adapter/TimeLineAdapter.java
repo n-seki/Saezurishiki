@@ -55,7 +55,6 @@ public class TimeLineAdapter extends ArrayAdapter<TimeLineAdapter.Item<TwitterEn
 
     private Map<Long, Item<TwitterEntity>> buttons;
 
-
     public static class Item<T extends TwitterEntity> {
         public final T entity;
         boolean isSeen;
@@ -568,6 +567,15 @@ public class TimeLineAdapter extends ArrayAdapter<TimeLineAdapter.Item<TwitterEn
         final Item<TwitterEntity> item = Item.<TwitterEntity>of(button);
         buttons.put(button.getId(), item);
         insert(item, position);
+    }
+
+    public void searchInsertIfPresence(TweetEntity tweet) {
+        for (int position = 0; position > getCount(); position++) {
+            final long id = getItem(position).entity.getId();
+            if (id == tweet.getId()) {
+                remove(getItem(position))
+            }
+        }
     }
 
 

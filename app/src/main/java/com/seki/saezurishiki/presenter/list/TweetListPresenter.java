@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Looper;
 
 import com.seki.saezurishiki.entity.TweetEntity;
+import com.seki.saezurishiki.entity.TwitterEntity;
 import com.seki.saezurishiki.model.TweetListModel;
 import com.seki.saezurishiki.model.adapter.ModelMessage;
 import com.seki.saezurishiki.model.adapter.RequestInfo;
@@ -12,6 +13,7 @@ import com.seki.saezurishiki.model.util.ModelObservable;
 import com.seki.saezurishiki.model.util.ModelObserver;
 import com.seki.saezurishiki.view.adapter.TimeLineAdapter;
 import com.seki.saezurishiki.view.fragment.dialog.adapter.DialogSelectAction;
+import com.seki.saezurishiki.view.fragment.list.TweetListFragment;
 
 import java.util.List;
 
@@ -40,6 +42,7 @@ public abstract class TweetListPresenter implements TimeLineAdapter.ViewListener
         void showPicture(TweetEntity tweet, String selectedMedia);
         void showReTweetDialog(TweetEntity tweet);
         void showFavoriteDialog(TweetEntity tweet);
+        void showLongClickDialog(TweetEntity tweet);
         void errorProcess(Exception e);
     }
 
@@ -59,19 +62,18 @@ public abstract class TweetListPresenter implements TimeLineAdapter.ViewListener
         this.view.setPresenter(this);
     }
 
-    public void onClickRetweetButton(TweetEntity tweet) {
-        reTweet(tweet);
-    }
 
-
-    public void onClickFavoriteButton(TweetEntity tweet) {
-        if (!tweet.isFavorited) {
-            createFavorite(tweet);
-        } else {
-            destroyFavorite(tweet);
+    public void onLongClickListItem(TwitterEntity entity) {
+        if (entity.getItemType() == TwitterEntity.Type.LoadButton) {
+            return;
         }
-    }
 
+        if (this.tweetListModel.isDelete((TweetEntity) entity)) {
+            return;
+        }
+
+        this.view.showLongClickDialog((TweetEntity)entity);
+    }
 
     public void createFavorite(TweetEntity tweet) {
         this.tweetListModel.favorite(tweet);
@@ -83,7 +85,7 @@ public abstract class TweetListPresenter implements TimeLineAdapter.ViewListener
     }
 
 
-    public void deleteTweet(TweetEntity tweet) {
+    void deleteTweet(TweetEntity tweet) {
         this.tweetListModel.delete(tweet);
     }
 
@@ -123,7 +125,7 @@ public abstract class TweetListPresenter implements TimeLineAdapter.ViewListener
             return;
         }
 
-        onClickRetweetButton(tweet);
+        reTweet(tweet);
     }
 
     @Override
@@ -133,8 +135,13 @@ public abstract class TweetListPresenter implements TimeLineAdapter.ViewListener
             return;
         }
 
-        onClickFavoriteButton(tweet);
+        if (!tweet.isFavorited) {
+            createFavorite(tweet);
+        } else {
+            destroyFavorite(tweet);
+        }
     }
+
 
     @Override
     public void onClickQuotedTweet(final TweetEntity tweet) {
