@@ -43,6 +43,8 @@ public class UserStreamTimeLineFragment extends TweetListFragment
 
     protected long mLastReadId = 0L;
 
+    boolean isNeedLoadButton = false;
+
     private static final String TAB_POSITION = "tab-position";
     private static final String LIST_NAME = "list-name";
     private int tabPosition;
@@ -76,7 +78,6 @@ public class UserStreamTimeLineFragment extends TweetListFragment
 
         if (getActivity() instanceof TabViewControl) {
             this.tabViewControl = (TabViewControl)getActivity();
-            //this.tabViewControl.registTabManagedView(this);
         } else {
             throw new IllegalStateException("Activity is not implements UnreadItemNotify!");
         }
@@ -212,9 +213,10 @@ public class UserStreamTimeLineFragment extends TweetListFragment
     @Override
     public void catchNewTweet(TweetEntity tweet) {
 
-        if (isNeedLoadButton) {
-            addLoadButton();
-        }
+        // FIXME: 2017/05/02
+//        if (isNeedLoadButton) {
+//            addLoadButton();
+//        }
 
         if (mListView.getFirstVisiblePosition() != 0) {
             mSavedStatuses.add(tweet);
@@ -224,9 +226,8 @@ public class UserStreamTimeLineFragment extends TweetListFragment
     }
 
 
-    boolean isNeedLoadButton = false;
 
-
+    @SuppressWarnings("unused")
     void addLoadButton() {
         mAdapter.insertButton(0);
         isNeedLoadButton = false;

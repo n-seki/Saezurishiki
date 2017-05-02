@@ -262,7 +262,7 @@ public abstract class TweetListFragment extends Fragment
 
     @Override
     public void deletionTweet(long deletedTweetId) {
-        //this.updateTweet(deletedTweetId);
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override

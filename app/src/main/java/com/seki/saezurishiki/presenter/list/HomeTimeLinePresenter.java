@@ -1,7 +1,5 @@
 package com.seki.saezurishiki.presenter.list;
 
-import android.util.Log;
-
 import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.model.TweetListModel;
 import com.seki.saezurishiki.model.adapter.ModelMessage;

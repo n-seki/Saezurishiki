@@ -37,8 +37,9 @@ final class StatusServer {
 
         this.put(status);
 
+        //再帰
         if (status.getQuotedStatus() != null) {
-            this.put(status.getQuotedStatus());
+            this.add(status.getQuotedStatus());
         }
 
         //再帰

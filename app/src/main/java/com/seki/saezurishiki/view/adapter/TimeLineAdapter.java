@@ -19,7 +19,6 @@ import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.entity.TwitterEntity;
 import com.seki.saezurishiki.model.GetTweetById;
 import com.seki.saezurishiki.model.impl.ModelContainer;
-import com.seki.saezurishiki.network.server.TwitterServer;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
 import com.seki.saezurishiki.view.adapter.viewholder.ViewHolder;
 import com.seki.saezurishiki.view.adapter.viewholder.ViewHolderWithPicture;
@@ -35,13 +34,9 @@ import twitter4j.User;
 import static com.seki.saezurishiki.control.UIControlUtil.createMediaURLList;
 import static com.seki.saezurishiki.control.UIControlUtil.formatDate;
 
-/**
- * BaseAdapterでいいのなら後で変更する
- */
+
 public class TimeLineAdapter extends ArrayAdapter<TimeLineAdapter.ListElement> {
 
-    //getView()内でnewする良い方法を思いつけないので、
-    //とりあえずフィールドとして保持
     private LayoutInflater mLayoutInflater;
     private Context mContext;
 
@@ -51,7 +46,6 @@ public class TimeLineAdapter extends ArrayAdapter<TimeLineAdapter.ListElement> {
 
     private boolean backgroundChange = false;
 
-    private TwitterServer repository;
     private final int TEXT_SIZE;
     private final boolean SHOW_THUMBNAIL;
     private final Setting.ButtonActionPattern FAVORITE_BUTTON_ACTION;
@@ -118,7 +112,6 @@ public class TimeLineAdapter extends ArrayAdapter<TimeLineAdapter.ListElement> {
         mLayoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mContext = context;
         mListener = listener;
-        this.repository = account.getRepository();
         TEXT_SIZE = account.setting.getTextSize();
         SHOW_THUMBNAIL = account.setting.isShowThumbnail();
         FAVORITE_BUTTON_ACTION = account.setting.getFavoriteButtonAction();
@@ -206,7 +199,7 @@ public class TimeLineAdapter extends ArrayAdapter<TimeLineAdapter.ListElement> {
     private void setStatusWithPictureToViewHolder(final TweetEntity status, ViewHolderWithPicture holder) {
         if (status.isRetweet) {
             this.setReTweetStatusToViewHolder(status, holder);
-            this.setPictureToViewHolder(repository.getTweet(status.retweetedStatusId), holder);
+            this.setPictureToViewHolder(this.repositoryAccessor.get(status.retweetedStatusId), holder);
         } else {
             this.setStatusToViewHolder(status, holder);
             this.setPictureToViewHolder(status, holder);
@@ -281,7 +274,7 @@ public class TimeLineAdapter extends ArrayAdapter<TimeLineAdapter.ListElement> {
 
     private void setQuotedTweetLayout(final TweetEntity status, ViewHolder holder) {
         if (status.hasQuotedStatus) {
-            final TweetEntity quotedStatus = this.repository.getTweet(status.quotedStatusId);
+            final TweetEntity quotedStatus = this.repositoryAccessor.get(status.quotedStatusId);
             Picasso.with(mContext).load(quotedStatus.user.getBiggerProfileImageURL()).into(holder.quotedUserIcon);
             holder.quotedUserName.setText(quotedStatus.user.getName());
             holder.quotedUserName.setTextSize(TEXT_SIZE - 2);
@@ -380,7 +373,7 @@ public class TimeLineAdapter extends ArrayAdapter<TimeLineAdapter.ListElement> {
 
 
     private void setReTweetStatusToViewHolder(final TweetEntity status, ViewHolder holder) {
-        final TweetEntity reTweet = repository.getTweet(status.retweetedStatusId);
+        final TweetEntity reTweet = this.repositoryAccessor.get(status.retweetedStatusId);
 
         this.setStatusToViewHolder(reTweet, holder);
 
@@ -477,7 +470,7 @@ public class TimeLineAdapter extends ArrayAdapter<TimeLineAdapter.ListElement> {
     public int getLoadButtonPosition(long buttonID) {
         final LoadButton button = this.buttons.get(buttonID);
         if (button == null) {
-            throw new IllegalStateException("button is no registered, id : " + buttonID);
+            throw new IllegalStateException("button is not registered, id : " + buttonID);
         }
 
         return getPosition(new ListElement(buttonID, false));
