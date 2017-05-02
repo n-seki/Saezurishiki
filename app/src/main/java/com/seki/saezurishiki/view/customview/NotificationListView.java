@@ -36,14 +36,14 @@ public class NotificationListView extends ListView {
         boolean isChangedColor = false;
         for (int position = firstVisibleItem; position < firstVisibleItem + visibleItemCount - 1; position++) {
             @SuppressWarnings("unchecked")
-            TimeLineAdapter.Item<TwitterEntity> item = (TimeLineAdapter.Item) getItemAtPosition(position);
+            TimeLineAdapter.ListElement listElement = (TimeLineAdapter.ListElement) getItemAtPosition(position);
 
-            if (item == null) {
+            if (listElement == null) {
                 continue;
             }
 
-            if (!item.isSeen()) {
-                item.see();
+            if (!listElement.isSeen()) {
+                listElement.see();
                 View v = getChildAt(position - firstVisibleItem);
                 if (v == null) {
                     continue;

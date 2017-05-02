@@ -272,7 +272,7 @@ public class LoginUserActivity extends    AppCompatActivity
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("display-fragment", mDisplayPosition);
-        outState.putSerializable("hash-tag-entity", mHashTagEntities);
+        outState.putSerializable("hash-tag-item", mHashTagEntities);
         outState.putInt("tab-position", mTabPosition);
     }
 
@@ -281,7 +281,7 @@ public class LoginUserActivity extends    AppCompatActivity
     public void onRestoreInstanceState(@NonNull Bundle inState) {
         super.onRestoreInstanceState(inState);
         mDisplayPosition = inState.getInt("display-fragment");
-        mHashTagEntities = (HashtagEntity[])inState.getSerializable("hash-tag-entity");
+        mHashTagEntities = (HashtagEntity[])inState.getSerializable("hash-tag-item");
         mTabPosition = inState.getInt("tab-position");
     }
 
@@ -444,7 +444,7 @@ public class LoginUserActivity extends    AppCompatActivity
     @Override
     public void onDeletionNotice(StatusDeletionNotice deletionNotice) {
         if (this.twitterAccount.getRepository().hasStatus(deletionNotice.getStatusId())) {
-            TweetEntity target = this.twitterAccount.getRepository().getStatus(deletionNotice.getStatusId());
+            TweetEntity target = this.twitterAccount.getRepository().getTweet(deletionNotice.getStatusId());
             CustomToast.show(this, getString(R.string.delete) + target.user.getName() + "\n" + target.text, Toast.LENGTH_LONG);
         }
 

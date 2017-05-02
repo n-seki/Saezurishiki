@@ -66,7 +66,7 @@ public class TweetEntity implements TwitterEntity, Serializable, Comparable<Twee
         this.isRetweetedbyLoginUser = status.isRetweetedByMe();
         this.retweetedStatusId = status.getRetweetedStatus() != null ? status.getRetweetedStatus().getId() : -1;
         this.hasQuotedStatus = status.getQuotedStatus() != null;
-        this.quotedTweet = new TweetEntity(status.getQuotedStatus(), isLoginUserStatus, isReplyToLoginUser);
+        this.quotedTweet = hasQuotedStatus ? new TweetEntity(status.getQuotedStatus(), isLoginUserStatus, isReplyToLoginUser) : null;
         this.quotedStatusId = status.getQuotedStatusId();
         this.userMentionEntities = status.getUserMentionEntities();
         this.urlEntities = status.getURLEntities();

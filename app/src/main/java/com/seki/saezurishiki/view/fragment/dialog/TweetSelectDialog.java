@@ -59,8 +59,8 @@ public class TweetSelectDialog extends DialogFragment {
         TwitterServer repository = app.getTwitterAccount().getRepository();
         this.theme = app.getTwitterAccount().setting.getTheme();
 
-        TweetEntity status = repository.getStatus(id);
-        mStatus = status.isRetweet ? repository.getStatus(status.retweetedStatusId) : status;
+        TweetEntity status = repository.getTweet(id);
+        mStatus = status.isRetweet ? repository.getTweet(status.retweetedStatusId) : status;
         mIsDelete = repository.hasDeletionNotice(mStatus.getId());
         this.loginUserId = app.getTwitterAccount().getLoginUserId();
     }

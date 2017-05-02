@@ -43,7 +43,7 @@ public class ConversationFragment extends TweetListFragment {
         mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                ConversationFragment.this.showLongClickDialog(twitterAccount.getRepository().getStatus(mAdapter.getItemIdAtPosition(i)));
+                ConversationFragment.this.showLongClickDialog(twitterAccount.getRepository().getTweet(mAdapter.getItemIdAtPosition(i)));
                 return false;
             }
         });
@@ -51,7 +51,7 @@ public class ConversationFragment extends TweetListFragment {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                ConversationFragment.this.showDialog(twitterAccount.getRepository().getStatus(mAdapter.getItemIdAtPosition(i)));
+                ConversationFragment.this.showDialog(twitterAccount.getRepository().getTweet(mAdapter.getItemIdAtPosition(i)));
             }
         });
 

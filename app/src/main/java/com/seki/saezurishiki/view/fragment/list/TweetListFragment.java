@@ -24,9 +24,7 @@ import com.seki.saezurishiki.entity.TwitterEntity;
 import com.seki.saezurishiki.model.adapter.RequestInfo;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
 import com.seki.saezurishiki.network.twitter.TwitterError;
-import com.seki.saezurishiki.network.twitter.TwitterWrapper;
 import com.seki.saezurishiki.presenter.list.TweetListPresenter;
-import com.seki.saezurishiki.view.adapter.AdapterItem;
 import com.seki.saezurishiki.view.adapter.TimeLineAdapter;
 import com.seki.saezurishiki.view.control.FragmentControl;
 import com.seki.saezurishiki.view.fragment.Fragments;
@@ -54,8 +52,6 @@ public abstract class TweetListFragment extends Fragment
         TweetListPresenter.TweetListView {
 
     protected TimeLineAdapter mAdapter;
-
-    protected TwitterWrapper mTwitterWrapper;
 
     protected ListView mListView;
 
@@ -102,7 +98,6 @@ public abstract class TweetListFragment extends Fragment
 
         mAdapter = new TimeLineAdapter(getActivity(), R.layout.tweet_layout_with_picture, presenter, twitterAccount);
         mListView.setAdapter(mAdapter);
-        mTwitterWrapper = new TwitterWrapper(getActivity(), getLoaderManager(), this.twitterAccount);
     }
 
 
@@ -271,7 +266,7 @@ public abstract class TweetListFragment extends Fragment
 //        int visibleLast = mListView.getLastVisiblePosition();
 //
 //        for (int position = visibleTop; position <= visibleLast; position++) {
-//            long itemId = ((TimeLineAdapter.Item)mListView.getItemAtPosition(position)).entity.getId();
+//            long itemId = ((TimeLineAdapter.ListElement)mListView.getItemAtPosition(position)).item.getId();
 //            if (tweet.getId() == itemId) {
 //                View view = mListView.getChildAt(position - visibleTop);
 //                mAdapter.getView(position, view, null);
@@ -279,7 +274,6 @@ public abstract class TweetListFragment extends Fragment
 //            }
 //        }
 
-        mAdapter.searchInsertIfPresence(tweet);
         mAdapter.notifyDataSetChanged();
     }
 

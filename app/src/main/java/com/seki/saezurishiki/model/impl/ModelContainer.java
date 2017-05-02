@@ -1,5 +1,6 @@
 package com.seki.saezurishiki.model.impl;
 
+import com.seki.saezurishiki.model.GetTweetById;
 import com.seki.saezurishiki.model.TweetListModel;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
 
@@ -11,6 +12,7 @@ public final class ModelContainer {
     private static TweetListModel userTweetListModel;
     private static TweetListModel conversationModel;
     private static TweetListModel searchTweetModel;
+    private static GetTweetById   getTweetById;
 
     private ModelContainer() {
         //no instance
@@ -23,6 +25,7 @@ public final class ModelContainer {
         userTweetListModel = new UserTweetListModel(account);
         conversationModel = new ConversationModel(account);
         searchTweetModel = new SearchTweetModel(account);
+        getTweetById = new GetTweetByIdImp(account);
     }
 
     public static void destroy() {
@@ -32,6 +35,7 @@ public final class ModelContainer {
         userTweetListModel = null;
         conversationModel = null;
         searchTweetModel = null;
+        getTweetById = null;
     }
 
     public static TweetListModel getHomeTweetListModel() {
@@ -55,4 +59,6 @@ public final class ModelContainer {
     }
 
     public static TweetListModel getSearchTweetModel() { return searchTweetModel;}
+
+    public static GetTweetById getRepositoryAccessor() { return getTweetById; }
 }

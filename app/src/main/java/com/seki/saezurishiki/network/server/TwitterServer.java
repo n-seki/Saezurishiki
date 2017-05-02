@@ -48,7 +48,7 @@ public class TwitterServer  {
         ALL_STATUS.add(status);
     }
 
-    public TweetEntity getStatus(long statusId) {
+    public TweetEntity getTweet(long statusId) {
         return (TweetEntity)ALL_STATUS.get(statusId);
     }
 
