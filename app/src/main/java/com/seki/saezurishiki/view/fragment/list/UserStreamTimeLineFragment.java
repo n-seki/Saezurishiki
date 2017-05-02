@@ -2,7 +2,6 @@ package com.seki.saezurishiki.view.fragment.list;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -113,6 +112,7 @@ public class UserStreamTimeLineFragment extends TweetListFragment
 
     @Override
     protected void initComponents(View rootView) {
+        super.initComponents(rootView);
         mListView = (ListView) rootView.findViewById(R.id.list);
         mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
@@ -137,8 +137,6 @@ public class UserStreamTimeLineFragment extends TweetListFragment
                 UserStreamTimeLineFragment.this.onRefresh();
             }
         });
-
-        super.initComponents(rootView);
     }
 
     private void requestTabChange() {
@@ -230,8 +228,7 @@ public class UserStreamTimeLineFragment extends TweetListFragment
 
 
     void addLoadButton() {
-        final LoadButton button = new LoadButton();
-        mAdapter.insertButton(button, 0);
+        mAdapter.insertButton(0);
         isNeedLoadButton = false;
     }
 
@@ -281,11 +278,21 @@ public class UserStreamTimeLineFragment extends TweetListFragment
 
         changeLoadButtonText(buttonID, true);
 
-        final RequestInfo info = new RequestInfo().count(200)
+        final RequestInfo info = new RequestInfo().count(50)
                                                   .maxID(mAdapter.getItemIdAtPosition(buttonPosition-1) - 1)
                                                   .sinceID(mAdapter.getItemIdAtPosition(buttonPosition+1) + 1);
 
         this.presenter.load(info);
+    }
+
+
+    void changeLoadButtonText(long buttonID, boolean isClick) {
+        final LoadButton button = mAdapter.getButton(buttonID);
+
+        int labelResID = isClick ? R.string.now_loading : R.string.click_to_load;
+        button.setLabelResId(labelResID);
+
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override

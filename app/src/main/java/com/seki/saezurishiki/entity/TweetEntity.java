@@ -15,7 +15,6 @@ import twitter4j.UserMentionEntity;
 
 public class TweetEntity implements TwitterEntity, Serializable, Comparable<TweetEntity> {
 
-    private boolean isSeen;
     private boolean isDelete;
 
     public final boolean isSentByLoginUser;
@@ -47,7 +46,6 @@ public class TweetEntity implements TwitterEntity, Serializable, Comparable<Twee
     private final long id;
 
     public TweetEntity(Status status, boolean isLoginUserStatus, boolean isReplyToLoginUser) {
-        this.isSeen = false;
         this.isDelete = false;
         this.isSentByLoginUser = isLoginUserStatus;
         this.isSentToLoginUser = isReplyToLoginUser;

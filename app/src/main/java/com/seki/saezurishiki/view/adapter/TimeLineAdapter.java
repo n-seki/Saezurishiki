@@ -503,6 +503,14 @@ public class TimeLineAdapter extends ArrayAdapter<TimeLineAdapter.ListElement> {
         return this.repositoryAccessor.get(id);
     }
 
+    public LoadButton getButton(long id) {
+        if (this.buttons.containsKey(id)) {
+            return buttons.get(id);
+        }
+
+        throw new IllegalStateException("button is not exist, id : " + id);
+    }
+
     public void add(TweetEntity tweet) {
         final ListElement newElement = new ListElement(tweet.getId(), false);
         add(newElement);
@@ -586,7 +594,8 @@ public class TimeLineAdapter extends ArrayAdapter<TimeLineAdapter.ListElement> {
         return false;
     }
 
-    public void insertButton(LoadButton button, int position) {
+    public void insertButton(int position) {
+        final LoadButton button = new LoadButton();
         final ListElement buttonElement = new ListElement(button.getId(), false);
         buttons.put(button.getId(), button);
         insert(buttonElement, position);

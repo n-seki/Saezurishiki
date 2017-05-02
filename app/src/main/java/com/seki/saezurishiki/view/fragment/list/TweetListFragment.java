@@ -18,7 +18,6 @@ import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.application.SaezurishikiApp;
 import com.seki.saezurishiki.control.CustomToast;
 import com.seki.saezurishiki.control.UIControlUtil;
-import com.seki.saezurishiki.entity.LoadButton;
 import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.entity.TwitterEntity;
 import com.seki.saezurishiki.model.adapter.RequestInfo;
@@ -39,12 +38,6 @@ import java.util.List;
 
 import twitter4j.TwitterException;
 
-/**
- * StatusをListViewで表示するFragmentの既定クラス
- * 全てのタイムライン系Fragmentはこのクラスを継承することで
- * タイムライン操作に必要なメソッドにアクセスできます
- * @author seki
- */
 public abstract class TweetListFragment extends Fragment
         implements
         TweetSelectDialog.DialogCallback,
@@ -62,6 +55,8 @@ public abstract class TweetListFragment extends Fragment
     protected TwitterAccount twitterAccount;
 
     TweetListPresenter presenter;
+
+    final int NEW_LOADING = -0x0003;
 
 
     @Override
@@ -91,7 +86,6 @@ public abstract class TweetListFragment extends Fragment
     }
 
 
-
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -101,10 +95,6 @@ public abstract class TweetListFragment extends Fragment
     }
 
 
-    /**
-     * onResume
-     * 初回起動時であればTimeLimeの読み込みを行う
-     */
     @Override
     public void onResume() {
         super.onResume();
@@ -151,10 +141,11 @@ public abstract class TweetListFragment extends Fragment
         mFooterView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View footer) {
-                TweetListFragment.this.clickReadMoreButton(footer);
+                TweetListFragment.this.clickReadMoreButton();
             }
         });
 
+        mFooterView.setTag(NEW_LOADING, false);
         mListView.addFooterView(mFooterView, null, true);
         mListView.setSmoothScrollbarEnabled(true);
         mListView.setFooterDividersEnabled(false);
@@ -254,32 +245,19 @@ public abstract class TweetListFragment extends Fragment
         this.mAdapter.insert(tweetEntity, 0);
     }
 
-    void removeLoadButton(long buttonID) {
-        mAdapter.remove(buttonID);
-    }
-
 
     @Override
     public void updateTweet(TweetEntity tweet) {
-//        if (this.mAdapter.isEmpty()) return;
-//        int visibleTop = mListView.getFirstVisiblePosition();
-//        int visibleLast = mListView.getLastVisiblePosition();
-//
-//        for (int position = visibleTop; position <= visibleLast; position++) {
-//            long itemId = ((TimeLineAdapter.ListElement)mListView.getItemAtPosition(position)).item.getId();
-//            if (tweet.getId() == itemId) {
-//                View view = mListView.getChildAt(position - visibleTop);
-//                mAdapter.getView(position, view, null);
-//                return;
-//            }
-//        }
-
         mAdapter.notifyDataSetChanged();
     }
+
 
     @Override
     public void loadTweets(List<TweetEntity> tweets) {
         mAdapter.addAll(tweets);
+        TextView footerText = (TextView)mFooterView.findViewById(R.id.read_more);
+        footerText.setText(R.string.click_to_load);
+        mFooterView.setTag(NEW_LOADING, false);
     }
 
     @Override
@@ -336,30 +314,19 @@ public abstract class TweetListFragment extends Fragment
     }
 
 
-    protected void clickReadMoreButton(View footer) {
-        TextView footerText = (TextView)footer.findViewById(R.id.read_more);
-        footerText.setText(R.string.now_loading);
+    protected void clickReadMoreButton() {
+        final boolean isLoading = (Boolean)mFooterView.getTag(NEW_LOADING);
 
-        loadTimeLine();
-    }
-
-
-    protected void changeLoadButtonText(long buttonID, boolean isClick) {
-        TwitterEntity entity = this.twitterAccount.getRepository().getTwitterEntity(buttonID);
-
-        if (entity == null || entity.getItemType() != TwitterEntity.Type.LoadButton) {
+        if (isLoading) {
             return;
         }
 
-        final LoadButton button = (LoadButton)entity;
+        TextView footerText = (TextView)mFooterView.findViewById(R.id.read_more);
+        footerText.setText(R.string.now_loading);
+        mFooterView.setTag(NEW_LOADING, true);
 
-        int labelResID = isClick ? R.string.now_loading : R.string.click_to_load;
-        button.setLabelResId(labelResID);
-
-        mAdapter.notifyDataSetChanged();
+        loadTimeLine();
     }
-
-
 
     protected long getLastId() {
         if (mAdapter == null || mAdapter.getCount() == 0) {
