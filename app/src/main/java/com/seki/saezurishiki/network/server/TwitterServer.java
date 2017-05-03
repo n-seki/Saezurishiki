@@ -26,7 +26,7 @@ public class TwitterServer  {
     private final StatusServer ALL_STATUS;
     private final Map<Long, DirectMessage> SENT_DM;
     private final Map<Long, DirectMessage> DM;
-    private final Map<Long, User> USER;
+    private final Map<Long, UserEntity> USER;
     
     private final EntityMapper mapper;
     
@@ -180,17 +180,14 @@ public class TwitterServer  {
     }
 
 
-    public void add(User user) {
-        USER.put(user.getId(), user);
+    public UserEntity add(User user) {
+        final UserEntity userEntity = map(user);
+        USER.put(user.getId(), userEntity);
+        return userEntity;
     }
 
 
-    public boolean hasUser(long userId) {
-        return USER.containsKey(userId);
-    }
-
-
-    public User getUser(long userId) {
+    public UserEntity getUser(long userId) {
         return USER.get(userId);
     }
 
@@ -210,16 +207,27 @@ public class TwitterServer  {
         return this.mapper.map(status);
     }
 
+    public List<TweetEntity> map(List<Status> statuses) {
+        final List<TweetEntity> tweets = new ArrayList<>(statuses.size());
+        for (final Status status : statuses) {
+            tweets.add(map(status));
+        }
+
+        return tweets;
+    }
+
     public UserEntity map(User user) {
         return this.mapper.map(user);
     }
 
-    public List<TweetEntity> map(List<Status> statuses) {
-        final List<TweetEntity> tweets = new ArrayList<>(statuses.size());
-        for (final Status status : statuses) {
-            tweets.add(mapper.map(status));
+    public List<UserEntity> addUsers(List<User> users) {
+        final List<UserEntity> userEntities = new ArrayList<>();
+        for (final User user : users) {
+            final UserEntity entity = map(user);
+            userEntities.add(entity);
+            USER.put(entity.getId(), entity);
         }
 
-        return tweets;
+        return userEntities;
     }
 }

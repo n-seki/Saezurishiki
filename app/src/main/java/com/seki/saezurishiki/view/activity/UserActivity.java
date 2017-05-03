@@ -153,16 +153,16 @@ public class UserActivity extends    AppCompatActivity
 
     void onLoadUser(TwitterTaskResult<User> result, final long userId) {
         if (result.isException()) {
-            TwitterError.showText(this, result.getException());
-            User user = this.twitterAccount.getRepository().getUser(userId);
-            if (user == null) {
-                UserActivity.this.finish();
-                return;
-            }
-
-            mUser = user;
-            this.setupUserInformation();
-            return;
+//            TwitterError.showText(this, result.getException());
+//            User user = this.twitterAccount.getRepository().getUser(userId);
+//            if (user == null) {
+//                UserActivity.this.finish();
+//                return;
+//            }
+//
+//            mUser = user;
+//            this.setupUserInformation();
+//            return;
         }
 
         mUser = result.getResult();

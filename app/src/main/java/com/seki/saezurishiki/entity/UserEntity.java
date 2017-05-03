@@ -1,10 +1,11 @@
 package com.seki.saezurishiki.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import twitter4j.User;
 
-public class UserEntity {
+public class UserEntity implements Serializable {
     final private twitter4j.User mUser;
     final public boolean isLoginUser;
 

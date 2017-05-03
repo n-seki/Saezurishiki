@@ -8,6 +8,8 @@ import com.seki.saezurishiki.model.impl.ModelContainer;
 import com.seki.saezurishiki.presenter.editor.TweetEditorPresenter;
 import com.seki.saezurishiki.presenter.list.ConversationPresenter;
 import com.seki.saezurishiki.presenter.list.FavoriteListPresenter;
+import com.seki.saezurishiki.presenter.list.FollowerListPresenter;
+import com.seki.saezurishiki.presenter.list.FriendListPresenter;
 import com.seki.saezurishiki.presenter.list.HomeTimeLinePresenter;
 import com.seki.saezurishiki.presenter.list.ReplyTimeLinePresenter;
 import com.seki.saezurishiki.presenter.list.SearchPresenter;
@@ -15,10 +17,13 @@ import com.seki.saezurishiki.presenter.list.UserTweetListPresenter;
 import com.seki.saezurishiki.view.fragment.editor.EditTweetFragment;
 import com.seki.saezurishiki.view.fragment.list.ConversationFragment;
 import com.seki.saezurishiki.view.fragment.list.FavoritesFragment;
+import com.seki.saezurishiki.view.fragment.list.FollowerListFragment;
+import com.seki.saezurishiki.view.fragment.list.FriendListFragment;
 import com.seki.saezurishiki.view.fragment.list.SearchFragment;
 import com.seki.saezurishiki.view.fragment.list.TweetListFragment;
 import com.seki.saezurishiki.view.fragment.list.UserStreamTimeLineFragment;
 import com.seki.saezurishiki.view.fragment.list.UserTweetFragment;
+import com.seki.saezurishiki.view.fragment.list.UsersListFragment;
 
 import twitter4j.HashtagEntity;
 import twitter4j.User;
@@ -89,6 +94,18 @@ public final class Fragments {
     public static Fragment newReplyEditorFromUser(User user) {
         final EditTweetFragment fragment = EditTweetFragment.newReplyEditorFromUser(user);
         new TweetEditorPresenter(fragment);
+        return fragment;
+    }
+
+    public static Fragment newFriendListFragment(long userId) {
+        final UsersListFragment fragment = FriendListFragment.newInstance();
+        new FriendListPresenter(fragment, ModelContainer.getFriendListModel(), userId);
+        return fragment;
+    }
+
+    public static Fragment newFollowerListFragment(long userId) {
+        final UsersListFragment fragment = FollowerListFragment.newInstance();
+        new FollowerListPresenter(fragment, ModelContainer.getFollowerListMode(), userId);
         return fragment;
     }
 }

@@ -13,11 +13,9 @@ import com.seki.saezurishiki.model.util.ModelObservable;
 import com.seki.saezurishiki.model.util.ModelObserver;
 import com.seki.saezurishiki.view.adapter.TimeLineAdapter;
 import com.seki.saezurishiki.view.fragment.dialog.adapter.DialogSelectAction;
-import com.seki.saezurishiki.view.fragment.list.TweetListFragment;
 
 import java.util.List;
 
-import twitter4j.Paging;
 import twitter4j.User;
 
 

@@ -4,19 +4,17 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.view.View;
 import android.view.Window;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.seki.saezurishiki.application.SaezurishikiApp;
 import com.seki.saezurishiki.R;
+import com.seki.saezurishiki.application.SaezurishikiApp;
 import com.seki.saezurishiki.control.StatusUtil;
 import com.seki.saezurishiki.control.UIControlUtil;
 import com.seki.saezurishiki.entity.TweetEntity;
-import com.seki.saezurishiki.view.fragment.util.DataType;
 import com.seki.saezurishiki.network.server.TwitterServer;
 import com.seki.saezurishiki.view.fragment.dialog.adapter.DialogSelectAction;
+import com.seki.saezurishiki.view.fragment.util.DataType;
 
 import java.util.List;
 
@@ -104,20 +102,20 @@ public class TweetSelectDialog extends DialogFragment {
         if (mIsDelete) {
             String userName = mStatus.user.getScreenName();
             final int icon = isThemeDark ? R.drawable.drawer_friend_follower_dark : R.drawable.drawer_friend_follower_light;
-            final DialogSelectAction action = DialogSelectAction.showBiography(mStatus);
+            final DialogSelectAction<TweetEntity> action = DialogSelectAction.showBiography(mStatus);
             adapter.add(new DialogItemAdapter.DialogItem(action, userName, icon));
             return;
         }
 
         final int showTweetIcon = isThemeDark ? R.drawable.drawer_tweet_dark : R.drawable.drawer_tweet_light;
-        final DialogSelectAction showTweet = DialogSelectAction.showTweet(mStatus);
+        final DialogSelectAction<TweetEntity> showTweet = DialogSelectAction.showTweet(mStatus);
         adapter.add(new DialogItemAdapter.DialogItem(showTweet, getString(R.string.show_convasation), showTweetIcon));
 
         List<String> usersName = StatusUtil.getAllUserMentionName(mStatus, this.loginUserId);
         List<Long> usersId = StatusUtil.getAllUserMentionId(mStatus, this.loginUserId);
         final int followerIcon = isThemeDark ? R.drawable.drawer_friend_follower_dark : R.drawable.drawer_friend_follower_light;
         for (int position = 0; position < usersId.size(); position++) {
-            final DialogSelectAction action = DialogSelectAction.showBiography(mStatus, usersId.get(position));
+            final DialogSelectAction<TweetEntity> action = DialogSelectAction.showBiography(mStatus, usersId.get(position));
             adapter.add(new DialogItemAdapter.DialogItem(action, usersName.get(position), followerIcon));
         }
 
@@ -126,7 +124,7 @@ public class TweetSelectDialog extends DialogFragment {
             final int icon = isThemeDark ? R.drawable.internet_icon_dark : R.drawable.internet_icon_light;
             for (URLEntity entity : mStatus.urlEntities) {
                 final String url = entity.getURL();
-                final DialogSelectAction action = DialogSelectAction.openURL(mStatus, url);
+                final DialogSelectAction<TweetEntity> action = DialogSelectAction.openURL(mStatus, url);
                 adapter.add(new DialogItemAdapter.DialogItem(action, url, icon));
             }
         }
@@ -135,7 +133,7 @@ public class TweetSelectDialog extends DialogFragment {
         if (!mediaURL.isEmpty()) {
             final int icon = isThemeDark ? R.drawable.image_update : R.drawable.image_update_light;
             for (String media : mediaURL) {
-                final DialogSelectAction action = DialogSelectAction.mediaURL(mStatus, media);
+                final DialogSelectAction<TweetEntity> action = DialogSelectAction.mediaURL(mStatus, media);
                 adapter.add(new DialogItemAdapter.DialogItem(action, media, icon));
             }
         }

@@ -37,18 +37,16 @@ public class ConversationFragment extends TweetListFragment {
 
     @Override
     protected void initComponents(View rootView) {
-        //this.setActionBarTitle();
         mListView = (ListView) rootView.findViewById(R.id.list);
         mListView.setOnItemLongClickListener((adapterView, view, i, l) -> {
-            ConversationFragment.this.showLongClickDialog(twitterAccount.getRepository().getTweet(mAdapter.getItemIdAtPosition(i)));
+            ConversationFragment.this.showLongClickDialog((TweetEntity)mAdapter.getEntity(i));
             return false;
         });
 
-        mListView.setOnItemClickListener((adapterView, view, i, l) -> ConversationFragment.this.showDialog(twitterAccount.getRepository().getTweet(mAdapter.getItemIdAtPosition(i))));
-
-
+        mListView.setOnItemClickListener((adapterView, view, i, l) -> {
+            ConversationFragment.this.showDialog((TweetEntity)mAdapter.getEntity(i));
+        });
         mListView.setSmoothScrollbarEnabled(true);
-
         mListView.setAdapter(mAdapter);
     }
 

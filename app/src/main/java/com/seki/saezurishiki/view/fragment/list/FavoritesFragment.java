@@ -22,7 +22,6 @@ public class FavoritesFragment extends TweetListFragment {
     }
 
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +38,5 @@ public class FavoritesFragment extends TweetListFragment {
     public String toString() {
         return "Favorite";
     }
-
 
 }

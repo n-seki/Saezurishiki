@@ -121,12 +121,7 @@ public class RecentlyDirectMessageListFragment extends Fragment implements Direc
 
     @Override
     public RequestTabState getRequestTabState() {
-        return new RequestTabState() {
-            @Override
-            public boolean hasUnreadItem() {
-                return RecentlyDirectMessageListFragment.this.mAdapter.containsUnreadItem();
-            }
-        };
+        return () -> RecentlyDirectMessageListFragment.this.mAdapter.containsUnreadItem();
     }
 
     public interface CallBack {
@@ -173,16 +168,13 @@ public class RecentlyDirectMessageListFragment extends Fragment implements Direc
 
     private void initComponents(View view) {
         ListView list = (ListView) view.findViewById(R.id.list);
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view1, int position, long id) {
-                AdapterItem item = mAdapter.getItem(position);
-                if (!item.isSeen) {
-                    item.see();
-                    mAdapter.notifyDataSetChanged();
-                }
-                RecentlyDirectMessageListFragment.this.openDirectMessageEditor(mAdapter.getItemId(position));
+        list.setOnItemClickListener((parent, view1, position, id) -> {
+            AdapterItem item = mAdapter.getItem(position);
+            if (!item.isSeen) {
+                item.see();
+                mAdapter.notifyDataSetChanged();
             }
+            RecentlyDirectMessageListFragment.this.openDirectMessageEditor(mAdapter.getItemId(position));
         });
 
         list.setSmoothScrollbarEnabled(true);
@@ -190,12 +182,7 @@ public class RecentlyDirectMessageListFragment extends Fragment implements Direc
 
         this.refreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swipe_refresh);
         this.refreshLayout.setColorSchemeColors(UIControlUtil.colorAccent(getActivity(), twitterAccount.setting.getTheme()));
-        this.refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                RecentlyDirectMessageListFragment.this.onSwipeRefresh();
-            }
-        });
+        this.refreshLayout.setOnRefreshListener(RecentlyDirectMessageListFragment.this::onSwipeRefresh);
     }
 
 
@@ -252,18 +239,15 @@ public class RecentlyDirectMessageListFragment extends Fragment implements Direc
         if (isLoading) return;
 
         isLoading = true;
-        AsyncTwitterTask.AfterTask<List<DirectMessage>> afterTask = new AsyncTwitterTask.AfterTask<List<DirectMessage>>() {
-            @Override
-            public void onLoadFinish(TwitterTaskResult<List<DirectMessage>> result) {
-                isLoading = false;
-                refreshLayout.setRefreshing(false);
-                if (result.isException()) {
-                    RecentlyDirectMessageListFragment.this.errorProcess(result.getException());
-                    return;
-                }
-                twitterAccount.getRepository().addDM(result.getResult());
-                computeAdd(result.getResult());
+        AsyncTwitterTask.AfterTask<List<DirectMessage>> afterTask = result -> {
+            isLoading = false;
+            refreshLayout.setRefreshing(false);
+            if (result.isException()) {
+                RecentlyDirectMessageListFragment.this.errorProcess(result.getException());
+                return;
             }
+            twitterAccount.getRepository().addDM(result.getResult());
+            computeAdd(result.getResult());
         };
 
         mTwitterTask.getDirectMessage(afterTask, paging);
@@ -275,15 +259,12 @@ public class RecentlyDirectMessageListFragment extends Fragment implements Direc
     }
 
     private void loadSendDirectMessage() {
-        AsyncTwitterTask.AfterTask<List<DirectMessage>> afterTask1 = new AsyncTwitterTask.AfterTask<List<DirectMessage>>() {
-            @Override
-            public void onLoadFinish(TwitterTaskResult<List<DirectMessage>> result) {
-                if (result.isException()) {
-                    return;
-                }
-
-                twitterAccount.getRepository().addSentDM(result.getResult());
+        AsyncTwitterTask.AfterTask<List<DirectMessage>> afterTask1 = result -> {
+            if (result.isException()) {
+                return;
             }
+
+            twitterAccount.getRepository().addSentDM(result.getResult());
         };
 
         mTwitterTask.getSentDirectMessage(afterTask1);

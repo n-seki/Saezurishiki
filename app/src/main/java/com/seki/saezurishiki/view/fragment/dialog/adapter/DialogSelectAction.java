@@ -26,43 +26,43 @@ public class DialogSelectAction<T> {
     }
 
 
-    public static DialogSelectAction showBiography(TweetEntity tweet) {
+    public static DialogSelectAction<TweetEntity> showBiography(TweetEntity tweet) {
         return new DialogSelectAction<>(tweet, tweet.user.getId(), BIOGRAPHY);
     }
 
-    public static DialogSelectAction showBiography(TweetEntity tweet, long userId) {
+    public static DialogSelectAction<TweetEntity> showBiography(TweetEntity tweet, long userId) {
         return new DialogSelectAction<>(tweet, userId, BIOGRAPHY);
     }
 
-    public static DialogSelectAction showTweet(TweetEntity tweet) {
+    public static DialogSelectAction<TweetEntity> showTweet(TweetEntity tweet) {
         return new DialogSelectAction<>(tweet, tweet.getId(), SHOW_TWEET);
     }
 
-    public static DialogSelectAction openURL(TweetEntity tweet, String url) {
+    public static DialogSelectAction<TweetEntity> openURL(TweetEntity tweet, String url) {
         return new DialogSelectAction<>(tweet, url, URL);
     }
 
-    public static DialogSelectAction mediaURL(TweetEntity tweet, String mediaUrl) {
+    public static DialogSelectAction<TweetEntity> mediaURL(TweetEntity tweet, String mediaUrl) {
         return new DialogSelectAction<>(tweet, mediaUrl, MEDIA);
     }
 
-    public static DialogSelectAction delete(TweetEntity tweet) {
+    public static DialogSelectAction<TweetEntity> delete(TweetEntity tweet) {
         return new DialogSelectAction<>(tweet, tweet.getId(), DELETE);
     }
 
-    public static DialogSelectAction retweet(TweetEntity tweet) {
+    public static DialogSelectAction<TweetEntity> retweet(TweetEntity tweet) {
         return new DialogSelectAction<>(tweet, tweet.getId(), RE_TWEET);
     }
 
-    public static DialogSelectAction unRetweet(TweetEntity tweet) {
+    public static DialogSelectAction<TweetEntity> unRetweet(TweetEntity tweet) {
         return new DialogSelectAction<>(tweet, tweet.getId(), UN_RE_TWEET);
     }
 
-    public static DialogSelectAction favorite(TweetEntity tweet) {
+    public static DialogSelectAction<TweetEntity> favorite(TweetEntity tweet) {
         return new DialogSelectAction<>(tweet, tweet.getId(), FAVORITE);
     }
 
-    public static DialogSelectAction unFavorite(TweetEntity tweet) {
+    public static DialogSelectAction<TweetEntity> unFavorite(TweetEntity tweet) {
         return new DialogSelectAction<>(tweet, tweet.getId(), UN_FAVORITE);
     }
 }

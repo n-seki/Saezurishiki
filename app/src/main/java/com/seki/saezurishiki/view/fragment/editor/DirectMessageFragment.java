@@ -15,17 +15,16 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.seki.saezurishiki.application.SaezurishikiApp;
 import com.seki.saezurishiki.R;
-import com.seki.saezurishiki.view.adapter.DirectMessageAdapter;
+import com.seki.saezurishiki.application.SaezurishikiApp;
 import com.seki.saezurishiki.control.CustomToast;
 import com.seki.saezurishiki.control.UIControlUtil;
 import com.seki.saezurishiki.network.twitter.AsyncTwitterTask;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
 import com.seki.saezurishiki.network.twitter.TwitterError;
-import com.seki.saezurishiki.network.twitter.TwitterTaskResult;
 import com.seki.saezurishiki.network.twitter.TwitterWrapper;
 import com.seki.saezurishiki.network.twitter.streamListener.DirectMessageUserStreamListener;
+import com.seki.saezurishiki.view.adapter.DirectMessageAdapter;
 import com.seki.saezurishiki.view.fragment.util.DataType;
 
 import java.util.ArrayList;

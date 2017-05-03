@@ -6,7 +6,7 @@ import com.seki.saezurishiki.network.twitter.TwitterAccount;
 
 class GetTweetByIdImp implements GetTweetById {
 
-    final TwitterAccount account;
+    private final TwitterAccount account;
 
     GetTweetByIdImp(TwitterAccount account) {
         this.account = account;

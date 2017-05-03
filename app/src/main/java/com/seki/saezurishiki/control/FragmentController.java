@@ -4,15 +4,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
 import com.seki.saezurishiki.R;
-import com.seki.saezurishiki.entity.UserEntity;
 import com.seki.saezurishiki.view.fragment.Fragments;
 import com.seki.saezurishiki.view.fragment.editor.DirectMessageFragment;
-import com.seki.saezurishiki.view.fragment.editor.EditTweetFragment;
-import com.seki.saezurishiki.view.fragment.list.FavoritesFragment;
-import com.seki.saezurishiki.view.fragment.list.FollowerListFragment;
-import com.seki.saezurishiki.view.fragment.list.FriendListFragment;
 import com.seki.saezurishiki.view.fragment.other.SettingFragment;
-import com.seki.saezurishiki.view.fragment.list.UserTweetFragment;
 
 import org.jetbrains.annotations.Contract;
 
@@ -75,10 +69,10 @@ public final class FragmentController {
                 return Fragments.createInjectFavoritesFragment(user.getId(), user.getFavouritesCount());
 
             case FRAGMENT_ID_FRIEND:
-                return FriendListFragment.newInstance(user.getId(), user.getFriendsCount());
+                return Fragments.newFriendListFragment(user.getId());
 
             case FRAGMENT_ID_FOLLOWER:
-                return FollowerListFragment.newInstance(user.getId(), user.getFollowersCount());
+                return Fragments.newFollowerListFragment(user.getId());
 
             case FRAGMENT_ID_SETTING:
                 return SettingFragment.getInstance();

@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,7 +30,6 @@ import com.seki.saezurishiki.view.fragment.dialog.TweetLongClickDialog;
 import com.seki.saezurishiki.view.fragment.dialog.TweetSelectDialog;
 import com.seki.saezurishiki.view.fragment.dialog.YesNoSelectDialog;
 import com.seki.saezurishiki.view.fragment.dialog.adapter.DialogSelectAction;
-import com.seki.saezurishiki.view.fragment.editor.EditTweetFragment;
 import com.seki.saezurishiki.view.fragment.other.PictureFragment;
 
 import java.util.List;
@@ -62,7 +60,6 @@ public abstract class TweetListFragment extends Fragment
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
         this.fragmentControl = (FragmentControl)getActivity();
     }
 
@@ -166,10 +163,6 @@ public abstract class TweetListFragment extends Fragment
     }
 
 
-    /**
-     * EditTweetFragmentを表示する
-     * mStatusがreTweetである場合には元TweetのUserに対してのReplyとなる
-     */
     @Override
     public void openReplyEditor(TweetEntity status) {
         Fragment fragment = Fragments.newReplyEditorFromStatus(status);

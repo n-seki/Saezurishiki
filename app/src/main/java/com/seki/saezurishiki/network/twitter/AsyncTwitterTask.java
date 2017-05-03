@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
 
 import twitter4j.TwitterException;
 
@@ -19,7 +18,6 @@ public class AsyncTwitterTask<T> extends AsyncTaskLoader<TwitterTaskResult<T>>
     private final LoaderManager mLoaderManager;
     private final AsyncTask<T> mTask;
     private final AfterTask<T> mAfterTask;
-    private final OnCancelTask mCancelTask;
 
 
     public interface AsyncTask<R> {
@@ -44,7 +42,7 @@ public class AsyncTwitterTask<T> extends AsyncTaskLoader<TwitterTaskResult<T>>
         super(context);
         mTask = task;
         mAfterTask = afterTask;
-        mCancelTask = cancelTask;
+        OnCancelTask mCancelTask = cancelTask;
         mLoaderManager = loaderManager;
     }
 

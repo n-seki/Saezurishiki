@@ -5,16 +5,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
-import android.view.View;
 import android.widget.Toast;
 
 import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.network.twitter.AsyncTwitterTask;
-import com.seki.saezurishiki.network.twitter.TwitterTaskResult;
-import com.seki.saezurishiki.network.twitter.TwitterWrapper;
 import com.seki.saezurishiki.network.twitter.TwitterUtil;
+import com.seki.saezurishiki.network.twitter.TwitterWrapper;
 
-import twitter4j.TwitterException;
 import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
 

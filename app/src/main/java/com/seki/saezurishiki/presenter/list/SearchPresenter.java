@@ -44,6 +44,9 @@ public class SearchPresenter extends TweetListPresenter {
             case RECEIVE_DELETION:
                 this.view.deletionTweet(((StatusDeletionNotice)message.data).getStatusId());
                 break;
+
+            default:
+                break;
         }
     }
 }
