@@ -172,7 +172,7 @@ public abstract class TweetListFragment extends Fragment
      */
     @Override
     public void openReplyEditor(TweetEntity status) {
-        Fragment fragment = EditTweetFragment.newReplyEditorFromStatus(status);
+        Fragment fragment = Fragments.newReplyEditorFromStatus(status);
         this.fragmentControl.requestShowFragment(fragment);
     }
 

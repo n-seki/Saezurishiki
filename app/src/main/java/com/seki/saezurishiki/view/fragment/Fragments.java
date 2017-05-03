@@ -3,19 +3,25 @@ package com.seki.saezurishiki.view.fragment;
 
 import android.support.v4.app.Fragment;
 
+import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.model.impl.ModelContainer;
+import com.seki.saezurishiki.presenter.editor.TweetEditorPresenter;
 import com.seki.saezurishiki.presenter.list.ConversationPresenter;
 import com.seki.saezurishiki.presenter.list.FavoriteListPresenter;
 import com.seki.saezurishiki.presenter.list.HomeTimeLinePresenter;
 import com.seki.saezurishiki.presenter.list.ReplyTimeLinePresenter;
 import com.seki.saezurishiki.presenter.list.SearchPresenter;
 import com.seki.saezurishiki.presenter.list.UserTweetListPresenter;
+import com.seki.saezurishiki.view.fragment.editor.EditTweetFragment;
 import com.seki.saezurishiki.view.fragment.list.ConversationFragment;
 import com.seki.saezurishiki.view.fragment.list.FavoritesFragment;
 import com.seki.saezurishiki.view.fragment.list.SearchFragment;
 import com.seki.saezurishiki.view.fragment.list.TweetListFragment;
 import com.seki.saezurishiki.view.fragment.list.UserStreamTimeLineFragment;
 import com.seki.saezurishiki.view.fragment.list.UserTweetFragment;
+
+import twitter4j.HashtagEntity;
+import twitter4j.User;
 
 import static com.seki.saezurishiki.file.SharedPreferenceUtil.HOME;
 import static com.seki.saezurishiki.file.SharedPreferenceUtil.REPLY;
@@ -60,5 +66,29 @@ public final class Fragments {
         final TweetListFragment fragment = SearchFragment.getInstance(query);
         new SearchPresenter(fragment, userID, ModelContainer.getSearchTweetModel());
         return  fragment;
+    }
+
+    public static Fragment newNormalEditor() {
+        final EditTweetFragment fragment = EditTweetFragment.newNormalEditor();
+        new TweetEditorPresenter(fragment);
+        return fragment;
+    }
+
+    public static Fragment newEditorWithHashTag(HashtagEntity[] hashTagEntities) {
+        final EditTweetFragment fragment = EditTweetFragment.newEditorWithHashTag(hashTagEntities);
+        new TweetEditorPresenter(fragment);
+        return fragment;
+    }
+
+   public static Fragment newReplyEditorFromStatus(TweetEntity tweet) {
+        final EditTweetFragment fragment = EditTweetFragment.newReplyEditorFromStatus(tweet);
+        new TweetEditorPresenter(fragment);
+        return fragment;
+   }
+
+    public static Fragment newReplyEditorFromUser(User user) {
+        final EditTweetFragment fragment = EditTweetFragment.newReplyEditorFromUser(user);
+        new TweetEditorPresenter(fragment);
+        return fragment;
     }
 }

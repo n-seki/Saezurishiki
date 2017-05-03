@@ -80,14 +80,11 @@ public final class FragmentController {
             case FRAGMENT_ID_FOLLOWER:
                 return FollowerListFragment.newInstance(user.getId(), user.getFollowersCount());
 
-//            case FRAGMENT_ID_RECENTLY_DIRECT_MESSAGE:
-//                return RecentlyDirectMessageListFragment.getInstance();
-
             case FRAGMENT_ID_SETTING:
-                return  SettingFragment.getInstance();
+                return SettingFragment.getInstance();
 
             case FRAGMENT_ID_TWEET_EDITOR:
-                return EditTweetFragment.newReplyEditorFromUser(user);
+                return Fragments.newReplyEditorFromUser(user);
 
             case FRAGMENT_ID_DIRECT_MESSAGE_EDITOR:
                 return DirectMessageFragment.getInstance(user);

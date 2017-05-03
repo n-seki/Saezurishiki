@@ -193,8 +193,8 @@ public class LoginUserActivity extends    AppCompatActivity
     private void setupTweetButton(int theme) {
         FloatingActionButton editTweetButton = (FloatingActionButton) findViewById(R.id.edit_tweet_button);
         editTweetButton.setOnClickListener(v -> {
-            Fragment fragment = mHashTagEntities == null ? EditTweetFragment.newNormalEditor()
-                    : EditTweetFragment.newEditorWithHashTag(mHashTagEntities);
+            Fragment fragment = mHashTagEntities == null ? Fragments.newNormalEditor()
+                    : Fragments.newEditorWithHashTag(mHashTagEntities);
 
             LoginUserActivity.this.addFragment(R.id.home_container, fragment);
         });

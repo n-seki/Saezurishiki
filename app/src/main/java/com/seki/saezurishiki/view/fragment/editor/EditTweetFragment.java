@@ -25,16 +25,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.seki.saezurishiki.application.SaezurishikiApp;
 import com.seki.saezurishiki.R;
+import com.seki.saezurishiki.application.SaezurishikiApp;
 import com.seki.saezurishiki.control.CustomToast;
 import com.seki.saezurishiki.control.StatusUtil;
 import com.seki.saezurishiki.entity.TweetEntity;
-import com.seki.saezurishiki.network.twitter.AsyncTwitterTask;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
-import com.seki.saezurishiki.network.twitter.TwitterError;
-import com.seki.saezurishiki.network.twitter.TwitterTaskResult;
-import com.seki.saezurishiki.network.twitter.TwitterWrapper;
+import com.seki.saezurishiki.presenter.editor.TweetEditorPresenter;
 import com.seki.saezurishiki.view.customview.TweetTextEditor;
 import com.seki.saezurishiki.view.fragment.util.DataType;
 
@@ -44,23 +41,15 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import twitter4j.HashtagEntity;
 import twitter4j.Status;
 import twitter4j.StatusUpdate;
-import twitter4j.UploadedMedia;
 import twitter4j.User;
 
-/**
- * Tweet作成Fragment
- * TextEditorに入力された文字列をTweetとして送信,および返信します.
- * 送信Tweetに#で始まるタグが含まれていた場合には次回表示時に引き継がれ,
- * 一度タグを消して送受信を行うと引き継ぎが終了します
- * @author seki
- */
-public class EditTweetFragment extends Fragment {
+
+public class EditTweetFragment extends Fragment implements TweetEditorPresenter.View {
 
 
     private Callback mCallback;
@@ -69,14 +58,15 @@ public class EditTweetFragment extends Fragment {
 
     private int mEditorType;
 
-    private TwitterWrapper mTwitterWrapper;
-    private List<Long> mediaIds;
     private InputStream media;
     private String mFileName;
 
     private ImageView uploadImage1;
 
-    private static final boolean TEST_RELEASE = true;
+    private TweetEditorPresenter presenter;
+
+    private TextView counter;
+
 
     private static final String EDITOR_TYPE = "editor_type";
     private static final int NORMAL_TWEET = 0x0001;
@@ -95,7 +85,7 @@ public class EditTweetFragment extends Fragment {
     }
 
 
-    public static Fragment newNormalEditor() {
+    public static EditTweetFragment newNormalEditor() {
         EditTweetFragment fragment = new EditTweetFragment();
         Bundle data = new Bundle();
         data.putInt(EDITOR_TYPE, NORMAL_TWEET);
@@ -103,7 +93,7 @@ public class EditTweetFragment extends Fragment {
         return fragment;
     }
 
-    public static Fragment newEditorWithHashTag(HashtagEntity[] hashTagEntities) {
+    public static EditTweetFragment newEditorWithHashTag(HashtagEntity[] hashTagEntities) {
         EditTweetFragment fragment = new EditTweetFragment();
         Bundle data = new Bundle();
         data.putSerializable(DataType.HASH_TAG, hashTagEntities);
@@ -113,7 +103,7 @@ public class EditTweetFragment extends Fragment {
     }
 
 
-    public static Fragment newReplyEditorFromStatus(TweetEntity status) {
+    public static EditTweetFragment newReplyEditorFromStatus(TweetEntity status) {
         Bundle data = new Bundle();
         data.putSerializable(DataType.STATUS, status);
         data.putInt(EDITOR_TYPE, IS_REPLY | FROM_STATUS);
@@ -123,7 +113,7 @@ public class EditTweetFragment extends Fragment {
     }
 
 
-    public static Fragment newReplyEditorFromUser(User user) {
+    public static EditTweetFragment newReplyEditorFromUser(User user) {
         Bundle data = new Bundle();
         data.putSerializable(DataType.USER, user);
         data.putInt(EDITOR_TYPE, IS_REPLY | FROM_USER);
@@ -133,7 +123,8 @@ public class EditTweetFragment extends Fragment {
     }
 
 
-    public static Fragment newQuotedTweetEditor(TweetEntity quotedTweet) {
+    @SuppressWarnings("unused")
+    public static EditTweetFragment newQuotedTweetEditor(TweetEntity quotedTweet) {
         Bundle data = new Bundle();
         data.putSerializable(DataType.QUOTED_TWEET, quotedTweet);
         data.putInt(EDITOR_TYPE, NORMAL_TWEET | HAS_QUOTED_TWEET);
@@ -143,18 +134,34 @@ public class EditTweetFragment extends Fragment {
     }
 
 
+    @Override
+    public void setPresenter(TweetEditorPresenter presenter) {
+        this.presenter = presenter;
+    }
+
+
     private View.OnClickListener uploadImageClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            v.setVisibility(View.GONE);
-            try {
-                media.close();
-                media = null;
-            } catch (IOException e) {
-                Log.d("EditTweetFragment", "close InputStream is failure");
-            }
+           presenter.onClickUploadImage();
         }
     };
+
+
+    @Override
+    public void hideUploadImage() {
+        this.uploadImage1.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void closeImageSource() {
+        try {
+            media.close();
+            media = null;
+        } catch (IOException e) {
+            Log.d("EditTweetFragment", "close InputStream is failure");
+        }
+    }
 
 
     @Override
@@ -182,8 +189,6 @@ public class EditTweetFragment extends Fragment {
 
         final SaezurishikiApp app = (SaezurishikiApp)getActivity().getApplication();
         final TwitterAccount twitterAccount = app.getTwitterAccount();
-        mTwitterWrapper = new TwitterWrapper(getActivity(), getLoaderManager(), twitterAccount);
-        mediaIds = new ArrayList<>();
         this.loginUserId = twitterAccount.getLoginUserId();
 
         setHasOptionsMenu(true);
@@ -226,7 +231,6 @@ public class EditTweetFragment extends Fragment {
     public void onResume() {
         super.onResume();
         InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        //mgr.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_IMPLICIT_ONLY);
         mgr.showSoftInput(getActivity().getCurrentFocus(), InputMethodManager.SHOW_IMPLICIT);
         getActivity().findViewById(R.id.tweet_editor).requestFocus();
     }
@@ -238,17 +242,13 @@ public class EditTweetFragment extends Fragment {
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
                 case IMAGE_SELECT:
-                    if (TEST_RELEASE) {
-                        media = getMediaInputStream(data);
-                        mFileName = data.getData().toString();
-                        this.uploadImage1 = (ImageView)getActivity().findViewById(R.id.upload_image_1);
-                        this.uploadImage1.setTag(1);
-                        this.uploadImage1.setOnClickListener(this.uploadImageClickListener);
-                        this.uploadImage1.setImageDrawable(Drawable.createFromStream(getMediaInputStream(data), mFileName));
-                        this.uploadImage1.setVisibility(View.VISIBLE);
-                    } else {
-                        uploadMultiMedia(data);
-                    }
+                    media = getMediaInputStream(data);
+                    mFileName = data.getData().toString();
+                    this.uploadImage1 = (ImageView) getActivity().findViewById(R.id.upload_image_1);
+                    this.uploadImage1.setTag(1);
+                    this.uploadImage1.setOnClickListener(this.uploadImageClickListener);
+                    this.uploadImage1.setImageDrawable(Drawable.createFromStream(getMediaInputStream(data), mFileName));
+                    this.uploadImage1.setVisibility(View.VISIBLE);
                     break;
 
                 default:
@@ -257,17 +257,6 @@ public class EditTweetFragment extends Fragment {
         }
     }
 
-    private void uploadMultiMedia(final Intent data) {
-        try {
-            final InputStream media = getContext().getContentResolver().openInputStream(data.getData());
-            final AsyncTwitterTask.AfterTask<UploadedMedia> afterTask = EditTweetFragment.this::onUploadMediaFinished;
-
-            mTwitterWrapper.uploadImage(data.toString(), media, afterTask);
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
 
     private InputStream getMediaInputStream(final Intent data) {
         try {
@@ -278,14 +267,21 @@ public class EditTweetFragment extends Fragment {
         }
     }
 
-    private void onUploadMediaFinished(TwitterTaskResult<UploadedMedia> result) {
-        if (result.isException()) {
-            TwitterError.showText(getActivity(), result.getException());
-            return;
+
+    final TextWatcher editorTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
         }
 
-        mediaIds.add(result.getResult().getMediaId());
-    }
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            presenter.onTextChange(s.length());
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+        }
+    };
 
 
     private void setupNormalView(final View rootView) {
@@ -293,39 +289,32 @@ public class EditTweetFragment extends Fragment {
         Button tweetButton = (Button) rootView.findViewById(R.id.tweet_button);
         tweetButton.setOnClickListener(v -> EditTweetFragment.this.executeTweetButton(tweetEditor.getText().toString()));
 
+        this.counter = (TextView) rootView.findViewById(R.id.counter);
+        this.counter.setText(String.valueOf(tweetEditor.getText().toString().length()));
 
-        final TextView counter = (TextView) rootView.findViewById(R.id.counter);
-        counter.setText(String.valueOf(tweetEditor.getText().toString().length()));
-
-        tweetEditor.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                final int length = s.length();
-                final TextView counter = (TextView)rootView.findViewById(R.id.counter);
-
-                if (length > 140) {
-                    counter.setTextColor(ContextCompat.getColor(getActivity(), R.color.background_color_reply_to_me));
-                } else {
-                    counter.setTextColor(ContextCompat.getColor(getActivity(), R.color.white_FFFFFF));
-                }
-
-                counter.setText(String.valueOf(length));
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
+        tweetEditor.addTextChangedListener(editorTextWatcher);
 
         ImageButton imageUploadButton = (ImageButton)rootView.findViewById(R.id.image_upload_button);
         imageUploadButton.setOnClickListener(view -> {
             Intent intent = EditTweetFragment.this.createShowGalleryIntent();
             EditTweetFragment.this.showGallery(intent);
         });
+    }
+
+
+    @Override
+    public void changeTextCountErrorColor() {
+        this.counter.setTextColor(ContextCompat.getColor(getActivity(), R.color.background_color_reply_to_me));
+    }
+
+    @Override
+    public void changeTextCountDefaultColor() {
+        this.counter.setTextColor(ContextCompat.getColor(getActivity(), R.color.white_FFFFFF));
+    }
+
+    @Override
+    public void setTextCount(String length) {
+        this.counter.setText(length);
     }
 
     private void showGallery(Intent intent) {
@@ -372,17 +361,13 @@ public class EditTweetFragment extends Fragment {
     }
 
 
-    /**
-     * Activityにハッシュタグが保存されている場合はこのEditTextに保存された全てのタグを表示する
-     * （reply時を除く）
-     */
     private void setupHashTag(View rootView) {
         Serializable tmp = getArguments().getSerializable(DataType.HASH_TAG);
         HashtagEntity[] hashTags;
         if (tmp instanceof HashtagEntity[]) {
             hashTags = (HashtagEntity[]) tmp;
         } else {
-            throw new IllegalArgumentException("hasHashTag is true, but HashTagEntity is not got!");
+            throw new IllegalArgumentException("hasHashTag is true, but HashTagEntity is not got");
         }
 
         TweetTextEditor editor = (TweetTextEditor)rootView.findViewById(R.id.tweet_editor);
@@ -392,27 +377,12 @@ public class EditTweetFragment extends Fragment {
 
 
     private void executeTweetButton(String text) {
-        if (text.isEmpty() && !this.hasMediaItem()) {
-            CustomToast.show(getActivity(), R.string.edit_text_empty, Toast.LENGTH_SHORT);
-            return;
-        }
-
-        if (text.length() > 140) {
-            CustomToast.show(getActivity(), R.string.over_max_text_count, Toast.LENGTH_SHORT);
-            return;
-        }
-
-        InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (getActivity().getCurrentFocus() != null) {
-            mgr.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-        }
-
-        this.postTweet(text);
-        mCallback.removeEditTweetFragment(this);
+        this.presenter.onClickPostButton(text, this.hasMediaItem());
     }
 
 
-    private void postTweet(final String text) {
+    @Override
+    public void postTweet(final String text) {
         final StatusUpdate status = new StatusUpdate(text);
 
         if (this.isReply() && !this.isFromBiography()) {
@@ -422,21 +392,12 @@ public class EditTweetFragment extends Fragment {
             status.inReplyToStatusId(mDestinationStatus.getId());
         }
 
-        if (TEST_RELEASE) {
-            if (this.hasMediaItem()) {
-                status.setMedia(mFileName, media);
-            }
-        } else {
-            if (!mediaIds.isEmpty()) {
-                final long[] medias = new long[mediaIds.size()];
-                for (int i = 0; i < mediaIds.size(); i++) {
-                    medias[i] = mediaIds.get(i);
-                }
-                status.setMediaIds(medias);
-            }
+        if (this.hasMediaItem()) {
+            status.setMedia(mFileName, media);
         }
 
         mCallback.postTweet(status);
+        mCallback.removeEditTweetFragment(this);
     }
 
 
@@ -450,7 +411,6 @@ public class EditTweetFragment extends Fragment {
 
         super.onPause();
     }
-
 
 
     @Override
@@ -477,6 +437,25 @@ public class EditTweetFragment extends Fragment {
     @Contract(pure = true)
     private boolean isQuotedTweet() {
         return (mEditorType & HAS_QUOTED_TWEET) != 0;
+    }
+
+
+    @Override
+    public void showMessageEmptyError() {
+        CustomToast.show(getActivity(), R.string.edit_text_empty, Toast.LENGTH_SHORT);
+    }
+
+    @Override
+    public void showMessageOverLengthError() {
+        CustomToast.show(getActivity(), R.string.over_max_text_count, Toast.LENGTH_SHORT);
+    }
+
+    @Override
+    public void hideSoftKeyBoard() {
+        InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (getActivity().getCurrentFocus() != null) {
+            mgr.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
     }
 
 
