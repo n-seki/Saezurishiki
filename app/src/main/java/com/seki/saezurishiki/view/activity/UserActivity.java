@@ -42,8 +42,6 @@ public class UserActivity extends    AppCompatActivity
                           implements EditTweetFragment.Callback,
                                      FragmentControl, UserPresenter.View {
 
-
-    public static final String USER = "UserEntity";
     public static final String USER_ID = "userID";
 
     public static final int SHOW_ACTIVITY = 0x0800;
