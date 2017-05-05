@@ -4,6 +4,7 @@ package com.seki.saezurishiki.view.fragment;
 import android.support.v4.app.Fragment;
 
 import com.seki.saezurishiki.entity.TweetEntity;
+import com.seki.saezurishiki.entity.UserEntity;
 import com.seki.saezurishiki.model.impl.ModelContainer;
 import com.seki.saezurishiki.presenter.editor.TweetEditorPresenter;
 import com.seki.saezurishiki.presenter.list.ConversationPresenter;
@@ -91,7 +92,7 @@ public final class Fragments {
         return fragment;
    }
 
-    public static Fragment newReplyEditorFromUser(User user) {
+    public static Fragment newReplyEditorFromUser(UserEntity user) {
         final EditTweetFragment fragment = EditTweetFragment.newReplyEditorFromUser(user);
         new TweetEditorPresenter(fragment);
         return fragment;

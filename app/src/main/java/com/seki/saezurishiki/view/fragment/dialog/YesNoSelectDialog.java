@@ -10,10 +10,12 @@ import android.support.v7.app.AlertDialog;
 
 import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.entity.TweetEntity;
+import com.seki.saezurishiki.entity.UserEntity;
 import com.seki.saezurishiki.view.activity.UserActivity;
 import com.seki.saezurishiki.view.fragment.list.TweetListFragment;
 
 import java.io.Serializable;
+import java.util.List;
 
 import twitter4j.User;
 
@@ -24,6 +26,8 @@ public class YesNoSelectDialog<T extends Serializable> extends DialogFragment {
     private static final String SUMMARY_KEY = "summary_key";
     private static final String POSITIVE_ACTION_KEY = "positive_action_key";
     private static final String NEGATIVE_ACTION_KEY = "negative_action_key";
+
+    public static final YesNoSelectDialog.Listener<UserEntity> EMPTY_ACTION = user -> {};
 
     public interface Listener<T extends Serializable> extends Serializable {
         void onItemClick(T item);
@@ -128,9 +132,7 @@ public class YesNoSelectDialog<T extends Serializable> extends DialogFragment {
                 .setTitle(tweet.isFavorited ? R.string.do_you_un_favorite : R.string.do_you_favorite)
                 .setSummary(tweet.user.getName() + "\n" + tweet.text)
                 .setPositiveAction(positiveAction)
-                .setNegativeAction((Listener<TweetEntity>) item -> {
-                    //do nothing
-                })
+                .setNegativeAction(EMPTY_ACTION)
                 .build();
     }
 
@@ -141,23 +143,57 @@ public class YesNoSelectDialog<T extends Serializable> extends DialogFragment {
                 .setTitle(R.string.do_you_retweet)
                 .setSummary(tweet.user.getName() + "\n" + tweet.text)
                 .setPositiveAction(action)
-                .setNegativeAction((Listener<TweetEntity>) item -> {
-                    //do nothing
-                })
+                .setNegativeAction(EMPTY_ACTION)
                 .build();
     }
 
 
     @SuppressWarnings("unchecked")
-    public static DialogFragment newReleaseBlockDialog(final User user, Listener<User> action) {
-        return new YesNoSelectDialog.Builder<User>()
+    public static DialogFragment newReleaseBlockDialog(final UserEntity user, Listener<UserEntity> action) {
+        return new YesNoSelectDialog.Builder<UserEntity>()
                         .setItem(user)
                         .setTitle(R.string.action_destroy_block)
                         .setSummary(user.getScreenName() + "のブロックを解除しますか？")
                         .setPositiveAction(action)
-                        .setNegativeAction((Listener<User>) item -> {//do nothing
-                        })
+                        .setNegativeAction(EMPTY_ACTION)
                         .build();
+    }
+
+
+
+    @SuppressWarnings("unchecked")
+    public static DialogFragment newFollowDialog(final UserEntity user, Listener<UserEntity> action, boolean isFollow) {
+        return new YesNoSelectDialog.Builder<UserEntity>()
+                        .setItem(user)
+                        .setSummary(user.getScreenName() + (isFollow ? "をリムーブしますか？" : "をフォローしますか？"))
+                        .setPositiveAction(action)
+                        .setNegativeAction(EMPTY_ACTION)
+                        .build();
+    }
+
+
+    @SuppressWarnings("unchecked")
+    public static DialogFragment newFollowRequestDialog(final UserEntity user, Listener<UserEntity> action) {
+        return new YesNoSelectDialog.Builder<UserEntity>()
+                .setItem(user)
+                .setTitle(R.string.follow_request)
+                .setSummary(user.getScreenName() + "にフォローリクエストを送信しますか？")
+                .setPositiveAction(action)
+                .setNegativeAction(EMPTY_ACTION)
+                .build();
+    }
+
+
+    @SuppressWarnings("unchecked")
+    public static DialogFragment newBlockUserDialog(final UserEntity user, Listener<UserEntity> action) {
+        return new YesNoSelectDialog.Builder<UserEntity>()
+                .setItem(user)
+                .setTitle(R.string.action_block)
+                .setSummary(user.getScreenName() + "をブロックしますか？")
+                .setPositiveAction(action)
+                .setNegativeAction(EMPTY_ACTION)
+                .build();
+
     }
 
 

@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
 import com.seki.saezurishiki.R;
+import com.seki.saezurishiki.entity.UserEntity;
 import com.seki.saezurishiki.view.fragment.Fragments;
 import com.seki.saezurishiki.view.fragment.editor.DirectMessageFragment;
 import com.seki.saezurishiki.view.fragment.other.SettingFragment;
@@ -56,7 +57,7 @@ public final class FragmentController {
     }
 
 
-    public Fragment createFragment(int fragmentId, User user) {
+    public Fragment createFragment(int fragmentId, UserEntity user) {
         if (fragmentId < 0) {
             throw new IllegalArgumentException("DrawerList item position is illegal! :" + fragmentId);
         }
@@ -99,11 +100,11 @@ public final class FragmentController {
         return mFragmentManager.findFragmentById(viewId);
     }
 
-    public void removeCurrentFragment(int viewId) {
+    public Fragment removeCurrentFragment(int viewId) {
         mFragmentManager.popBackStack(null, 0);
         mFragmentManager.executePendingTransactions();
+        return mFragmentManager.findFragmentById(viewId);
     }
-
 
     public void removeAllFragment(int layout) {
         while(hasFragment()) {

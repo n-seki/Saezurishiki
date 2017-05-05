@@ -18,9 +18,17 @@ public enum ModelActionType {
     COMPLETE_UN_FAVORITE(false, DisplayType.UPDATE),
     COMPLETE_RETWEET(false, DisplayType.UPDATE),
     COMPLETE_DELETE_TWEET(false, DisplayType.DELETE),
+    COMPLETE_POST_TWEET(false, DisplayType.NO_DISPLAY),
 
     LOAD_FRIENDS(false, DisplayType.ADD),
     LOAD_FOLLOWERS(false, DisplayType.ADD),
+
+    LOAD_USER(false, DisplayType.NO_DISPLAY),
+    LOAD_RELATIONSHIP(false, DisplayType.NO_DISPLAY),
+    COMPLETE_FOLLOW(false, DisplayType.NO_DISPLAY),
+    COMPLETE_REMOVE(false, DisplayType.NO_DISPLAY),
+    COMPLETE_BLOCK(false, DisplayType.NO_DISPLAY),
+    COMPLETE_DESTROY_BLOCK(false, DisplayType.NO_DISPLAY),
 
     ERROR(false, DisplayType.NO_DISPLAY);
 

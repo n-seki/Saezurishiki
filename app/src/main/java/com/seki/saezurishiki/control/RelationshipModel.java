@@ -15,8 +15,19 @@ public class RelationshipModel {
     private boolean loginUserFollowed = false;
     private boolean blocking = false;
     private boolean loginUserMuting = false;
+    private boolean isYourself;
+    private final long userId;
+
+    public RelationshipModel(long userId) {
+        this.userId = userId;
+    }
 
     public void update(@NonNull Relationship relationship) {
+
+        if (relationship.getSourceUserId() == this.userId) {
+            this.isYourself = true;
+            return;
+        }
 
         loginUserMuting = relationship.isSourceMutingTarget();
 
@@ -47,6 +58,10 @@ public class RelationshipModel {
 
     public int toStringResource() {
 
+        if (this.isYourself) {
+            return R.string.showing_loginUser;
+        }
+
         if (this.blocking) {
             return R.string.blocking_state_message;
         }
@@ -66,10 +81,6 @@ public class RelationshipModel {
         return R.string.non_relation_message;
     }
 
-//
-//    public boolean isLoginUserMuting() {
-//        return this.loginUserMuting;
-//    }
 
     public boolean isFollowByLoginUser() {
         return this.loginUserFollowing;
@@ -77,6 +88,10 @@ public class RelationshipModel {
 
     public void onFollowedByLoginUser() {
         this.loginUserFollowing = true;
+    }
+
+    public boolean isYourself() {
+        return isYourself;
     }
 
     public void onRemovedByLoginUser() {

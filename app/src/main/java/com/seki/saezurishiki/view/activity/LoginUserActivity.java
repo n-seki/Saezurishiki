@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import com.seki.saezurishiki.application.SaezurishikiApp;
 import com.seki.saezurishiki.R;
+import com.seki.saezurishiki.entity.UserEntity;
 import com.seki.saezurishiki.model.impl.ModelContainer;
 import com.seki.saezurishiki.view.adapter.DrawerButtonListAdapter;
 import com.seki.saezurishiki.control.CustomToast;
@@ -221,7 +222,7 @@ public class LoginUserActivity extends    AppCompatActivity
                 LoginUserActivity.this.displayBiography(mLoginUser.getId());
                 return;
             }
-            LoginUserActivity.this.displayFragment(action, mLoginUser);
+            LoginUserActivity.this.displayFragment(action, twitterAccount.getRepository().map(mLoginUser));
         }
     };
 
@@ -243,7 +244,7 @@ public class LoginUserActivity extends    AppCompatActivity
 
 
 
-    private void displayFragment(int position, User user) {
+    private void displayFragment(int position, UserEntity user) {
         if (mDisplayPosition == position) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
             return;
@@ -382,7 +383,8 @@ public class LoginUserActivity extends    AppCompatActivity
             User user = Serializer.loadUser(LoginUserActivity.this);
             if (user == null) return;
             mLoginUser = user;
-            userDrawerView.updateUser(mLoginUser);
+            //TODO
+            userDrawerView.updateUser(this.twitterAccount.getRepository().map(mLoginUser));
         };
 
         mTwitterTask.showUser(this.twitterAccount.getLoginUserId(), afterTask, cancelTask);
@@ -399,7 +401,8 @@ public class LoginUserActivity extends    AppCompatActivity
             mLoginUser = result.getResult();
         }
 
-        this.userDrawerView.updateUser(mLoginUser);
+        //TODO
+        this.userDrawerView.updateUser(this.twitterAccount.getRepository().map(mLoginUser));
     }
 
 
@@ -479,8 +482,9 @@ public class LoginUserActivity extends    AppCompatActivity
 
     @Override
     public void displayDirectMessageEditor(long messageId) {
-        Fragment directMessageEditor = DirectMessageFragment.getInstance(this.twitterAccount.getRepository().getDM(messageId).getSender());
-        this.addFragment(R.id.home_container, directMessageEditor);
+        //TODO
+//        Fragment directMessageEditor = DirectMessageFragment.getInstance(this.twitterAccount.getRepository().getDM(messageId).getSender());
+//        this.addFragment(R.id.home_container, directMessageEditor);
     }
 
 

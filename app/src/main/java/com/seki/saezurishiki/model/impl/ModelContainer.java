@@ -4,11 +4,13 @@ import com.seki.saezurishiki.model.GetTweetById;
 import com.seki.saezurishiki.model.GetUserById;
 import com.seki.saezurishiki.model.TweetListModel;
 import com.seki.saezurishiki.model.UserListModel;
+import com.seki.saezurishiki.model.UserScreenModel;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
 import com.seki.saezurishiki.presenter.list.UserListPresenter;
 
 public final class ModelContainer {
 
+    private static UserScreenModel userScreenModel;
     private static TweetListModel homeTweetListModel;
     private static TweetListModel replyTweetListModel;
     private static TweetListModel favoriteListModel;
@@ -25,6 +27,7 @@ public final class ModelContainer {
     }
 
     public static void start(final TwitterAccount account) {
+        userScreenModel = new UserScreenModelImp(account);
         homeTweetListModel = new HomeTweetListModel(account);
         replyTweetListModel = new ReplyTweetListModel(account);
         favoriteListModel = new FavoriteListModel(account);
@@ -38,6 +41,7 @@ public final class ModelContainer {
     }
 
     public static void destroy() {
+        userScreenModel = null;
         homeTweetListModel = null;
         replyTweetListModel = null;
         favoriteListModel = null;
@@ -48,6 +52,10 @@ public final class ModelContainer {
         getUserById = null;
         friendListModel = null;
         followerListMode = null;
+    }
+
+    public static UserScreenModel getUserScreenModel() {
+        return userScreenModel;
     }
 
     public static TweetListModel getHomeTweetListModel() {

@@ -9,15 +9,14 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.seki.saezurishiki.R;
+import com.seki.saezurishiki.entity.UserEntity;
 
-import twitter4j.User;
-
-import static com.seki.saezurishiki.view.activity.UserActivity.SHOW_ACTIVITY;
 import static com.seki.saezurishiki.control.FragmentController.FRAGMENT_ID_FAVORITE;
 import static com.seki.saezurishiki.control.FragmentController.FRAGMENT_ID_FOLLOWER;
 import static com.seki.saezurishiki.control.FragmentController.FRAGMENT_ID_FRIEND;
 import static com.seki.saezurishiki.control.FragmentController.FRAGMENT_ID_SETTING;
 import static com.seki.saezurishiki.control.FragmentController.FRAGMENT_ID_TWEET;
+import static com.seki.saezurishiki.view.activity.UserActivity.SHOW_ACTIVITY;
 
 /**
  * Navigation Drawerボタンアイテム用Adapter<br>
@@ -91,7 +90,7 @@ public class DrawerButtonListAdapter extends ArrayAdapter<DrawerButtonListAdapte
     }
 
 
-    public void setLoginUserItem(User user) {
+    public void setLoginUserItem(UserEntity user) {
 
         this.setUserItem(user);
 
@@ -109,7 +108,7 @@ public class DrawerButtonListAdapter extends ArrayAdapter<DrawerButtonListAdapte
     }
 
 
-    public void setUserItem(User user) {
+    public void setUserItem(UserEntity user) {
         add(new ButtonInfoBuilder()
                 .text(R.string.tweet)
                 .count(user.getStatusesCount())
@@ -177,6 +176,16 @@ public class DrawerButtonListAdapter extends ArrayAdapter<DrawerButtonListAdapte
         }
 
         throw new AssertionError();
+    }
+
+    @Override
+    @NonNull
+    public DrawerButtonListAdapter.ButtonInfo getItem(int position) {
+        final DrawerButtonListAdapter.ButtonInfo item = super.getItem(position);
+        if (item == null) {
+            throw new NullPointerException("item is null, position : " + position);
+        }
+        return item;
     }
 
 

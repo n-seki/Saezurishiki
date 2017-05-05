@@ -3,7 +3,6 @@ package com.seki.saezurishiki.view.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -27,33 +26,21 @@ import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.application.SaezurishikiApp;
 import com.seki.saezurishiki.control.CustomToast;
 import com.seki.saezurishiki.control.FragmentController;
-import com.seki.saezurishiki.control.RelationshipModel;
+import com.seki.saezurishiki.entity.UserEntity;
+import com.seki.saezurishiki.model.impl.ModelContainer;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
-import com.seki.saezurishiki.network.twitter.TwitterError;
-import com.seki.saezurishiki.network.twitter.TwitterTaskResult;
-import com.seki.saezurishiki.network.twitter.TwitterWrapper;
+import com.seki.saezurishiki.presenter.activity.UserPresenter;
 import com.seki.saezurishiki.view.adapter.BioHeaderPageAdapter;
 import com.seki.saezurishiki.view.adapter.DrawerButtonListAdapter;
 import com.seki.saezurishiki.view.control.FragmentControl;
 import com.seki.saezurishiki.view.fragment.dialog.YesNoSelectDialog;
 import com.seki.saezurishiki.view.fragment.editor.EditTweetFragment;
 
-import java.io.Serializable;
-
-import twitter4j.Relationship;
-import twitter4j.Status;
 import twitter4j.StatusUpdate;
-import twitter4j.User;
 
-/**
- * ユーザー情報管理Activity<br>
- * ログインユーザーによって選択されたUserに関するFragmentなどを管理する
- * ログインユーザーとのrelation等も扱う
-* @author seki
-*/
 public class UserActivity extends    AppCompatActivity
                           implements EditTweetFragment.Callback,
-                                     FragmentControl {
+                                     FragmentControl, UserPresenter.View {
 
 
     public static final String USER = "UserEntity";
@@ -61,15 +48,12 @@ public class UserActivity extends    AppCompatActivity
 
     public static final int SHOW_ACTIVITY = 0x0800;
 
-    private RelationshipModel relation;
-
-    private TwitterWrapper mTwitterTask;
-    private User mUser;
-
     private FragmentController mFragmentController;
     private DrawerButtonListAdapter mListAdapter;
 
     private TwitterAccount twitterAccount;
+
+    private UserPresenter presenter;
 
 
     @Override
@@ -85,12 +69,24 @@ public class UserActivity extends    AppCompatActivity
         setTheme(theme);
         setContentView(R.layout.activity_biography);
 
-        this.relation = new RelationshipModel();
         mFragmentController = new FragmentController(getSupportFragmentManager());
-        mTwitterTask = new TwitterWrapper(this, getSupportLoaderManager(), this.twitterAccount);
         mListAdapter = new DrawerButtonListAdapter(this, R.layout.drawer_list_button, theme);
-        this.loadUser();
 
+        final long userId = getIntent().getExtras().getLong(USER_ID);
+        this.presenter = new UserPresenter(this, ModelContainer.getUserScreenModel(), userId);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        this.presenter.onResume();
+        this.presenter.loadOwner();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        this.presenter.onPause();
     }
 
     @Override
@@ -98,8 +94,8 @@ public class UserActivity extends    AppCompatActivity
         super.onDestroy();
     }
 
-
-    private void setupActionBar() {
+    @Override
+    public void setupActionBar(UserEntity owner) {
         Toolbar toolbar = (Toolbar)findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -109,95 +105,79 @@ public class UserActivity extends    AppCompatActivity
 
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
-        this.replaceTitle(mUser.getName(), mUser.getScreenName());
+        this.replaceTitle(owner.getName(), owner.getScreenName());
     }
 
-    private void setupUserInformation() {
-        this.setupActionBar();
-        this.showRelationship();
-        this.displayBiographyInfo(mUser);
-    }
-
-
-    protected void loadUser() {
-        Serializable temp = getIntent().getExtras().getSerializable(USER);
-
-        if (temp instanceof User) {
-            mUser = (User)temp;
-            this.setupUserInformation();
-        } else {
-            this.asyncLoadUser();
-        }
-    }
-
-
-    private final AdapterView.OnItemClickListener drawerItemClickListener = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            if ( mListAdapter.getItem(position).getAction() == FragmentController.FRAGMENT_ID_DIRECT_MESSAGE_EDITOR ) {
-                if (!UserActivity.this.relation.isMutualFollow()) {
-                    return;
-                }
-            }
-            UserActivity.this.displayFragment(mListAdapter.getItem(position).getAction());
-        }
-    };
-
-
-
-    private void asyncLoadUser() {
-        final long userID = getIntent().getExtras().getLong(USER_ID);
-        mTwitterTask.showUser(userID, result -> UserActivity.this.onLoadUser(result, userID));
-    }
-
-
-    void onLoadUser(TwitterTaskResult<User> result, final long userId) {
-        if (result.isException()) {
-//            TwitterError.showText(this, result.getException());
-//            User user = this.twitterAccount.getRepository().getUser(userId);
-//            if (user == null) {
-//                UserActivity.this.finish();
-//                return;
-//            }
-//
-//            mUser = user;
-//            this.setupUserInformation();
-//            return;
-        }
-
-        mUser = result.getResult();
-
-        new Handler().post(UserActivity.this::setupUserInformation);
-    }
-
-
-
-    public void displayBiographyInfo(User user) {
+    @Override
+    public void setupBioInformation(UserEntity owner) {
         ViewPager headerPage = (ViewPager)findViewById(R.id.bio_header_page);
-        PagerAdapter pagerAdapter = new BioHeaderPageAdapter(getSupportFragmentManager(), mUser);
+        PagerAdapter pagerAdapter = new BioHeaderPageAdapter(getSupportFragmentManager(), owner);
         headerPage.setAdapter(pagerAdapter);
         headerPage.setCurrentItem(1);
 
         Button replyButton = (Button)findViewById(R.id.bio_reply_button);
-        replyButton.setOnClickListener(view -> UserActivity.this.displayFragment(FragmentController.FRAGMENT_ID_TWEET_EDITOR));
+        replyButton.setOnClickListener(view -> UserActivity.this.displayFragment(FragmentController.FRAGMENT_ID_TWEET_EDITOR, owner));
 
         Button messageButton = (Button)findViewById(R.id.bio_message_button);
-        messageButton.setOnClickListener(view -> UserActivity.this.displayFragment(FragmentController.FRAGMENT_ID_DIRECT_MESSAGE_EDITOR));
+        messageButton.setOnClickListener(view -> UserActivity.this.displayFragment(FragmentController.FRAGMENT_ID_DIRECT_MESSAGE_EDITOR, owner));
 
         Button followButton = (Button)findViewById(R.id.bio_follow_button);
-        followButton.setOnClickListener(view -> UserActivity.this.showFollowDialog());
+        followButton.setOnClickListener(view -> presenter.onClickFollowButton());
 
         ListView drawerList = (ListView)findViewById(R.id.bio_drawer_list);
-        mListAdapter.setUserItem(user);
+        mListAdapter.setUserItem(owner);
         drawerList.setAdapter(mListAdapter);
         drawerList.setOnItemClickListener(drawerItemClickListener);
     }
 
+    @Override
+    public void setRelationshipText(int text) {
+        ((TextView)findViewById(R.id.bio_relation)).setText(text);
+    }
 
+    @Override
+    public void changeDirectMessageButtonState(boolean isMutual) {
+        Button sendButton = (Button) findViewById(R.id.bio_message_button);
+        final int color = isMutual ? R.color.white_FFFFFF : R.color.gray_808080;
+        sendButton.setClickable(isMutual);
+        sendButton.setTextColor(ContextCompat.getColor(this, color));
+    }
 
+    @Override
+    public void disableFollowButton() {
+        Button followButton = (Button)findViewById(R.id.bio_follow_button);
+        followButton.setClickable(false);
+        followButton.setTextColor(ContextCompat.getColor(this, R.color.gray_808080));
+    }
 
-    private void displayFragment(int position) {
-        Fragment fragment = mFragmentController.createFragment(position, mUser);
+    @Override
+    public void setFollowButton() {
+        Button followButton = (Button)findViewById(R.id.bio_follow_button);
+        followButton.setText(R.string.follow_button_label);
+    }
+
+    @Override
+    public void setRemoveButton() {
+        Button followButton = (Button)findViewById(R.id.bio_follow_button);
+        followButton.setText(R.string.remove_button_label);
+    }
+
+    @Override
+    public void updateOptionMenu() {
+        invalidateOptionsMenu();
+    }
+
+    private final AdapterView.OnItemClickListener drawerItemClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            final int action = mListAdapter.getItem(position).getAction();
+            presenter.onClickButtonList(action);
+        }
+    };
+
+    @Override
+    public void displayFragment(int position, UserEntity owner) {
+        Fragment fragment = mFragmentController.createFragment(position, owner);
         if (position != FragmentController.FRAGMENT_ID_DIRECT_MESSAGE_EDITOR && position != FragmentController.FRAGMENT_ID_TWEET_EDITOR) {
             this.replaceFragment(fragment);
         } else {
@@ -205,20 +185,17 @@ public class UserActivity extends    AppCompatActivity
         }
     }
 
-
     private void replaceFragment(Fragment fragment) {
         mFragmentController.replace(fragment, R.id.biography_container);
         changeSubtitle(fragment.toString());
         changeActionBarIndicatorState();
     }
 
-
     private void addFragment(Fragment fragment) {
         mFragmentController.add(fragment, R.id.biography_container);
         changeSubtitle(fragment.toString());
         changeActionBarIndicatorState();
     }
-
 
     private void changeActionBarIndicatorState() {
         if (getSupportActionBar() == null) {
@@ -228,7 +205,6 @@ public class UserActivity extends    AppCompatActivity
         getSupportActionBar().setHomeButtonEnabled(true);
     }
 
-
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
@@ -237,7 +213,7 @@ public class UserActivity extends    AppCompatActivity
         MenuItem block = menu.findItem(R.id.action_block);
         MenuItem destroyBlock = menu.findItem(R.id.action_release_block);
 
-        if (this.relation.isBlocking()) {
+        if (this.presenter.isBlocking()) {
             block.setVisible(false);
             destroyBlock.setVisible(true);
         } else {
@@ -257,29 +233,22 @@ public class UserActivity extends    AppCompatActivity
         return true;
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        switch (id) {
-            case android.R.id.home :
+        switch (item.getItemId()) {
+            case android.R.id.home:
                 onHomePressed();
                 return true;
 
-            case R.id.action_search :
+            case R.id.action_search:
                 return true;
 
-//            case R.id.action_follow :
-//                this.showFollowDialog();
-//                return true;
-
-            case R.id.action_block :
-                this.showBlockUserDialog();
+            case R.id.action_block:
+                this.presenter.onSelectBlock();
                 return true;
 
             case R.id.action_release_block:
-                this.showReleaseBlockDialog();
+                this.presenter.onSelectReleaseBlock();
                 return true;
 
             case R.id.action_mute:
@@ -291,139 +260,37 @@ public class UserActivity extends    AppCompatActivity
         }
     }
 
-    private void showRelationship() {
-        mTwitterTask.showRelationShip(mUser.getId(), UserActivity.this::onShowRelationship);
-    }
-
-
-    void onShowRelationship(TwitterTaskResult<Relationship> result) {
-        if ( result.isException() ) {
-            TwitterError.showText(UserActivity.this, result.getException());
-            return;
-        }
-
-        UserActivity.this.changeUserInformation(result.getResult());
-    }
-
-    private void changeUserInformation(Relationship relation) {
-        changeRelationStatus(relation);
-        changeUserInformation();
-    }
-
-
-    private void changeUserInformation() {
-        changeRelationStatusText();
-        changeDirectMessageButtonState();
-        changeFollowButtonState();
-        invalidateOptionsMenu();
-    }
-
-    private void changeFollowButtonState() {
-        Button followButton = (Button)findViewById(R.id.bio_follow_button);
-        if (mUser.getId() == this.twitterAccount.getLoginUserId() ) {
-            followButton.setClickable(false);
-            followButton.setTextColor(ContextCompat.getColor(this, R.color.gray_808080));
-            return;
-        }
-
-        if (this.relation.isFollowByLoginUser()) {
-            followButton.setText(R.string.remove_button_label);
-        } else {
-            followButton.setText(R.string.follow_button_label);
-        }
-
-    }
-
-    private void changeDirectMessageButtonState() {
-        Button sendButton = (Button) findViewById(R.id.bio_message_button);
-        if (this.relation.isMutualFollow()) {
-            sendButton.setClickable(true);
-            sendButton.setTextColor(ContextCompat.getColor(this, R.color.white_FFFFFF));
-        } else {
-            sendButton.setClickable(false);
-            sendButton.setTextColor(ContextCompat.getColor(this, R.color.gray_808080));
-        }
-    }
-
-
-
-    private void follow() {
-        if (this.twitterAccount.getLoginUserId() == mUser.getId() ) {
-            return;
-        }
-
-        mTwitterTask.createRelationShip(mUser.getId(), UserActivity.this::onFollow);
-    }
-
-
-    void onFollow(TwitterTaskResult<User> result) {
-        if ( result.isException() ) {
-            TwitterError.showText(UserActivity.this, result.getException());
-            return;
-        }
-
-        CustomToast.show(UserActivity.this, R.string.done_follow, Toast.LENGTH_SHORT);
-        this.relation.onFollowedByLoginUser();
-        changeUserInformation();
-    }
-
-
-    private void remove() {
-        mTwitterTask.destroyRelationShip(mUser.getId(), UserActivity.this::onRemove);
-    }
-
-
-    void onRemove(TwitterTaskResult<User> result) {
-        if ( result.isException() ) {
-            TwitterError.showText(UserActivity.this, result.getException());
-            return;
-        }
-        CustomToast.show(UserActivity.this, R.string.done_remove, Toast.LENGTH_SHORT);
-        this.relation.onRemovedByLoginUser();
-        changeUserInformation();
-    }
-
-
-
-    private void changeRelationStatusText() {
-        if (mUser.getId() == this.twitterAccount.getLoginUserId()) {
-            ((TextView)findViewById(R.id.bio_relation)).setText(R.string.showing_loginUser);
-            return;
-        }
-        ((TextView)findViewById(R.id.bio_relation)).setText(this.relation.toStringResource());
-    }
-
-
-    private void changeRelationStatus(Relationship relationship) {
-        this.relation.update(relationship);
-    }
-
-
+    @Override
     @SuppressWarnings("unchecked")
-    private void displayFollowDialog() {
+    public void displayFollowDialog(UserEntity user, final boolean isFollow) {
+        final YesNoSelectDialog.Listener<UserEntity> action = userEntity ->  {
+            if (isFollow)
+                UserActivity.this.remove();
+            else
+                UserActivity.this.follow();
+        };
 
-        final boolean follow = this.relation.isFollowByLoginUser();
-
-        DialogFragment dialogFragment =
-                new YesNoSelectDialog.Builder<User>()
-                        .setItem(mUser)
-                        .setSummary(mUser.getScreenName() + (follow ? "をリムーブしますか？" : "をフォローしますか？"))
-                        .setPositiveAction((YesNoSelectDialog.Listener<User>) item -> {
-                            if (follow)
-                                UserActivity.this.remove();
-                            else
-                                UserActivity.this.follow();
-                        })
-                        .setNegativeAction((YesNoSelectDialog.Listener<User>) item -> {
-                            //do nothing
-                        })
-                        .build();
-
+        final DialogFragment dialogFragment = YesNoSelectDialog.newFollowDialog(user, action, isFollow);
         dialogFragment.show(getSupportFragmentManager(), "YesNoSelectDialog");
     }
 
+    private void follow() {
+        this.presenter.follow();
+    }
 
+    @Override
+    public void showCompleteFollowMessage() {
+        CustomToast.show(this, R.string.done_follow, Toast.LENGTH_SHORT);
+    }
 
+    private void remove() {
+        this.presenter.remove();
+    }
+
+    @Override
+    public void showCompleteRemoveMessage() {
+        CustomToast.show(this, R.string.done_remove, Toast.LENGTH_SHORT);
+    }
 
     @Override
     public void removeEditTweetFragment(Fragment tweetEditor) {
@@ -432,27 +299,19 @@ public class UserActivity extends    AppCompatActivity
 
     @Override
     public void postTweet(StatusUpdate status) {
-        mTwitterTask.post(status, UserActivity.this::onPostTweet);
+        this.presenter.postTweet(status);
     }
 
-
-    void onPostTweet(TwitterTaskResult<Status> result) {
-        if ( result.isException() ) {
-            TwitterError.showText(UserActivity.this, result.getException());
-            return;
-        }
-
+    @Override
+    public void showCompletePostTweetMessage() {
         CustomToast.show(UserActivity.this, R.string.reply_complete, Toast.LENGTH_SHORT);
     }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_user_activity, menu);
         return true;
     }
-
 
     private void replaceTitle(String title, String subTitle) {
         ActionBar actionBar = getSupportActionBar();
@@ -462,15 +321,15 @@ public class UserActivity extends    AppCompatActivity
         actionBar.setSubtitle(subTitle);
     }
 
-
-    private void changeTitle() {
+    @Override
+    public void updateTitle(UserEntity user) {
         if (!mFragmentController.hasFragment()) {
-            this.replaceTitle(mUser.getName(), mUser.getScreenName());
+            this.replaceTitle(user.getName(), user.getScreenName());
             return;
         }
 
         Fragment currentFragment = mFragmentController.getFragment(R.id.biography_container);
-        replaceTitle(mUser.getName(), currentFragment.toString());
+        replaceTitle(user.getName(), currentFragment.toString());
     }
 
     private void changeSubtitle(String subtitle) {
@@ -480,133 +339,79 @@ public class UserActivity extends    AppCompatActivity
         actionBar.setSubtitle(subtitle);
     }
 
-
     void onHomePressed() {
-        if (!mFragmentController.hasFragment()) {
-            finish();
-            return;
-        }
-        mFragmentController.removeAllFragment(R.id.biography_container);
-        changeTitle();
+        this.presenter.onHomePressed(mFragmentController.hasFragment());
     }
-
 
     @Override
     public void onBackPressed() {
-        if (!mFragmentController.hasFragment()) {
-            finish();
-            return;
-        }
-
-        mFragmentController.removeCurrentFragment(R.id.biography_container);
-        changeTitle();
-
-        if (!mFragmentController.hasFragment()) {
-            changeSubtitle(mUser.getScreenName());
-        }
+        this.presenter.onBackPressed(mFragmentController.hasFragment());
     }
 
+    @Override
+    public void finishActivity() {
+        finish();
+    }
 
+    @Override
+    public void removeCurrentScreen() {
+        mFragmentController.removeCurrentFragment(R.id.biography_container);
+    }
+
+    @Override
+    public void removeAllScreen() {
+        mFragmentController.removeAllFragment(R.id.biography_container);
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
-    public void displayFollowRequestDialog() {
-        DialogFragment dialogFragment =
-                new YesNoSelectDialog.Builder<User>()
-                        .setItem(mUser)
-                        .setTitle(R.string.follow_request)
-                        .setSummary(mUser.getScreenName() + "にフォローリクエストを送信しますか？")
-                        .setPositiveAction((YesNoSelectDialog.Listener<User>) item -> UserActivity.this.sendFollowRequest())
-                        .setNegativeAction((YesNoSelectDialog.Listener<User>) item -> {
-                            //do nothing
-                        })
-                        .build();
-
+    public void displayFollowRequestDialog(UserEntity user) {
+        YesNoSelectDialog.Listener<UserEntity> action = u -> sendFollowRequest();
+        DialogFragment dialogFragment = YesNoSelectDialog.newFollowRequestDialog(user, action);
         dialogFragment.show(getSupportFragmentManager(), "YesNoSelectDialog");
     }
 
-
     public void sendFollowRequest() {
-        mTwitterTask.follow(mUser, UserActivity.this::onSendFollowRequest);
+        this.presenter.sendFollowRequest();
     }
 
-
-    void onSendFollowRequest(TwitterTaskResult<User> result) {
-        if (result.isException()) {
-            TwitterError.showText(UserActivity.this, result.getException());
-            return;
-        }
-
+    @Override
+    public void showCompleteSendFollowRequestMessage() {
         CustomToast.show(UserActivity.this, R.string.done_follow_request, Toast.LENGTH_SHORT);
     }
 
-
-
+    @Override
     @SuppressWarnings("unchecked")
-    public void showBlockUserDialog() {
-        DialogFragment dialogFragment =
-                new YesNoSelectDialog.Builder<User>()
-                        .setItem(mUser)
-                        .setTitle(R.string.action_block)
-                        .setSummary(mUser.getScreenName() + "をブロックしますか？")
-                        .setPositiveAction((YesNoSelectDialog.Listener<User>) item -> UserActivity.this.blockUser())
-                        .setNegativeAction((YesNoSelectDialog.Listener<User>) item -> {
-                            //do nothing
-                        })
-                        .build();
-
+    public void showBlockUserDialog(UserEntity user) {
+        YesNoSelectDialog.Listener<UserEntity> action = u -> this.blockUser();
+        DialogFragment dialogFragment = YesNoSelectDialog.newBlockUserDialog(user, action);
         dialogFragment.show(getSupportFragmentManager(), "YesNoSelectDialog");
     }
 
-
     public void blockUser() {
-        mTwitterTask.block(mUser, UserActivity.this::onBlock);
+        this.presenter.block();
     }
 
-
-    void onBlock(TwitterTaskResult<User> result) {
-        if (result.isException()) {
-            TwitterError.showText(UserActivity.this, result.getException());
-            return;
-        }
-
+    @Override
+    public void showCompleteBlockMessage() {
         CustomToast.show(UserActivity.this, R.string.block_complete, Toast.LENGTH_SHORT);
-        this.relation.onBlock();
-        this.changeUserInformation();
     }
 
-
+    @Override
     @SuppressWarnings("unchecked")
-    private void showReleaseBlockDialog() {
-        YesNoSelectDialog.Listener<User> action = (YesNoSelectDialog.Listener<User>) item -> UserActivity.this.releaseBlock();
-
-        DialogFragment dialog = YesNoSelectDialog.newReleaseBlockDialog(mUser, action);
+    public void showReleaseBlockDialog(UserEntity user) {
+        YesNoSelectDialog.Listener<UserEntity> action = item -> UserActivity.this.releaseBlock();
+        DialogFragment dialog = YesNoSelectDialog.newReleaseBlockDialog(user, action);
         dialog.show(getSupportFragmentManager(), "YesNoSelectDialog");
     }
 
-
     private void releaseBlock() {
-        mTwitterTask.destroyBlock(mUser, UserActivity.this::onReleaseBlock);
+        this.presenter.destroyBlock();
     }
 
-
-    void onReleaseBlock(TwitterTaskResult<User> result) {
-        if (result.isException()) {
-            TwitterError.showText(UserActivity.this, result.getException());
-            return;
-        }
-
+    @Override
+    public void showCompleteDestroyBlockMessage() {
         CustomToast.show(UserActivity.this, R.string.release_block_complete, Toast.LENGTH_SHORT);
-        this.relation.onReleaseBlock();
-        this.changeUserInformation();
-    }
-
-
-    protected void showFollowDialog() {
-        if (mUser.isProtected() && !this.relation.isFollowByLoginUser()) {
-            this.displayFollowRequestDialog();
-            return;
-        }
-
-        this.displayFollowDialog();
     }
 
     @Override
@@ -616,9 +421,6 @@ public class UserActivity extends    AppCompatActivity
 
     @Override
     public void requestShowUser(long userId) {
-        //同一ユーザーの表示はしない
-        if (userId == this.mUser.getId()) return;
-
         Intent intent = new Intent(this, UserActivity.class);
         intent.putExtra(USER_ID, userId);
         startActivity(intent);

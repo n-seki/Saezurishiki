@@ -19,6 +19,7 @@ import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.application.SaezurishikiApp;
 import com.seki.saezurishiki.control.CustomToast;
 import com.seki.saezurishiki.control.UIControlUtil;
+import com.seki.saezurishiki.entity.UserEntity;
 import com.seki.saezurishiki.network.twitter.AsyncTwitterTask;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
 import com.seki.saezurishiki.network.twitter.TwitterError;
@@ -51,7 +52,7 @@ public class DirectMessageFragment extends Fragment implements DirectMessageUser
 
     private TwitterAccount twitterAccount;
 
-    public static Fragment getInstance(User user) {
+    public static Fragment getInstance(UserEntity user) {
         Fragment fragment = new DirectMessageFragment();
         Bundle data  = new Bundle();
         data.putSerializable(DataType.USER, user);

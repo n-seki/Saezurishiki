@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.control.UIControlUtil;
+import com.seki.saezurishiki.entity.UserEntity;
 import com.seki.saezurishiki.view.fragment.util.DataType;
 import com.squareup.picasso.Picasso;
 
@@ -20,9 +21,9 @@ import twitter4j.User;
 
 public class BioHeaderPageAdapter extends FragmentPagerAdapter {
 
-    private final User mUser;
+    private final UserEntity mUser;
 
-    public BioHeaderPageAdapter(FragmentManager fm, User user) {
+    public BioHeaderPageAdapter(FragmentManager fm, UserEntity user) {
         super(fm);
         mUser = user;
     }
@@ -51,8 +52,8 @@ public class BioHeaderPageAdapter extends FragmentPagerAdapter {
 
 
     public static class BioFirstFragment extends Fragment {
-        private User mUser;
-        public static Fragment newInstance(User user) {
+        private UserEntity mUser;
+        public static Fragment newInstance(UserEntity user) {
             Bundle data = new Bundle();
             data.putSerializable(DataType.USER, user);
             Fragment f = new BioFirstFragment();
@@ -63,7 +64,7 @@ public class BioHeaderPageAdapter extends FragmentPagerAdapter {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            mUser = (User)getArguments().getSerializable(DataType.USER);
+            mUser = (UserEntity) getArguments().getSerializable(DataType.USER);
         }
 
         @Override
@@ -92,8 +93,8 @@ public class BioHeaderPageAdapter extends FragmentPagerAdapter {
 
 
     public static class BioSecondFragment extends Fragment {
-        private User mUser;
-        public static Fragment newInstance(User user) {
+        private UserEntity mUser;
+        public static Fragment newInstance(UserEntity user) {
             Bundle data = new Bundle();
             data.putSerializable(DataType.USER, user);
             Fragment f = new BioSecondFragment();
@@ -104,7 +105,7 @@ public class BioHeaderPageAdapter extends FragmentPagerAdapter {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            mUser = (User)getArguments().getSerializable(DataType.USER);
+            mUser = (UserEntity) getArguments().getSerializable(DataType.USER);
         }
 
         @Override
@@ -122,8 +123,8 @@ public class BioHeaderPageAdapter extends FragmentPagerAdapter {
 
 
     public static class BioThirdFragment extends Fragment {
-        private User mUser;
-        public static Fragment newInstance(User user) {
+        private UserEntity mUser;
+        public static Fragment newInstance(UserEntity user) {
             Bundle data = new Bundle();
             data.putSerializable(DataType.USER, user);
             Fragment f = new BioThirdFragment();
@@ -134,7 +135,7 @@ public class BioHeaderPageAdapter extends FragmentPagerAdapter {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            mUser = (User)getArguments().getSerializable(DataType.USER);
+            mUser = (UserEntity) getArguments().getSerializable(DataType.USER);
         }
 
         @Override

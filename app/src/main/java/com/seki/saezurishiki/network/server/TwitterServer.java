@@ -217,7 +217,9 @@ public class TwitterServer  {
     }
 
     public UserEntity map(User user) {
-        return this.mapper.map(user);
+        final UserEntity userEntity = this.mapper.map(user);
+        this.USER.put(userEntity.getId(), userEntity);
+        return userEntity;
     }
 
     public List<UserEntity> addUsers(List<User> users) {

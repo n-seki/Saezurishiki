@@ -30,6 +30,7 @@ import com.seki.saezurishiki.application.SaezurishikiApp;
 import com.seki.saezurishiki.control.CustomToast;
 import com.seki.saezurishiki.control.StatusUtil;
 import com.seki.saezurishiki.entity.TweetEntity;
+import com.seki.saezurishiki.entity.UserEntity;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
 import com.seki.saezurishiki.presenter.editor.TweetEditorPresenter;
 import com.seki.saezurishiki.view.customview.TweetTextEditor;
@@ -113,7 +114,7 @@ public class EditTweetFragment extends Fragment implements TweetEditorPresenter.
     }
 
 
-    public static EditTweetFragment newReplyEditorFromUser(User user) {
+    public static EditTweetFragment newReplyEditorFromUser(UserEntity user) {
         Bundle data = new Bundle();
         data.putSerializable(DataType.USER, user);
         data.putInt(EDITOR_TYPE, IS_REPLY | FROM_USER);
@@ -341,7 +342,7 @@ public class EditTweetFragment extends Fragment implements TweetEditorPresenter.
 
 
     private void setupReplyToUserView(View rootView) {
-        User user = (User) getArguments().getSerializable(DataType.USER);
+        UserEntity user = (UserEntity) getArguments().getSerializable(DataType.USER);
         String replyName = user.getScreenName();
         TweetTextEditor tweetTextEditor = (TweetTextEditor)rootView.findViewById(R.id.tweet_editor);
         tweetTextEditor.setUserName(replyName);

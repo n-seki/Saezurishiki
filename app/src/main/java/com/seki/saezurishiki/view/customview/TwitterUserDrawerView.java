@@ -10,6 +10,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.seki.saezurishiki.R;
+import com.seki.saezurishiki.entity.UserEntity;
 import com.seki.saezurishiki.view.adapter.DrawerButtonListAdapter;
 import com.seki.saezurishiki.control.UIControlUtil;
 import com.squareup.picasso.Picasso;
@@ -36,7 +37,7 @@ public class TwitterUserDrawerView extends NavigationView {
     }
 
 
-    public synchronized void updateUser(User user) {
+    public synchronized void updateUser(UserEntity user) {
         if (user == null) {
             throw new NullPointerException("UserEntity is null!");
         }
@@ -61,7 +62,7 @@ public class TwitterUserDrawerView extends NavigationView {
         this.buttonListAdapter = adapter;
     }
 
-    private void updateButtonAdapter(User user) {
+    private void updateButtonAdapter(UserEntity user) {
         if (!buttonListAdapter.isEmpty()) {
             buttonListAdapter.clear();
         }

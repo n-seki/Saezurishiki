@@ -71,7 +71,7 @@ public abstract class UsersListFragment extends Fragment implements UserListPres
     @Override
     public void showUser(UserEntity user) {
         Intent intent = new Intent(getActivity(), UserActivity.class);
-        intent.putExtra(UserActivity.USER, user);
+        intent.putExtra(UserActivity.USER_ID, user.getId());
         startActivity(intent);
     }
 

@@ -72,11 +72,8 @@ public class UserEntity implements Serializable {
         return mUser.getProfileBannerURL();
     }
 
-
-
-
-
-
-
+    public String getURL() {
+        return mUser.getURL();
+    }
 }
 
