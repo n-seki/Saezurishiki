@@ -8,8 +8,8 @@ android {
         applicationId "com.seki.saezurishiki"
         minSdkVersion 14
         targetSdkVersion 25
-        versionCode 18
-        versionName "1.68"
+        versionCode 19
+        versionName "1.70"
 
         jackOptions {
             enabled true
