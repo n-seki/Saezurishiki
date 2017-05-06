@@ -173,4 +173,7 @@
     <string name="do_you_retweet">リツイートしますか？</string>
     <string name="do_you_un_favorite">あんふぁぼしますか？</string>
     <string name="do_you_favorite">ふぁぼしますか？</string>
+    <string name="library3">Conceal</string>
+    <string name="library_link3">https://facebook.github.io/conceal/</string>
+    <string name="license_description2">囀り式は、BSD License の下で提供される以下のライブラリを使用しています</string>
 </resources>

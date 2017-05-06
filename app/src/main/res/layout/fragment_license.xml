@@ -64,6 +64,32 @@
         android:text="@string/library_link2"/>
 
     <TextView
+        android:id="@+id/description_text2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:autoLink="web"
+        android:text="@string/license_description2"
+        android:layout_marginTop="8dp"/>
+
+    <TextView
+        android:id="@+id/library_name3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:text="@string/library3"/>
+
+    <TextView
+        android:id="@+id/library_link3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:autoLink="web"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:text="@string/library_link3"/>
+
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/about_version"
