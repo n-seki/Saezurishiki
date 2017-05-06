@@ -158,7 +158,9 @@ public class TwitterServer  {
     }
 
     public void add(List<Status> tweets) {
-        tweets.forEach(this.ALL_STATUS::add);
+        for (Status status : tweets) {
+            this.ALL_STATUS.add(status);
+        }
     }
 
     public TweetEntity map(Status status) {

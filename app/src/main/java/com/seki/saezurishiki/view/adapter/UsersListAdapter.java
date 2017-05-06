@@ -81,6 +81,8 @@ public class UsersListAdapter extends ArrayAdapter<Long> {
 
 
     public void addAll(List<UserEntity> users) {
-        users.forEach(user -> add(user.getId()));
+        for (UserEntity user : users) {
+            this.add(user.getId());
+        }
     }
 }

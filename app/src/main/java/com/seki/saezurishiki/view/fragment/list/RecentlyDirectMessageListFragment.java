@@ -127,7 +127,7 @@ public class RecentlyDirectMessageListFragment extends Fragment implements Conne
 
     @Override
     public void onConnect() {
-        this.loadMessage();
+       // this.loadMessage();
     }
 
     @Override
