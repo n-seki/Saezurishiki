@@ -46,7 +46,7 @@ public class TimeLinePager extends FragmentPagerAdapter {
                 break;
 
             case POSITION_MESSAGE:
-                fragment = RecentlyDirectMessageListFragment.getInstance(POSITION_MESSAGE);
+                fragment = Fragments.createInjectRecentlyDMListFragment(POSITION_MESSAGE);
                 break;
 
             default :

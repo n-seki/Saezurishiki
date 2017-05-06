@@ -8,96 +8,126 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.seki.saezurishiki.application.SaezurishikiApp;
 import com.seki.saezurishiki.R;
-import com.seki.saezurishiki.view.adapter.AdapterItem;
-import com.seki.saezurishiki.view.adapter.DirectMessageAdapter;
+import com.seki.saezurishiki.application.SaezurishikiApp;
 import com.seki.saezurishiki.control.UIControlUtil;
+import com.seki.saezurishiki.entity.DirectMessageEntity;
 import com.seki.saezurishiki.file.SharedPreferenceUtil;
+import com.seki.saezurishiki.model.adapter.RequestInfo;
 import com.seki.saezurishiki.network.ConnectionReceiver;
-import com.seki.saezurishiki.network.twitter.AsyncTwitterTask;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
-import com.seki.saezurishiki.network.twitter.TwitterError;
-import com.seki.saezurishiki.network.twitter.TwitterTaskResult;
-import com.seki.saezurishiki.network.twitter.TwitterWrapper;
-import com.seki.saezurishiki.network.twitter.streamListener.DirectMessageUserStreamListener;
+import com.seki.saezurishiki.presenter.list.RecentlyDirectMessageListPresenter;
+import com.seki.saezurishiki.view.adapter.DirectMessageAdapter;
+import com.seki.saezurishiki.view.adapter.ListElement;
 import com.seki.saezurishiki.view.control.RequestTabState;
 import com.seki.saezurishiki.view.control.TabManagedView;
 import com.seki.saezurishiki.view.control.TabViewControl;
 
 import java.util.List;
 
-import twitter4j.DirectMessage;
-import twitter4j.Paging;
-import twitter4j.TwitterException;
-
-/**
- * ダイレクトメッセージ一覧表示Fragment<br>
- * ログインユーザーが受信しているメッセージを時系列順に表紙します
- * @author seki
- */
-public class RecentlyDirectMessageListFragment extends Fragment implements DirectMessageUserStreamListener, ConnectionReceiver.Observer, TabManagedView{
+public class RecentlyDirectMessageListFragment extends Fragment implements ConnectionReceiver.Observer, TabManagedView, RecentlyDirectMessageListPresenter.View{
 
     private DirectMessageAdapter mAdapter;
-    private boolean isLoading;
     private CallBack mCallBack;
-    private TwitterWrapper mTwitterTask;
     private long mLastUnreadMessageId;
     private TwitterAccount twitterAccount;
     private TabViewControl tabViewControl;
     private int tabPosition;
     private SwipeRefreshLayout refreshLayout;
 
+    private RecentlyDirectMessageListPresenter presenter;
+
     private static final String TAB_POSITION = "tab-position";
 
-    private void computeAdd(DirectMessage message) {
-        long targetSenderId = message.getSenderId();
-
-        for(int i = 0; i < mAdapter.getCount(); i++) {
-            AdapterItem item = mAdapter.getItem(i);
-            final DirectMessage m = this.twitterAccount.getRepository().getDM(item.itemID);
-            if (targetSenderId == m.getSenderId()) {
-                if (message.getId() > m.getId()) {
-                    mAdapter.setNotifyOnChange(false);
-                    mAdapter.remove(item);
-                    mAdapter.insert(message.getId(), 0);
-                    mAdapter.setNotifyOnChange(true);
-                    mAdapter.notifyDataSetChanged();
-                }
-                return;
-            }
-        }
-
-        if (message.getId() <= mLastUnreadMessageId) {
-            mAdapter.addSeenItem(message.getId());
-        } else {
-            mAdapter.add(message);
-        }
+    public interface CallBack {
+        void displayDirectMessageEditor(long messageId);
     }
 
+    public static RecentlyDirectMessageListFragment getInstance(int tabPosition) {
+        Bundle data = new Bundle();
+        data.putInt(TAB_POSITION, tabPosition);
+        RecentlyDirectMessageListFragment fragment = new RecentlyDirectMessageListFragment();
+        fragment.setArguments(data);
+        return fragment;
+    }
 
-    private void computeAdd(List<DirectMessage> messages) {
-        for (DirectMessage message : messages) {
-            computeAdd(message);
+    @Override public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        SaezurishikiApp app = (SaezurishikiApp)getActivity().getApplication();
+        this.twitterAccount = app.getTwitterAccount();
+        mAdapter = new DirectMessageAdapter(getActivity(), R.layout.direct_message_layout);
+        mAdapter.setBackgroundColor();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mLastUnreadMessageId = this.readLastID();
+        mCallBack = (CallBack) getActivity();
+        this.tabPosition = getArguments().getInt(TAB_POSITION);
+        this.tabViewControl = (TabViewControl)getActivity();
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        ConnectionReceiver.addObserver(this);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_list_swipe_refresh, container, false);
+        this.initComponents(view);
+
+        view.setBackgroundColor(UIControlUtil.backgroundColor(getActivity()));
+
+        return view;
+    }
+
+    private void initComponents(View view) {
+        ListView list = (ListView) view.findViewById(R.id.list);
+        list.setOnItemClickListener((parent, view1, position, id) -> {
+            final ListElement item = mAdapter.getItem(position);
+            presenter.onItemClick(item);
+        });
+
+        list.setSmoothScrollbarEnabled(true);
+        list.setAdapter(mAdapter);
+
+        this.refreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swipe_refresh);
+        this.refreshLayout.setColorSchemeColors(UIControlUtil.colorAccent(getActivity(), twitterAccount.setting.getTheme()));
+        this.refreshLayout.setOnRefreshListener(RecentlyDirectMessageListFragment.this::onSwipeRefresh);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        this.presenter.onResume();
+        if (mAdapter.isEmpty()) {
+            this.presenter.request(new RequestInfo().count(50));
         }
     }
 
     @Override
-    public void onConnect() {
-        this.loadMessageComputeAdd();
+    public void onPause() {
+        super.onPause();
+        this.presenter.onPause();
     }
 
-
-    private void loadMessageComputeAdd() {
-        if (mAdapter.isEmpty()) {
-            this.loadDirectMessage(new Paging().count(50));
-            this.loadSendDirectMessage();
-        } else {
-            this.loadDirectMessage(new Paging().sinceId(mAdapter.getItem(mAdapter.getCount()-1).itemID));
+    @Override
+    public void onStop() {
+        if (!mAdapter.isEmpty()) {
+            this.write("message", mAdapter.lastReadId());
         }
+
+        super.onStop();
+    }
+
+    @Override
+    public void onConnect() {
+        this.loadMessage();
     }
 
     @Override
@@ -105,13 +135,9 @@ public class RecentlyDirectMessageListFragment extends Fragment implements Direc
         //do nothing
     }
 
-    @Override
-    public void onDirectMessage(DirectMessage directMessage) {
-        if (directMessage.getSenderId() == this.twitterAccount.getLoginUserId()) {
-            return;
-        }
-
-        computeAdd(directMessage);
+    private void loadMessage() {
+        final RequestInfo info = new RequestInfo().count(50).sinceID(mAdapter.getLatestItemId() - 1);
+        this.presenter.request(info);
     }
 
     @Override
@@ -124,157 +150,39 @@ public class RecentlyDirectMessageListFragment extends Fragment implements Direc
         return () -> RecentlyDirectMessageListFragment.this.mAdapter.containsUnreadItem();
     }
 
-    public interface CallBack {
-        void displayDirectMessageEditor(long messageId);
-    }
-
-
-    public static Fragment getInstance(int tabPosition) {
-        Bundle data = new Bundle();
-        data.putInt(TAB_POSITION, tabPosition);
-        Fragment fragment = new RecentlyDirectMessageListFragment();
-        fragment.setArguments(data);
-        return fragment;
-    }
-
-    @Override public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        SaezurishikiApp app = (SaezurishikiApp)getActivity().getApplication();
-        this.twitterAccount = app.getTwitterAccount();
-        this.twitterAccount.addStreamListener(this);
-        mAdapter = new DirectMessageAdapter(getActivity(), R.layout.direct_message_layout, twitterAccount.getRepository());
-        mAdapter.setBackgroundColor();
-        mTwitterTask = new TwitterWrapper(getActivity(), getLoaderManager(), twitterAccount);
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        ConnectionReceiver.addObserver(this);
-    }
-
-
-    @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_list_swipe_refresh, container, false);
-        this.initComponents(view);
-
-        view.setBackgroundColor(UIControlUtil.backgroundColor(getActivity()));
-
-        return view;
-    }
-
-
-
-    private void initComponents(View view) {
-        ListView list = (ListView) view.findViewById(R.id.list);
-        list.setOnItemClickListener((parent, view1, position, id) -> {
-            AdapterItem item = mAdapter.getItem(position);
-            if (!item.isSeen) {
-                item.see();
-                mAdapter.notifyDataSetChanged();
-            }
-            RecentlyDirectMessageListFragment.this.openDirectMessageEditor(mAdapter.getItemId(position));
-        });
-
-        list.setSmoothScrollbarEnabled(true);
-        list.setAdapter(mAdapter);
-
-        this.refreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swipe_refresh);
-        this.refreshLayout.setColorSchemeColors(UIControlUtil.colorAccent(getActivity(), twitterAccount.setting.getTheme()));
-        this.refreshLayout.setOnRefreshListener(RecentlyDirectMessageListFragment.this::onSwipeRefresh);
-    }
-
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        mLastUnreadMessageId = this.readLastID();
-        mCallBack = (CallBack) getActivity();
-        this.tabPosition = getArguments().getInt(TAB_POSITION);
-        this.tabViewControl = (TabViewControl)getActivity();
-    }
-
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        this.refreshLayout.setRefreshing(false);
-        this.isLoading = false;
-    }
-
-    @Override
-    public void onStop() {
-        if (!mAdapter.isEmpty()) {
-            this.write("message", mAdapter.lastReadId());
-        }
-
-        super.onStop();
-    }
-
-
-    @Override
-    public void onDestroy() {
-        this.twitterAccount.removeListener(this);
-        super.onDestroy();
-    }
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (mAdapter.isEmpty()) {
-            this.loadDirectMessage(new Paging().count(50));
-            this.loadSendDirectMessage();
-        }
-    }
-
     private void onSwipeRefresh() {
-        this.refreshLayout.setRefreshing(true);
-        this.loadMessageComputeAdd();
+        //this.presenter.onSwipeRefresh(new RequestInfo().count(50).sinceID(mAdapter.getLatestItemId()));
+        this.refreshLayout.setRefreshing(false);
     }
 
-
-    private void loadDirectMessage(Paging paging) {
-        if (isLoading) return;
-
-        isLoading = true;
-        AsyncTwitterTask.AfterTask<List<DirectMessage>> afterTask = result -> {
-            isLoading = false;
-            refreshLayout.setRefreshing(false);
-            if (result.isException()) {
-                RecentlyDirectMessageListFragment.this.errorProcess(result.getException());
-                return;
-            }
-            twitterAccount.getRepository().addDM(result.getResult());
-            computeAdd(result.getResult());
-        };
-
-        mTwitterTask.getDirectMessage(afterTask, paging);
+    @Override
+    public void loadMessages(List<DirectMessageEntity> messages) {
+        this.mAdapter.updateIfSameUserMessage(messages);
     }
 
-
-    private void openDirectMessageEditor(long messageId) {
-        mCallBack.displayDirectMessageEditor(messageId);
+    @Override
+    public void updateList(DirectMessageEntity message) {
+        this.mAdapter.updateIfSameUserMessage(message);
     }
 
-    private void loadSendDirectMessage() {
-        AsyncTwitterTask.AfterTask<List<DirectMessage>> afterTask1 = result -> {
-            if (result.isException()) {
-                return;
-            }
-
-            twitterAccount.getRepository().addSentDM(result.getResult());
-        };
-
-        mTwitterTask.getSentDirectMessage(afterTask1);
+    @Override
+    public void updateList() {
+        this.mAdapter.notifyDataSetChanged();
     }
 
-
-    private void errorProcess(TwitterException exception) {
-        TwitterError.showText(getActivity(), exception);
+    @Override
+    public void setSwipeRefreshState(boolean state) {
+        this.refreshLayout.setRefreshing(state);
     }
 
+    public void openDirectMessageEditor(long messageId) {
+        this.mCallBack.displayDirectMessageEditor(messageId);
+    }
+
+    @Override
+    public void setPresenter(RecentlyDirectMessageListPresenter presenter) {
+        this.presenter = presenter;
+    }
 
     protected long readLastID() {
         SharedPreferences preferences = getActivity().getSharedPreferences("LatestSeenId", Context.MODE_PRIVATE);
@@ -284,7 +192,6 @@ public class RecentlyDirectMessageListFragment extends Fragment implements Direc
     public synchronized void write(String key, long id) {
         SharedPreferenceUtil.writeLatestID(getActivity(), key, id);
     }
-
 
     @Override
     public String toString() {

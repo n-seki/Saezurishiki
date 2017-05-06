@@ -1,9 +1,10 @@
 package com.seki.saezurishiki.network.server;
 
-import com.seki.saezurishiki.entity.UserEntity;
-import com.seki.saezurishiki.entity.mapper.EntityMapper;
+import com.seki.saezurishiki.entity.DirectMessageEntity;
 import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.entity.TwitterEntity;
+import com.seki.saezurishiki.entity.UserEntity;
+import com.seki.saezurishiki.entity.mapper.EntityMapper;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,15 +18,11 @@ import twitter4j.Status;
 import twitter4j.StatusDeletionNotice;
 import twitter4j.User;
 
-/**
- * 各Serverの管理クラス<br>
- * @author seki
- */
 public class TwitterServer  {
 
     private final StatusServer ALL_STATUS;
-    private final Map<Long, DirectMessage> SENT_DM;
-    private final Map<Long, DirectMessage> DM;
+    private final Map<Long, DirectMessageEntity> SENT_DM;
+    private final Map<Long, DirectMessageEntity> DM;
     private final Map<Long, UserEntity> USER;
     
     private final EntityMapper mapper;
@@ -50,11 +47,6 @@ public class TwitterServer  {
 
     public TweetEntity getTweet(long statusId) {
         return (TweetEntity)ALL_STATUS.get(statusId);
-    }
-
-    public TwitterEntity getTwitterEntity(long id) {
-        //TODO
-        return ALL_STATUS.get(id);
     }
 
     public boolean hasStatus(long statusId) {
@@ -86,34 +78,19 @@ public class TwitterServer  {
         }
     }
 
-    public void addSentDM(DirectMessage message) {
-        SENT_DM.put(message.getId(), message);
+    public DirectMessageEntity addSentDM(DirectMessage message) {
+        final DirectMessageEntity dm = this.mapper.map(message);
+        SENT_DM.put(dm.getId(), dm);
+        return dm;
     }
 
-
-//    public boolean hasSentDM() {
-//        return !SENT_DM.isEmpty();
-//    }
-//
-//
-//    public List<DirectMessage> getSentDM(long recipientUserId) {
-//        List<DirectMessage> list = new ArrayList<>();
-//        Collection<DirectMessage> messages = SENT_DM.values();
-//        for (DirectMessage message : messages) {
-//            if (message.getRecipient().getId() == recipientUserId) {
-//                list.add(message);
-//            }
-//        }
-//
-//        return list;
-//    }
 
 
     public List<Long> getSentDMId(long recipientUserId) {
         List<Long> list = new ArrayList<>();
-        Collection<DirectMessage> messages = SENT_DM.values();
-        for (DirectMessage message : messages) {
-            if (message.getRecipient().getId() == recipientUserId) {
+        Collection<DirectMessageEntity> messages = SENT_DM.values();
+        for (DirectMessageEntity message : messages) {
+            if (message.recipientId == recipientUserId) {
                 list.add(message.getId());
             }
         }
@@ -122,37 +99,29 @@ public class TwitterServer  {
     }
 
 
-    public void addDM(List<DirectMessage> list) {
+    public List<DirectMessageEntity> addDM(List<DirectMessage> list) {
+        final List<DirectMessageEntity> mappedList = new ArrayList<>();
         for (DirectMessage message : list) {
-            addDM(message);
+            final DirectMessageEntity entity = this.mapper.map(message);
+            DM.put(entity.getId(), entity);
+            mappedList.add(entity);
         }
+
+        return mappedList;
     }
 
-    public void addDM(DirectMessage message) {
-        DM.put(message.getId(), message);
+    public DirectMessageEntity addDM(DirectMessage message) {
+        final DirectMessageEntity dm = this.mapper.map(message);
+        DM.put(dm.getId(), dm);
+        return dm;
     }
 
-//    public boolean hasDM() {
-//        return !DM.isEmpty();
-//    }
-//
-//    public List<DirectMessage> getDMByUser(long senderId) {
-//        List<DirectMessage> list = new ArrayList<>();
-//        Collection<DirectMessage> messages = DM.values();
-//        for (DirectMessage message : messages) {
-//            if (message.getSenderId() == senderId) {
-//                list.add(message);
-//            }
-//        }
-//
-//        return list;
-//    }
 
     public List<Long> getDMIdByUser(long senderId) {
         List<Long> list = new ArrayList<>();
-        Collection<DirectMessage> messages = DM.values();
-        for (DirectMessage message : messages) {
-            if (message.getSenderId() == senderId) {
+        Collection<DirectMessageEntity> messages = DM.values();
+        for (DirectMessageEntity message : messages) {
+            if (message.sender.getId() == senderId) {
                 list.add(message.getId());
             }
         }
@@ -161,22 +130,13 @@ public class TwitterServer  {
     }
 
 
-    public DirectMessage getDM(long messageId) {
+    public DirectMessageEntity getDM(long messageId) {
         return DM.get(messageId);
     }
 
-    public DirectMessage findDM(long messageId) {
+    public DirectMessageEntity findDM(long messageId) {
         if (DM.containsKey(messageId)) return DM.get(messageId);
         return SENT_DM.get(messageId);
-    }
-
-    public List<DirectMessage> getAllDM() {
-        List<DirectMessage> list = new ArrayList<>();
-        for (DirectMessage message : DM.values()) {
-            list.add(message);
-        }
-
-        return list;
     }
 
 
@@ -198,9 +158,7 @@ public class TwitterServer  {
     }
 
     public void add(List<Status> tweets) {
-        for (Status status : tweets) {
-            this.ALL_STATUS.add(status);
-        }
+        tweets.forEach(this.ALL_STATUS::add);
     }
 
     public TweetEntity map(Status status) {

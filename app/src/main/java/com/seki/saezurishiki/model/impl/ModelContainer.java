@@ -1,5 +1,7 @@
 package com.seki.saezurishiki.model.impl;
 
+import com.seki.saezurishiki.model.DirectMessageListModel;
+import com.seki.saezurishiki.model.GetDirectMessageById;
 import com.seki.saezurishiki.model.GetTweetById;
 import com.seki.saezurishiki.model.GetUserById;
 import com.seki.saezurishiki.model.TweetListModel;
@@ -19,8 +21,10 @@ public final class ModelContainer {
     private static TweetListModel searchTweetModel;
     private static GetTweetById   getTweetById;
     private static GetUserById    getUserById;
+    private static GetDirectMessageById getDirectMessageById;
     private static UserListModel  friendListModel;
     private static UserListModel  followerListMode;
+    private static DirectMessageListModel directMessageListModel;
 
     private ModelContainer() {
         //no instance
@@ -36,8 +40,11 @@ public final class ModelContainer {
         searchTweetModel = new SearchTweetModel(account);
         getTweetById = new GetTweetByIdImp(account);
         getUserById = new GetUserByIdImp(account);
+        getDirectMessageById = new GetDirectMessageByIdImp(account);
         friendListModel = new FriendListModel(account);
         followerListMode = new FollowerListModel(account);
+        directMessageListModel = new DirectMessageListModelImp(account);
+
     }
 
     public static void destroy() {
@@ -50,8 +57,10 @@ public final class ModelContainer {
         searchTweetModel = null;
         getTweetById = null;
         getUserById = null;
+        getDirectMessageById = null;
         friendListModel = null;
         followerListMode = null;
+        directMessageListModel = null;
     }
 
     public static UserScreenModel getUserScreenModel() {
@@ -86,11 +95,19 @@ public final class ModelContainer {
         return getUserById;
     }
 
+    public static GetDirectMessageById getDirectMessageById() {
+        return getDirectMessageById;
+    }
+
     public static UserListModel getFriendListModel() {
         return friendListModel;
     }
 
     public static UserListModel getFollowerListMode() {
         return followerListMode;
+    }
+
+    public static DirectMessageListModel getDirectMessageListModel() {
+        return directMessageListModel;
     }
 }

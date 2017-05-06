@@ -35,7 +35,7 @@ import static com.seki.saezurishiki.control.UIControlUtil.createMediaURLList;
 import static com.seki.saezurishiki.control.UIControlUtil.formatDate;
 
 
-public class TimeLineAdapter extends ArrayAdapter<TimeLineAdapter.ListElement> {
+public class TimeLineAdapter extends ArrayAdapter<ListElement> {
 
     private LayoutInflater mLayoutInflater;
     private Context mContext;
@@ -52,34 +52,6 @@ public class TimeLineAdapter extends ArrayAdapter<TimeLineAdapter.ListElement> {
     private final Setting.ButtonActionPattern RETWEET_BUTTON_ACTION;
 
     private Map<Long, LoadButton> buttons;
-
-    public static class ListElement {
-        public final long id;
-        boolean isSeen;
-
-        private ListElement(long id, boolean isSeen) {
-            this.id = id;
-            this.isSeen = isSeen;
-        }
-
-        public void see() {
-            this.isSeen = true;
-        }
-
-        public boolean isSeen() {
-            return this.isSeen;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (!(o instanceof ListElement)) {
-                return false;
-            }
-
-            final ListElement le = (ListElement)o;
-            return this.id == le.id;
-        }
-    }
 
     public interface ViewListener {
         void onClickPicture(String pictureURL, TweetEntity status);
@@ -353,8 +325,6 @@ public class TimeLineAdapter extends ArrayAdapter<TimeLineAdapter.ListElement> {
             mListener.onClickQuotedTweet(status);
         }
     };
-
-
 
 
     private void setUserIcon(TweetEntity status, ViewHolder holder) {

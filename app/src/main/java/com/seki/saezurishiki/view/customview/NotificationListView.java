@@ -8,8 +8,7 @@ import android.view.View;
 import android.widget.ListView;
 
 import com.seki.saezurishiki.control.UIControlUtil;
-import com.seki.saezurishiki.entity.TwitterEntity;
-import com.seki.saezurishiki.view.adapter.TimeLineAdapter;
+import com.seki.saezurishiki.view.adapter.ListElement;
 
 
 public class NotificationListView extends ListView {
@@ -36,7 +35,7 @@ public class NotificationListView extends ListView {
         boolean isChangedColor = false;
         for (int position = firstVisibleItem; position < firstVisibleItem + visibleItemCount - 1; position++) {
             @SuppressWarnings("unchecked")
-            TimeLineAdapter.ListElement listElement = (TimeLineAdapter.ListElement) getItemAtPosition(position);
+            ListElement listElement = (ListElement) getItemAtPosition(position);
 
             if (listElement == null) {
                 continue;

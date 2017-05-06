@@ -72,13 +72,11 @@ public class DirectMessageFragment extends Fragment implements DirectMessageUser
         this.twitterAccount.addStreamListener(this);
 
         mUserID = ((User)getArguments().getSerializable(DataType.USER)).getId();
-        mAdapter = new DirectMessageAdapter(getActivity(), R.layout.direct_message_layout, twitterAccount.getRepository());
+        mAdapter = new DirectMessageAdapter(getActivity(), R.layout.direct_message_layout);
         mTwitterTask = new TwitterWrapper(getActivity(), getLoaderManager(), this.twitterAccount);
 
         setHasOptionsMenu(true);
     }
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -88,28 +86,17 @@ public class DirectMessageFragment extends Fragment implements DirectMessageUser
         return rootView;
     }
 
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-    }
-
-
     @Override
     public void onDestroy() {
         this.twitterAccount.removeListener(this);
         super.onDestroy();
     }
 
-
     public void initComponents(final View rootView) {
         setupDirectMessageList(rootView);
 
         Button sendButton = (Button)rootView.findViewById(R.id.send_button);
         sendButton.setOnClickListener(v -> DirectMessageFragment.this.onClickSendButton(rootView));
-
-
     }
 
 
@@ -147,7 +134,6 @@ public class DirectMessageFragment extends Fragment implements DirectMessageUser
         }
     }
 
-
     private void sendDirectMessage(final String message) {
         AsyncTwitterTask.AfterTask<DirectMessage> afterTask = result -> {
             if (result.isException()) {
@@ -160,8 +146,6 @@ public class DirectMessageFragment extends Fragment implements DirectMessageUser
 
         mTwitterTask.sendDirectMessage(mUserID, message, afterTask);
     }
-
-
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

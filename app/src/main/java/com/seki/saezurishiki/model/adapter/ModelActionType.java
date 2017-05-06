@@ -12,6 +12,7 @@ public enum ModelActionType {
     RECEIVE_TWEET(true, DisplayType.ADD),
     RECEIVE_FAVORITE(true, DisplayType.UPDATE_UNLESS_MAIN),
     RECEIVE_UN_FAVORITE(true, DisplayType.UPDATE_UNLESS_MAIN),
+    RECEIVE_DIRECT_MESSAGE(true, DisplayType.ADD),
     RECEIVE_DELETION(true, DisplayType.UPDATE_UNLESS_MAIN),
 
     COMPLETE_FAVORITE(false, DisplayType.UPDATE),
@@ -29,6 +30,8 @@ public enum ModelActionType {
     COMPLETE_REMOVE(false, DisplayType.NO_DISPLAY),
     COMPLETE_BLOCK(false, DisplayType.NO_DISPLAY),
     COMPLETE_DESTROY_BLOCK(false, DisplayType.NO_DISPLAY),
+
+    LOAD_DIRECT_MESSAGE(false, DisplayType.ADD),
 
     ERROR(false, DisplayType.NO_DISPLAY);
 
