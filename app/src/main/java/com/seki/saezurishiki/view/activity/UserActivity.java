@@ -26,6 +26,7 @@ import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.application.SaezurishikiApp;
 import com.seki.saezurishiki.control.CustomToast;
 import com.seki.saezurishiki.control.FragmentController;
+import com.seki.saezurishiki.control.Setting;
 import com.seki.saezurishiki.entity.UserEntity;
 import com.seki.saezurishiki.model.impl.ModelContainer;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
@@ -51,6 +52,8 @@ public class UserActivity extends    AppCompatActivity
 
     private TwitterAccount twitterAccount;
 
+    private Setting setting;
+
     private UserPresenter presenter;
 
 
@@ -63,7 +66,8 @@ public class UserActivity extends    AppCompatActivity
         SaezurishikiApp app = (SaezurishikiApp)getApplication();
         this.twitterAccount = app.getTwitterAccount();
 
-        final int theme = this.twitterAccount.setting.getTheme();
+        this.setting = new Setting();
+        final int theme = this.setting.getTheme();
         setTheme(theme);
         setContentView(R.layout.activity_biography);
 

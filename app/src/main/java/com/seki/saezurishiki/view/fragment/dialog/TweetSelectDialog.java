@@ -9,6 +9,7 @@ import android.widget.ListView;
 
 import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.application.SaezurishikiApp;
+import com.seki.saezurishiki.control.Setting;
 import com.seki.saezurishiki.control.StatusUtil;
 import com.seki.saezurishiki.control.UIControlUtil;
 import com.seki.saezurishiki.entity.TweetEntity;
@@ -55,7 +56,7 @@ public class TweetSelectDialog extends DialogFragment {
 
         SaezurishikiApp app = (SaezurishikiApp) getActivity().getApplication();
         TwitterServer repository = app.getTwitterAccount().getRepository();
-        this.theme = app.getTwitterAccount().setting.getTheme();
+        this.theme = new Setting().getTheme();
 
         TweetEntity status = repository.getTweet(id);
         mStatus = status.isRetweet ? repository.getTweet(status.retweetedStatusId) : status;

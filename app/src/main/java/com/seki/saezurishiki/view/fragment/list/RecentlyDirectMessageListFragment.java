@@ -12,6 +12,7 @@ import android.widget.ListView;
 
 import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.application.SaezurishikiApp;
+import com.seki.saezurishiki.control.Setting;
 import com.seki.saezurishiki.control.UIControlUtil;
 import com.seki.saezurishiki.entity.DirectMessageEntity;
 import com.seki.saezurishiki.file.SharedPreferenceUtil;
@@ -37,6 +38,8 @@ public class RecentlyDirectMessageListFragment extends Fragment implements Conne
     private int tabPosition;
     private SwipeRefreshLayout refreshLayout;
 
+    private Setting setting;
+
     private RecentlyDirectMessageListPresenter presenter;
 
     private static final String TAB_POSITION = "tab-position";
@@ -59,6 +62,7 @@ public class RecentlyDirectMessageListFragment extends Fragment implements Conne
         this.twitterAccount = app.getTwitterAccount();
         mAdapter = new DirectMessageAdapter(getActivity(), R.layout.direct_message_layout);
         mAdapter.setBackgroundColor();
+        this.setting = new Setting();
     }
 
     @Override
@@ -97,7 +101,7 @@ public class RecentlyDirectMessageListFragment extends Fragment implements Conne
         list.setAdapter(mAdapter);
 
         this.refreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swipe_refresh);
-        this.refreshLayout.setColorSchemeColors(UIControlUtil.colorAccent(getActivity(), twitterAccount.setting.getTheme()));
+        this.refreshLayout.setColorSchemeColors(UIControlUtil.colorAccent(getActivity(), this.setting.getTheme()));
         this.refreshLayout.setOnRefreshListener(RecentlyDirectMessageListFragment.this::onSwipeRefresh);
     }
 

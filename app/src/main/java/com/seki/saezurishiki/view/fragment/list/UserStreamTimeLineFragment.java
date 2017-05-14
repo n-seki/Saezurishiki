@@ -10,6 +10,7 @@ import android.widget.AbsListView;
 import android.widget.ListView;
 
 import com.seki.saezurishiki.R;
+import com.seki.saezurishiki.control.Setting;
 import com.seki.saezurishiki.control.UIControlUtil;
 import com.seki.saezurishiki.entity.LoadButton;
 import com.seki.saezurishiki.entity.TweetEntity;
@@ -122,7 +123,7 @@ public class UserStreamTimeLineFragment extends TweetListFragment
         });
 
         mSwipeRefresher = (SwipeRefreshLayout)rootView.findViewById(R.id.swipe_refresh);
-        mSwipeRefresher.setColorSchemeColors(UIControlUtil.colorAccent(getActivity(), twitterAccount.setting.getTheme()));
+        mSwipeRefresher.setColorSchemeColors(UIControlUtil.colorAccent(getActivity(), new Setting().getTheme()));
         mSwipeRefresher.setOnRefreshListener(this::onRefresh);
     }
 

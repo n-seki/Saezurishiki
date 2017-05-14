@@ -8,25 +8,23 @@ import com.seki.saezurishiki.R;
 
 public final class Setting {
 
-    private final Context context;
-
     //default theme is light
-    private final int theme;
+    private static int theme;
 
     //default size is 14
-    private final int textSize;
+    private static int textSize;
 
     //default configuration is show
-    private final boolean showThumbnail;
+    private static boolean showThumbnail;
 
     //default is LONG_TAP
-    private final ButtonActionPattern favoriteButtonAction;
+    private static ButtonActionPattern favoriteButtonAction;
 
     //default is LONG_TAP
-    private final ButtonActionPattern reTweetButtonAction;
+    private static ButtonActionPattern reTweetButtonAction;
 
 
-    private final String DEFAULT_BUTTON_ACTION;
+    private static String DEFAULT_BUTTON_ACTION;
 
 
     public enum ButtonActionPattern {
@@ -57,27 +55,24 @@ public final class Setting {
         }
     }
 
-    public Setting(Context context) {
-
-        this.context = context;
-
+    public static void init(Context context) {
         DEFAULT_BUTTON_ACTION = context.getString(R.string.pref_default_action_button_operation);
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        this.theme = getTheme(sharedPref);
-        this.textSize = getTextSize(sharedPref);
-        this.showThumbnail = getShowThumbnail(sharedPref);
-        this.favoriteButtonAction = getFavoriteButtonAction(sharedPref);
-        this.reTweetButtonAction = getReTweetButtonAction(sharedPref);
+        theme = getTheme(sharedPref, context);
+        textSize = getTextSize(sharedPref, context);
+        showThumbnail = getShowThumbnail(sharedPref, context);
+        favoriteButtonAction = getFavoriteButtonAction(sharedPref, context);
+        reTweetButtonAction = getReTweetButtonAction(sharedPref, context);
     }
 
-    private int getTheme(SharedPreferences sharedPreferences) {
+    private static int getTheme(SharedPreferences sharedPreferences, Context context) {
         String theme = sharedPreferences.getString(context.getString(R.string.pref_theme_key), "");
-        return convertTheme(theme);
+        return convertTheme(theme, context);
     }
 
 
-    private int convertTheme(String theme) {
+    private static int convertTheme(String theme, Context context) {
         if (theme.equals(context.getString(R.string.pref_theme_color_default))) {
             return R.style.AppTheme_Dark;
         }
@@ -85,25 +80,25 @@ public final class Setting {
     }
 
 
-    private int getTextSize(SharedPreferences sharedPreferences) {
+    private static int getTextSize(SharedPreferences sharedPreferences, Context context) {
         final String DEFAULT_TEXT_SIZE = "14";
 
         final String size = sharedPreferences.getString(context.getString(R.string.pref_text_size_key), DEFAULT_TEXT_SIZE);
         return Integer.parseInt(size);
     }
 
-    private boolean getShowThumbnail(SharedPreferences sharedPreferences) {
+    private static boolean getShowThumbnail(SharedPreferences sharedPreferences, Context context) {
         return sharedPreferences.getBoolean(context.getString(R.string.pref_show_thumbnail_key), true);
     }
 
-    private ButtonActionPattern getFavoriteButtonAction(SharedPreferences sharedPreferences) {
+    private static ButtonActionPattern getFavoriteButtonAction(SharedPreferences sharedPreferences, Context context) {
         final String symbol =
                 sharedPreferences.getString(context.getString(R.string.pref_favorite_operation_key), DEFAULT_BUTTON_ACTION);
 
         return ButtonActionPattern.convert(symbol);
     }
 
-    private ButtonActionPattern getReTweetButtonAction(SharedPreferences sharedPreferences) {
+    private static ButtonActionPattern getReTweetButtonAction(SharedPreferences sharedPreferences, Context context) {
         final String symbol =
                 sharedPreferences.getString(context.getString(R.string.pref_key_reTweet_operation), DEFAULT_BUTTON_ACTION);
 
@@ -111,18 +106,18 @@ public final class Setting {
     }
 
     public int getTheme() {
-        return this.theme;
+        return theme;
     }
 
     public int getTextSize() {
-        return this.textSize;
+        return textSize;
     }
 
     public boolean isShowThumbnail() {
-        return this.showThumbnail;
+        return showThumbnail;
     }
 
-    public ButtonActionPattern getFavoriteButtonAction() { return this.favoriteButtonAction; }
+    public ButtonActionPattern getFavoriteButtonAction() { return favoriteButtonAction; }
 
-    public ButtonActionPattern getReTweetButtonAction() { return this.reTweetButtonAction; }
+    public ButtonActionPattern getReTweetButtonAction() { return reTweetButtonAction; }
 }

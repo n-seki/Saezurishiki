@@ -5,7 +5,6 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Bundle;
 
-import com.seki.saezurishiki.control.Setting;
 import com.seki.saezurishiki.entity.mapper.EntityMapper;
 import com.seki.saezurishiki.file.SharedPreferenceUtil;
 import com.seki.saezurishiki.network.server.TwitterServer;
@@ -32,8 +31,6 @@ public class TwitterAccount implements Application.ActivityLifecycleCallbacks {
     private final TwitterServer twitterRepository;
     final Configuration conf;
 
-    public final Setting setting;
-
     public TwitterAccount(Context context) {
         this.context = context;
         this.accessToken = TwitterUtil.createLoginUserAccessToken(context);
@@ -42,8 +39,6 @@ public class TwitterAccount implements Application.ActivityLifecycleCallbacks {
         this.twitter = new TwitterFactory(conf).getInstance(this.accessToken);
         this.twitterRepository = new TwitterServer(new EntityMapper(this.loginUserId));
         this.streamManager = new UserStreamManager(this, context);
-
-        this.setting = new Setting(context);
     }
 
     public long getLoginUserId() {

@@ -12,6 +12,7 @@ import android.widget.ListView;
 
 import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.application.SaezurishikiApp;
+import com.seki.saezurishiki.control.Setting;
 import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.view.fragment.util.DataType;
 import com.seki.saezurishiki.view.fragment.dialog.adapter.DialogSelectAction;
@@ -41,7 +42,7 @@ public class TweetLongClickDialog extends DialogFragment {
         super.onCreate(savedInstanceState);
         mStatus = (TweetEntity) getArguments().getSerializable(DataType.STATUS);
 
-        this.theme = ((SaezurishikiApp)getActivity().getApplication()).getTwitterAccount().setting.getTheme();
+        this.theme = new Setting().getTheme();
     }
 
 

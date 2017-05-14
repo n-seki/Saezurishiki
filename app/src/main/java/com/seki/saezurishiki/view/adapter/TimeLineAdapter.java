@@ -44,6 +44,8 @@ public class TimeLineAdapter extends ArrayAdapter<ListElement> {
 
     private GetTweetById repositoryAccessor;
 
+    private Setting setting;
+
     private boolean backgroundChange = false;
 
     private final int TEXT_SIZE;
@@ -78,20 +80,21 @@ public class TimeLineAdapter extends ArrayAdapter<ListElement> {
         }
     }
 
-    public TimeLineAdapter(Context context, int resourceId, ViewListener listener, TwitterAccount account) {
+    public TimeLineAdapter(Context context, int resourceId, ViewListener listener) {
         super(context, resourceId);
 
         mLayoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mContext = context;
         mListener = listener;
-        TEXT_SIZE = account.setting.getTextSize();
-        SHOW_THUMBNAIL = account.setting.isShowThumbnail();
-        FAVORITE_BUTTON_ACTION = account.setting.getFavoriteButtonAction();
-        RETWEET_BUTTON_ACTION = account.setting.getReTweetButtonAction();
+        this.setting = new Setting();
+        TEXT_SIZE = this.setting.getTextSize();
+        SHOW_THUMBNAIL = this.setting.isShowThumbnail();
+        FAVORITE_BUTTON_ACTION = this.setting.getFavoriteButtonAction();
+        RETWEET_BUTTON_ACTION = this.setting.getReTweetButtonAction();
 
         this.repositoryAccessor = ModelContainer.getRepositoryAccessor();
 
-        buttons = new HashMap<>();
+        this.buttons = new HashMap<>();
     }
 
 

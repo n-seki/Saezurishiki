@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import com.seki.saezurishiki.application.SaezurishikiApp;
 import com.seki.saezurishiki.R;
+import com.seki.saezurishiki.control.Setting;
 import com.seki.saezurishiki.entity.UserEntity;
 import com.seki.saezurishiki.model.impl.ModelContainer;
 import com.seki.saezurishiki.view.adapter.DrawerButtonListAdapter;
@@ -110,6 +111,8 @@ public class LoginUserActivity extends    AppCompatActivity
 
     private TwitterUserDrawerView userDrawerView;
 
+    private Setting setting;
+
 
     private TwitterAccount twitterAccount;
 
@@ -136,7 +139,9 @@ public class LoginUserActivity extends    AppCompatActivity
         saezurishikiApp.createTwitterAccount();
         this.twitterAccount = saezurishikiApp.getTwitterAccount();
 
-        final int theme = this.twitterAccount.setting.getTheme();
+        Setting.init(this);
+        this.setting = new Setting();
+        final int theme = this.setting.getTheme();
         setTheme(theme);
         setContentView(R.layout.activity_home);
 

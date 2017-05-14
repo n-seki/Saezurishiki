@@ -87,7 +87,7 @@ public abstract class TweetListFragment extends Fragment
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mAdapter = new TimeLineAdapter(getActivity(), R.layout.tweet_layout_with_picture, presenter, twitterAccount);
+        mAdapter = new TimeLineAdapter(getActivity(), R.layout.tweet_layout_with_picture, presenter);
         mListView.setAdapter(mAdapter);
     }
 
