@@ -50,8 +50,6 @@ public class UserActivity extends    AppCompatActivity
     private FragmentController mFragmentController;
     private DrawerButtonListAdapter mListAdapter;
 
-    private TwitterAccount twitterAccount;
-
     private Setting setting;
 
     private UserPresenter presenter;
@@ -62,9 +60,6 @@ public class UserActivity extends    AppCompatActivity
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         super.onCreate(savedInstanceState);
-
-        SaezurishikiApp app = (SaezurishikiApp)getApplication();
-        this.twitterAccount = app.getTwitterAccount();
 
         this.setting = new Setting();
         final int theme = this.setting.getTheme();
