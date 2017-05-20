@@ -10,13 +10,14 @@ import com.facebook.crypto.CryptoConfig;
 import com.facebook.crypto.Entity;
 import com.facebook.crypto.exception.CryptoInitializationException;
 import com.facebook.crypto.exception.KeyChainException;
+import com.seki.saezurishiki.BuildConfig;
 
 import java.io.IOException;
 
 
 public final class EncryptUtil {
 
-    private final static Entity entity = Entity.create("saezurishiki");
+    private final static Entity entity = Entity.create(BuildConfig.ENCRYTP_NAME);
 
     //private final Crypto crypto;
 
