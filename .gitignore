@@ -9,3 +9,5 @@
 .idea/misc.xml
 
 build.gradle
+
+gradle.properties
