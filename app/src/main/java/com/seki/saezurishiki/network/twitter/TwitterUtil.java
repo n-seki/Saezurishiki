@@ -3,6 +3,7 @@ package com.seki.saezurishiki.network.twitter;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.seki.saezurishiki.BuildConfig;
 import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.file.EncryptUtil;
 
@@ -71,11 +72,9 @@ public final class TwitterUtil {
      * @return Configuration
      */
     static Configuration createConfiguration(Context context) {
-//        final String key = EncryptUtil.decrypt(context.getString(R.string.oauth_consumer_key), context);
-//        final String secret = EncryptUtil.decrypt(context.getString(R.string.oauth_consumer_secret), context);
         return new ConfigurationBuilder().setDispatcherImpl("twitter4j.DispatcherImpl")
-                .setOAuthConsumerKey(context.getString(R.string.oauth_consumer_key))
-                .setOAuthConsumerSecret(context.getString(R.string.oauth_consumer_secret))
+                .setOAuthConsumerKey(BuildConfig.TWITTER_CONSUMER_KEY)
+                .setOAuthConsumerSecret(BuildConfig.TWITTER_CONSUMER_SECRET)
                 .build();
 
     }
