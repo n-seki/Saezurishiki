@@ -17,7 +17,18 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField "String", "TWITTER_CONSUMER_KEY", "\"${project.property("twitter_consumer_key")}\""
+            buildConfigField "String", "TWITTER_CONSUMER_SECRET", "\"${project.property("twitter_consumer_secret")}\""
+            buildConfigField "String", "ENCRYTP_NAME", "\"${project.property("encrypt_name")}\""
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
         release {
+            buildConfigField "String", "TWITTER_CONSUMER_KEY", "\"${project.property("twitter_consumer_key")}\""
+            buildConfigField "String", "TWITTER_CONSUMER_SECRET", "\"${project.property("twitter_consumer_secret")}\""
+            buildConfigField "String", "ENCRYTP_NAME", "\"${project.property("encrypt_name")}\""
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

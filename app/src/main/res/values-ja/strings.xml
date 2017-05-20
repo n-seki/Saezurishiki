@@ -3,8 +3,6 @@
     <string name="app_name">囀り式</string>
 
     <string name="please_add_account">アカウントを追加してください</string>
-    <string name="oauth_consumer_key">xErr9otaGYvAJAYLRBAnFgzCq</string>
-    <string name="oauth_consumer_secret">HQvzieLqUq4HP0jWBAy60lKF8xlGZmkMgnuBgcprYByf0dsW5Q</string>
 
     <!--エラーメッセージ-->
     <string name="update_time_line_fail">ツイートを読み込めませんでした</string>
