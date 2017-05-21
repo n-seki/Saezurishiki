@@ -30,6 +30,10 @@ public class HomeTimeLinePresenter extends TweetListPresenter {
                 this.view.updateTweet((TweetEntity)message.data);
                 break;
 
+            case COMPLETE_RETWEET:
+                this.view.completeReTweet((TweetEntity)message.data);
+                break;
+
             case RECEIVE_TWEET:
                 this.view.catchNewTweet((TweetEntity)message.data);
                 break;

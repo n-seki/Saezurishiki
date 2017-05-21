@@ -29,6 +29,10 @@ public class ReplyTimeLinePresenter extends TweetListPresenter {
                 this.view.updateTweet((TweetEntity)message.data);
                 break;
 
+            case COMPLETE_RETWEET:
+                this.view.completeReTweet((TweetEntity)message.data);
+                break;
+
             case RECEIVE_TWEET:
                 final TweetEntity entity = (TweetEntity)message.data;
                 if (entity.isSentToLoginUser) {

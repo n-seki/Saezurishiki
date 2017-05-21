@@ -34,6 +34,10 @@ public class FavoriteListPresenter extends TweetListPresenter {
                 this.view.updateTweet((TweetEntity)message.data);
                 break;
 
+            case COMPLETE_RETWEET:
+                this.view.completeReTweet((TweetEntity)message.data);
+                break;
+
             case RECEIVE_FAVORITE :
             case RECEIVE_UN_FAVORITE :
                 if (message.source.isLoginUser) {

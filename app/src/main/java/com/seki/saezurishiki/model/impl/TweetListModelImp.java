@@ -92,7 +92,8 @@ abstract class TweetListModelImp extends ModelBaseImp implements TweetListModel 
         this.executor.execute(() -> {
             try {
                 final Status result = twitterAccount.twitter.retweetStatus(tweetEntity.getId());
-                final ModelMessage message = ModelMessage.of(ModelActionType.COMPLETE_RETWEET, result);
+                final TweetEntity tweet = twitterAccount.getRepository().map(result);
+                final ModelMessage message = ModelMessage.of(ModelActionType.COMPLETE_RETWEET, tweet);
                 observable.notifyObserver(message);
             } catch (TwitterException e) {
                 observable.notifyObserver(ModelMessage.error(e));
