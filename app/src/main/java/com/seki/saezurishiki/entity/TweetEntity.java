@@ -2,15 +2,17 @@ package com.seki.saezurishiki.entity;
 
 import android.support.annotation.NonNull;
 
+import com.seki.saezurishiki.control.UIControlUtil;
+import com.seki.saezurishiki.entity.mapper.EntityMapper;
+
 import java.io.Serializable;
-import java.util.Date;
+import java.util.List;
 
 import twitter4j.ExtendedMediaEntity;
 import twitter4j.HashtagEntity;
 import twitter4j.MediaEntity;
 import twitter4j.Status;
 import twitter4j.URLEntity;
-import twitter4j.User;
 import twitter4j.UserMentionEntity;
 
 public class TweetEntity implements TwitterEntity, Serializable, Comparable<TweetEntity> {
@@ -20,8 +22,8 @@ public class TweetEntity implements TwitterEntity, Serializable, Comparable<Twee
     public final boolean isSentByLoginUser;
     public final boolean isSentToLoginUser;
 
-    public final User user;
-    public final Date createdAt;
+    public final UserEntity user;
+    public final String createdAt;
     public final String text;
     public final long inReplyToStatusId;
     public final long inReplyToUserId;
@@ -30,27 +32,30 @@ public class TweetEntity implements TwitterEntity, Serializable, Comparable<Twee
     public final int favoriteCount;
     public final boolean isRetweet;
     public final boolean isRetweeted;
+    public final TweetEntity retweet;
     public final int reTweetCount;
     public final boolean isRetweetedbyLoginUser;
     public final long retweetedStatusId;
     public final boolean hasQuotedStatus;
     public final long quotedStatusId;
+    public final TweetEntity quotedTweet;
     public final UserMentionEntity[] userMentionEntities;
     public final URLEntity[] urlEntities;
     public final HashtagEntity[] hashtagEntities;
     public final MediaEntity[] mediaEntities;
     public final ExtendedMediaEntity[] extendedMediaEntities;
+    public final List<String> mediaUrlList;
 
 
     private final long id;
 
-    public TweetEntity(Status status, boolean isLoginUserStatus, boolean isReplyToLoginUser) {
+    public TweetEntity(Status status, boolean isLoginUserStatus, boolean isReplyToLoginUser, EntityMapper mapper) {
         this.isDelete = false;
         this.isSentByLoginUser = isLoginUserStatus;
         this.isSentToLoginUser = isReplyToLoginUser;
 
-        this.user = status.getUser();
-        this.createdAt = status.getCreatedAt();
+        this.user = mapper.map(status.getUser());
+        this.createdAt = UIControlUtil.formatDate(status.getCreatedAt());
         this.text = status.getText();
         this.inReplyToStatusId = status.getInReplyToStatusId();
         this.inReplyToUserId = status.getInReplyToUserId();
@@ -58,12 +63,14 @@ public class TweetEntity implements TwitterEntity, Serializable, Comparable<Twee
         this.isFavorited = status.isFavorited();
         this.favoriteCount = status.getFavoriteCount();
         this.isRetweet = status.isRetweet();
+        this.retweet = isRetweet ? mapper.map(status.getRetweetedStatus()) : null;
         this.isRetweeted = status.getRetweetCount() > 0;
         this.reTweetCount = status.getRetweetCount();
         this.isRetweetedbyLoginUser = status.isRetweetedByMe();
         this.retweetedStatusId = status.getRetweetedStatus() != null ? status.getRetweetedStatus().getId() : -1;
         this.hasQuotedStatus = status.getQuotedStatus() != null;
         this.quotedStatusId = status.getQuotedStatusId();
+        this.quotedTweet = hasQuotedStatus ? mapper.map(status.getQuotedStatus()) : null;
         this.userMentionEntities = status.getUserMentionEntities();
         this.urlEntities = status.getURLEntities();
         this.hashtagEntities = status.getHashtagEntities();
@@ -71,6 +78,8 @@ public class TweetEntity implements TwitterEntity, Serializable, Comparable<Twee
         this.extendedMediaEntities = status.getExtendedMediaEntities();
 
         this.id = status.getId();
+
+        this.mediaUrlList = UIControlUtil.createMediaURLList(this);
 
     }
 

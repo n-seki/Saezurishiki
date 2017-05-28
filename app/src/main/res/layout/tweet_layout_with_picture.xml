@@ -1,5 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
+    <data>
+        <import type="android.view.View"/>
+        <import type="com.seki.saezurishiki.control.Setting.ButtonActionPattern"/>
+        <variable
+            name="setting"
+            type="com.seki.saezurishiki.control.Setting"/>
+        <variable
+            name="reTweeter"
+            type="com.seki.saezurishiki.entity.UserEntity"/>
+        <variable
+            name="tweet"
+            type="com.seki.saezurishiki.entity.TweetEntity"/>
+        <variable
+            name="listener"
+            type="com.seki.saezurishiki.view.adapter.TimeLineAdapter.ViewListener"/>
+    </data>
+
+    <FrameLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -17,7 +36,8 @@
             android:layout_marginLeft="58dp"
             android:layout_marginStart="58dp"
             android:layout_marginTop="8dp"
-            android:visibility="gone">
+            android:visibility="@{reTweeter != null ? View.VISIBLE : View.GONE}"
+            android:onClick="@{(view) -> listener.onClickUserIcon(view, reTweeter)}">
 
             <TextView
                 android:id="@+id/reTweet_text"
@@ -26,11 +46,13 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="4dp"
-                android:textSize="12sp"
+                android:textSize="@{setting.textSize - 2}"
                 android:text="@string/re_tweeted_by"/>
 
             <ImageView
                 android:id="@+id/reTweeter_icon"
+                bind:imageUrl="@{reTweeter.getBiggerProfileImageURL}"
+                bind:imageSize='@{60}'
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_marginLeft="2dp"
@@ -43,10 +65,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="2dp"
                 android:layout_marginLeft="2dp"
-                android:textSize="12sp"
+                android:textSize="@{setting.textSize - 2}"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:layout_marginTop="4dp"/>
+                android:layout_marginTop="4dp"
+                android:text="@{reTweeter.name}"/>
         </LinearLayout>
 
         <RelativeLayout
@@ -63,17 +86,20 @@
                 android:layout_marginTop="8dp">
 
                 <ImageView
+                    bind:imageUrl="@{tweet.user.getBiggerProfileImageURL}"
+                    bind:imageSize='@{60}'
                     android:id="@+id/user_icon"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:contentDescription="@string/user_icon"/>
+                    android:contentDescription="@string/user_icon"
+                    android:onClick="@{(view) -> listener.onClickUserIcon(view, tweet.user)}"/>
 
                 <View
                     android:id="@+id/lock_icon"
                     android:layout_width="15dp"
                     android:layout_height="15dp"
                     android:layout_gravity="bottom|end"
-                    android:visibility="invisible"
+                    android:visibility="@{tweet.user.protected ? View.VISIBLE : View.GONE}"
                     android:clickable="false"
                     android:background="@drawable/protected_mark"/>
 
@@ -83,7 +109,7 @@
                 android:id="@+id/user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
+                android:textSize="@{setting.textSize}"
                 android:textColor="@color/user_name_text_color"
                 android:maxLines="1"
                 android:ellipsize="end"
@@ -93,32 +119,21 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginRight="4dp"
                 android:layout_marginEnd="4dp"
-                android:layout_marginTop="5dp"/>
-
-            <!--<TweetListView
-                android:id="@+id/lock_icon"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_toRightOf="@+id/user_name"
-                android:layout_toEndOf="@+id/user_name"
-                android:layout_marginLeft="0dp"
-                android:layout_marginStart="0dp"
-                android:layout_marginTop="8dp"
-                android:visibility="invisible"
-                android:clickable="false"
-                android:background="@drawable/protected_mark"/>-->
+                android:layout_marginTop="5dp"
+                android:text="@{tweet.user.name + `@` + tweet.user.screenName}"/>
 
             <TextView
                 android:id="@+id/tweet_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
+                android:textSize="@{setting.textSize}"
                 android:layout_below="@+id/user_name"
                 android:layout_toRightOf="@id/user_icon_area"
                 android:layout_toEndOf="@id/user_icon_area"
                 android:layout_marginLeft="8dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginRight="8dp"/>
+                android:layout_marginRight="8dp"
+                android:text="@{tweet.text}"/>
 
             <RelativeLayout
                 android:id="@+id/quoted_status_layout"
@@ -133,13 +148,51 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginTop="4dp"
                 android:background="@drawable/stroke_style"
-                android:visibility="gone">
+                android:visibility="@{tweet.hasQuotedStatus ? View.VISIBLE : View.GONE}"
+                android:onClick="@{() -> listener.onClickQuotedTweet(tweet.quotedTweet)}">
 
-                <include layout="@layout/quoted_tweet"/>
+                <ImageView
+                    android:id="@+id/quoted_user_icon"
+                    bind:imageUrl="@{tweet.quotedTweet.user.getBiggerProfileImageURL}"
+                    bind:imageSize="@{60}"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:contentDescription="@string/user_icon"/>
+
+                <TextView
+                    android:id="@+id/quoted_user_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/quoted_user_icon"
+                    android:layout_toRightOf="@id/quoted_user_icon"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginLeft="2dp"
+                    android:textSize="@{setting.textSize - 2}"
+                    android:layout_marginTop="12dp"
+                    android:text="@{tweet.quotedTweet.user.name}"/>
+
+                <TextView
+                    android:id="@+id/quoted_tweet_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/quoted_user_name"
+                    android:layout_marginTop="2dp"
+                    android:paddingBottom="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:textSize="@{setting.textSize}"
+                    android:text="@{tweet.quotedTweet.text}"/>
             </RelativeLayout>
 
             <com.seki.saezurishiki.view.customview.PictureThumbnail
                 android:id="@+id/picture1"
+                bind:imageUrl="@{tweet.mediaUrlList.size() > 0 ? tweet.mediaUrlList.get(0) : null}"
+                bind:imageSize="@{45}"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_below="@id/quoted_status_layout"
@@ -148,11 +201,14 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginStart="8dp"
-                android:visibility="gone"
-                android:contentDescription="@string/picture"/>
+                android:visibility="@{setting.showThumbnail &amp;&amp; tweet.mediaUrlList.size() &gt; 0 ? View.VISIBLE : View.GONE}"
+                android:contentDescription="@string/picture"
+                android:onClick="@{() -> listener.onClickPicture(0, tweet)}"/>
 
             <com.seki.saezurishiki.view.customview.PictureThumbnail
                 android:id="@+id/picture2"
+                bind:imageUrl="@{tweet.mediaUrlList.size() > 1 ? tweet.mediaUrlList.get(1) : null}"
+                bind:imageSize="@{45}"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_below="@id/quoted_status_layout"
@@ -161,11 +217,14 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginStart="8dp"
-                android:visibility="gone"
-                android:contentDescription="@string/picture"/>
+                android:visibility="@{setting.showThumbnail &amp;&amp; tweet.mediaUrlList.size() &gt; 1 ? View.VISIBLE : View.GONE}"
+                android:contentDescription="@string/picture"
+                android:onClick="@{() -> listener.onClickPicture(1, tweet)}"/>
 
             <com.seki.saezurishiki.view.customview.PictureThumbnail
                 android:id="@+id/picture3"
+                bind:imageUrl="@{tweet.mediaUrlList.size() > 2 ? tweet.mediaUrlList.get(2) : null}"
+                bind:imageSize="@{45}"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_below="@id/quoted_status_layout"
@@ -174,11 +233,14 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginStart="8dp"
-                android:visibility="gone"
-                android:contentDescription="@string/picture"/>
+                android:visibility="@{setting.showThumbnail &amp;&amp; tweet.mediaUrlList.size() &gt; 2 ? View.VISIBLE : View.GONE}"
+                android:contentDescription="@string/picture"
+                android:onClick="@{() -> listener.onClickPicture(2, tweet)}"/>
 
             <com.seki.saezurishiki.view.customview.PictureThumbnail
                 android:id="@+id/picture4"
+                bind:imageUrl="@{tweet.mediaUrlList.size() > 3 ? tweet.mediaUrlList.get(3) : null}"
+                bind:imageSize="@{45}"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_below="@id/quoted_status_layout"
@@ -187,20 +249,9 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginStart="8dp"
-                android:visibility="gone"
-                android:contentDescription="@string/picture"/>
-
-            <!--<TextView-->
-                <!--android:id="@+id/post_time"-->
-                <!--android:textSize="12sp"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_below="@id/picture1"-->
-                <!--android:layout_alignParentRight="true"-->
-                <!--android:layout_alignParentEnd="true"-->
-                <!--android:layout_marginRight="8dp"-->
-                <!--android:layout_marginEnd="8dp"-->
-                <!--android:layout_marginTop="8dp"/>-->
+                android:visibility="@{setting.showThumbnail &amp;&amp; tweet.mediaUrlList.size() &gt; 3 ? View.VISIBLE : View.GONE}"
+                android:contentDescription="@string/picture"
+                android:onClick="@{() -> listener.onClickPicture(3, tweet)}"/>
 
             <LinearLayout
                 android:id="@+id/operation_button"
@@ -219,7 +270,8 @@
                     android:id="@+id/reply_button_area"
                     android:layout_weight="1"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:onClick="@{() -> listener.onClickReplyButton(tweet)}">
 
                     <ImageView
                         android:id="@+id/reply_button"
@@ -235,13 +287,17 @@
                     android:id="@+id/retweet_button_area"
                     android:layout_weight="1"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:visibility="@{tweet.user.protected ? View.INVISIBLE : View.VISIBLE}"
+                    android:onClick="@{() -> listener.onClickReTweetButton(tweet, setting.reTweetButtonAction)}"
+                    android:longClickable="@{setting.reTweetButtonAction == ButtonActionPattern.TAP_AND_DIALOG}"
+                    android:onLongClick="@{(view) -> listener.onLongClickReTweetButton(tweet, setting.favoriteButtonAction)}">
 
                     <ImageView
                         android:id="@+id/reTweet_button"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:background="@drawable/retweet_mark_off"
+                        android:background="@{tweet.isRetweetedbyLoginUser ? @drawable/retweet_mark_on : @drawable/retweet_mark_off}"
                         android:contentDescription="@string/re_tweet_button"
                         android:layout_centerHorizontal="true"/>
 
@@ -249,37 +305,45 @@
                         android:id="@+id/reTweet_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="12sp"
+                        android:textSize="@{setting.textSize - 2}"
                         android:layout_below="@id/reTweet_button"
-                        android:layout_centerHorizontal="true"/>
+                        android:layout_centerHorizontal="true"
+                        android:visibility="@{tweet.reTweetCount != 0 ? View.VISIBLE : View.GONE}"
+                        android:text="@{tweet.reTweetCount != 0 ? String.valueOf(tweet.reTweetCount) : null}"/>
                 </RelativeLayout>
 
                 <RelativeLayout
                     android:id="@+id/favorite_button_area"
                     android:layout_weight="1"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:onClick="@{() -> listener.onClickFavoriteButton(tweet, setting.favoriteButtonAction)}"
+                    android:longClickable="@{setting.favoriteButtonAction == ButtonActionPattern.LONG}"
+                    android:onLongClick="@{(view) -> listener.onLongClickFavoriteButton(tweet, setting.favoriteButtonAction)}">
+
                     <com.seki.saezurishiki.view.customview.FavoriteStar
                         android:id="@+id/favorite_button"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:background="@drawable/favorite_star_off"
+                        android:background="@{tweet.isFavorited ? @drawable/favorite_star_on : @drawable/favorite_star_off}"
                         android:contentDescription="@string/favorite"
-                        android:layout_centerHorizontal="true"/>
+                        android:layout_centerHorizontal="true" />
 
                     <TextView
                         android:id="@+id/favorite_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="12sp"
+                        android:textSize="@{setting.textSize - 2}"
                         android:layout_below="@id/favorite_button"
-                        android:layout_centerHorizontal="true"/>
+                        android:layout_centerHorizontal="true"
+                        android:visibility="@{tweet.favoriteCount != 0 ? View.VISIBLE : View.GONE}"
+                        android:text="@{tweet.favoriteCount != 0 ? String.valueOf(tweet.favoriteCount) : null}" />
                 </RelativeLayout>
             </LinearLayout>
 
             <TextView
                 android:id="@+id/post_time"
-                android:textSize="12sp"
+                android:textSize="@{setting.textSize - 2}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/picture1"
@@ -290,14 +354,18 @@
                 android:gravity="bottom|end"
                 android:layout_marginRight="4dp"
                 android:layout_marginEnd="4dp"
-                android:layout_marginTop="12dp"/>
+                android:layout_marginTop="12dp"
+                android:text="@{tweet.createdAt}"/>
 
         </RelativeLayout>
     </RelativeLayout>
 
     <com.seki.saezurishiki.view.customview.TweetStatusBar
         android:id="@+id/status_bar"
+        bind:tweet="@{tweet}"
         android:layout_width="3dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"/>
 </FrameLayout>
+
+</layout>

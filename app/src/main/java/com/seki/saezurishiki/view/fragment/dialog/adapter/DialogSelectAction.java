@@ -42,8 +42,8 @@ public class DialogSelectAction<T> {
         return new DialogSelectAction<>(tweet, url, URL);
     }
 
-    public static DialogSelectAction<TweetEntity> mediaURL(TweetEntity tweet, String mediaUrl) {
-        return new DialogSelectAction<>(tweet, mediaUrl, MEDIA);
+    public static DialogSelectAction<TweetEntity> mediaURL(TweetEntity tweet, int selectedPosition) {
+        return new DialogSelectAction<>(tweet, selectedPosition, MEDIA);
     }
 
     public static DialogSelectAction<TweetEntity> delete(TweetEntity tweet) {

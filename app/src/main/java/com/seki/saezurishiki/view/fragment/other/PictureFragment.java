@@ -34,16 +34,16 @@ import static com.seki.saezurishiki.control.UIControlUtil.createMediaURLList;
 public class PictureFragment extends Fragment implements ViewPager.OnPageChangeListener {
 
     private TweetEntity mStatus;
-    private String mTouchedPicture;
+    private int mTouchedPicturePosition;
 
     private int mPicCount;
 
     private ActionBar mActionBar;
 
-    public static Fragment getInstance(String pictureURL, TweetEntity status) {
+    public static Fragment getInstance(int position, TweetEntity status) {
         Fragment fragment = new PictureFragment();
         Bundle data = new Bundle();
-        data.putString(DataType.URL, pictureURL);
+        data.putInt(DataType.PIC_POSITION, position);
         data.putSerializable(DataType.STATUS, status);
         fragment.setArguments(data);
 
@@ -58,7 +58,7 @@ public class PictureFragment extends Fragment implements ViewPager.OnPageChangeL
         Bundle data = getArguments();
         if ( data == null ) throw new IllegalStateException("Argument is null");
         mStatus = (TweetEntity) data.getSerializable(DataType.STATUS);
-        mTouchedPicture = data.getString(DataType.URL);
+        mTouchedPicturePosition = data.getInt(DataType.PIC_POSITION);
         mActionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
     }
 
@@ -66,7 +66,7 @@ public class PictureFragment extends Fragment implements ViewPager.OnPageChangeL
     public View onCreateView(LayoutInflater inflater, ViewGroup container, final Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_picture, container, false);
 
-        List<String> URLs = createMediaURLList(mStatus);
+        List<String> URLs = mStatus.mediaUrlList;
         mPicCount = URLs.size();
         PicturePager pageAdapter = new PicturePager(getChildFragmentManager(), URLs);
         ViewPager viewPager = (ViewPager)view.findViewById(R.id.pic_pager);
@@ -74,10 +74,9 @@ public class PictureFragment extends Fragment implements ViewPager.OnPageChangeL
         viewPager.addOnPageChangeListener(this);
         viewPager.setOffscreenPageLimit(mPicCount - 1);
 
-        final int touchedPicNumber = URLs.indexOf(mTouchedPicture);
-        viewPager.setCurrentItem(touchedPicNumber);
+        viewPager.setCurrentItem(mTouchedPicturePosition);
 
-        mActionBar.setTitle("Picture" + " " + String.valueOf(touchedPicNumber + 1) + "/" + mPicCount);
+        mActionBar.setTitle("Picture" + " " + String.valueOf(mTouchedPicturePosition + 1) + "/" + mPicCount);
 
         return view;
     }
