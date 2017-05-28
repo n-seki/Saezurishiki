@@ -3,6 +3,7 @@ package com.seki.saezurishiki.view.fragment.util;
 public class DataType {
 
     public static final String COUNT = "count";
+    public static final String PIC_POSITION = "pic_position";
 
     private DataType() {
         throw new IllegalAccessError();

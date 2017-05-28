@@ -130,12 +130,12 @@ public class TweetSelectDialog extends DialogFragment {
             }
         }
 
-        List<String> mediaURL = UIControlUtil.createMediaURLList(mStatus);
+        List<String> mediaURL = mStatus.mediaUrlList;
         if (!mediaURL.isEmpty()) {
             final int icon = isThemeDark ? R.drawable.image_update : R.drawable.image_update_light;
-            for (String media : mediaURL) {
-                final DialogSelectAction<TweetEntity> action = DialogSelectAction.mediaURL(mStatus, media);
-                adapter.add(new DialogItemAdapter.DialogItem(action, media, icon));
+            for (int position = 0; position < mediaURL.size(); position++) {
+                final DialogSelectAction<TweetEntity> action = DialogSelectAction.mediaURL(mStatus, position);
+                adapter.add(new DialogItemAdapter.DialogItem(action, mediaURL.get(position), icon));
             }
         }
     }

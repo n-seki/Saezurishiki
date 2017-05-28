@@ -24,7 +24,7 @@ public class EntityMapper {
         final boolean isReplyToLoginUser =
                 this.loginUserId == status.getInReplyToUserId();
 
-        return new TweetEntity(status, isLoginUserStatus, isReplyToLoginUser);
+        return new TweetEntity(status, isLoginUserStatus, isReplyToLoginUser, this);
     }
 
     public UserEntity map(User user) {

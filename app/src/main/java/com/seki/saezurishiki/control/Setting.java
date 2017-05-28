@@ -28,14 +28,18 @@ public final class Setting {
 
 
     public enum ButtonActionPattern {
-        ONE_TAP("1"),
-        TAP_AND_DIALOG("2"),
-        LONG("3");
+        ONE_TAP("1", false, false),
+        TAP_AND_DIALOG("2", true, false),
+        LONG("3", false, true);
 
         final String symbol;
+        final public boolean showDialog;
+        final public boolean isLongClick;
 
-        ButtonActionPattern(String symbol) {
+        ButtonActionPattern(String symbol, boolean showDialog, boolean isLongClick) {
             this.symbol = symbol;
+            this.showDialog = showDialog;
+            this.isLongClick = isLongClick;
         }
 
         public static ButtonActionPattern convert(String symbol) {

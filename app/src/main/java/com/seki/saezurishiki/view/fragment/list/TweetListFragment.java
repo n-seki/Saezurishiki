@@ -277,8 +277,8 @@ public abstract class TweetListFragment extends Fragment
     }
 
     @Override
-    public void showPicture(TweetEntity tweet, String selectedMedia) {
-        final Fragment f = PictureFragment.getInstance(selectedMedia, tweet);
+    public void showPicture(TweetEntity tweet, int position) {
+        final Fragment f = PictureFragment.getInstance(position, tweet);
         this.fragmentControl.requestShowFragment(f);
     }
 

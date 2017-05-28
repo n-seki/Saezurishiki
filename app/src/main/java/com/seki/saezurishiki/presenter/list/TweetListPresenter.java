@@ -3,9 +3,12 @@ package com.seki.saezurishiki.presenter.list;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.view.View;
 
+import com.seki.saezurishiki.control.Setting;
 import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.entity.TwitterEntity;
+import com.seki.saezurishiki.entity.UserEntity;
 import com.seki.saezurishiki.model.TweetListModel;
 import com.seki.saezurishiki.model.adapter.ModelMessage;
 import com.seki.saezurishiki.model.adapter.RequestInfo;
@@ -37,7 +40,7 @@ public abstract class TweetListPresenter implements TimeLineAdapter.ViewListener
         void showUserActivity(long userID);
         void openLink(String url);
         void openReplyEditor(TweetEntity tweet);
-        void showPicture(TweetEntity tweet, String selectedMedia);
+        void showPicture(TweetEntity tweet, int position);
         void showReTweetDialog(TweetEntity tweet);
         void showFavoriteDialog(TweetEntity tweet);
         void showLongClickDialog(TweetEntity tweet);
@@ -99,13 +102,15 @@ public abstract class TweetListPresenter implements TimeLineAdapter.ViewListener
     }
 
     @Override
-    public void onClickPicture(String pictureURL, TweetEntity tweet) {
-        this.view.showPicture(tweet, pictureURL);
+    public void onClickPicture(int position, TweetEntity tweet) {
+        this.view.showPicture(tweet, position);
     }
 
     @Override
-    public void onClickUserIcon(User user) {
+    public void onClickUserIcon(View view, UserEntity user) {
+        view.setEnabled(false);
         this.view.showUserActivity(user.getId());
+        new Handler().postDelayed(() -> view.setEnabled(true), 1000L);
     }
 
     @Override
@@ -114,8 +119,12 @@ public abstract class TweetListPresenter implements TimeLineAdapter.ViewListener
     }
 
     @Override
-    public void onClickReTweetButton(TweetEntity tweet, boolean isShowDialog) {
-        if (isShowDialog) {
+    public void onClickReTweetButton(TweetEntity tweet, Setting.ButtonActionPattern actionPattern) {
+        if (actionPattern.isLongClick) {
+            return;
+        }
+
+        if (actionPattern.showDialog) {
             this.view.showReTweetDialog(tweet);
             return;
         }
@@ -124,8 +133,27 @@ public abstract class TweetListPresenter implements TimeLineAdapter.ViewListener
     }
 
     @Override
-    public void onClickFavoriteButton(final TweetEntity tweet, final boolean isShowDialog) {
-        if (isShowDialog) {
+    public boolean onLongClickReTweetButton(TweetEntity tweet, Setting.ButtonActionPattern actionPattern) {
+        if (!actionPattern.isLongClick) {
+            return true;
+        }
+
+        if (actionPattern.showDialog) {
+            this.view.showReTweetDialog(tweet);
+            return true;
+        }
+
+        reTweet(tweet);
+        return true;
+    }
+
+    @Override
+    public void onClickFavoriteButton(final TweetEntity tweet, Setting.ButtonActionPattern actionPattern) {
+        if (actionPattern.isLongClick) {
+            return;
+        }
+
+        if (actionPattern.showDialog) {
             this.view.showFavoriteDialog(tweet);
             return;
         }
@@ -137,6 +165,25 @@ public abstract class TweetListPresenter implements TimeLineAdapter.ViewListener
         }
     }
 
+    @Override
+    public boolean onLongClickFavoriteButton(final TweetEntity tweet, Setting.ButtonActionPattern actionPattern) {
+        if (!actionPattern.isLongClick) {
+            return true;
+        }
+
+        if (actionPattern.showDialog) {
+            this.view.showFavoriteDialog(tweet);
+            return true;
+        }
+
+        if (!tweet.isFavorited) {
+            createFavorite(tweet);
+        } else {
+            destroyFavorite(tweet);
+        }
+
+        return true;
+    }
 
     @Override
     public void onClickQuotedTweet(final TweetEntity tweet) {
@@ -159,7 +206,7 @@ public abstract class TweetListPresenter implements TimeLineAdapter.ViewListener
                 break;
 
             case DialogSelectAction.MEDIA:
-                this.view.showPicture(selectedItem.targetItem, (String)selectedItem.item);
+                this.view.showPicture(selectedItem.targetItem, (int)selectedItem.item);
                 break;
 
             default:

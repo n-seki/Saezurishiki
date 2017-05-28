@@ -27,7 +27,8 @@ public class YesNoSelectDialog<T extends Serializable> extends DialogFragment {
     private static final String POSITIVE_ACTION_KEY = "positive_action_key";
     private static final String NEGATIVE_ACTION_KEY = "negative_action_key";
 
-    public static final YesNoSelectDialog.Listener<UserEntity> EMPTY_ACTION = user -> {};
+    public static final YesNoSelectDialog.Listener<UserEntity> EMPTY_ACTION_USER = user -> {};
+    public static final YesNoSelectDialog.Listener<TweetEntity> EMPTY_ACTION_TWEET = tweet -> {};
 
     public interface Listener<T extends Serializable> extends Serializable {
         void onItemClick(T item);
@@ -132,7 +133,7 @@ public class YesNoSelectDialog<T extends Serializable> extends DialogFragment {
                 .setTitle(tweet.isFavorited ? R.string.do_you_un_favorite : R.string.do_you_favorite)
                 .setSummary(tweet.user.getName() + "\n" + tweet.text)
                 .setPositiveAction(positiveAction)
-                .setNegativeAction(EMPTY_ACTION)
+                .setNegativeAction(EMPTY_ACTION_TWEET)
                 .build();
     }
 
@@ -143,7 +144,7 @@ public class YesNoSelectDialog<T extends Serializable> extends DialogFragment {
                 .setTitle(R.string.do_you_retweet)
                 .setSummary(tweet.user.getName() + "\n" + tweet.text)
                 .setPositiveAction(action)
-                .setNegativeAction(EMPTY_ACTION)
+                .setNegativeAction(EMPTY_ACTION_TWEET)
                 .build();
     }
 
@@ -155,7 +156,7 @@ public class YesNoSelectDialog<T extends Serializable> extends DialogFragment {
                         .setTitle(R.string.action_destroy_block)
                         .setSummary(user.getScreenName() + "のブロックを解除しますか？")
                         .setPositiveAction(action)
-                        .setNegativeAction(EMPTY_ACTION)
+                        .setNegativeAction(EMPTY_ACTION_USER)
                         .build();
     }
 
@@ -167,7 +168,7 @@ public class YesNoSelectDialog<T extends Serializable> extends DialogFragment {
                         .setItem(user)
                         .setSummary(user.getScreenName() + (isFollow ? "をリムーブしますか？" : "をフォローしますか？"))
                         .setPositiveAction(action)
-                        .setNegativeAction(EMPTY_ACTION)
+                        .setNegativeAction(EMPTY_ACTION_USER)
                         .build();
     }
 
@@ -179,7 +180,7 @@ public class YesNoSelectDialog<T extends Serializable> extends DialogFragment {
                 .setTitle(R.string.follow_request)
                 .setSummary(user.getScreenName() + "にフォローリクエストを送信しますか？")
                 .setPositiveAction(action)
-                .setNegativeAction(EMPTY_ACTION)
+                .setNegativeAction(EMPTY_ACTION_USER)
                 .build();
     }
 
@@ -191,7 +192,7 @@ public class YesNoSelectDialog<T extends Serializable> extends DialogFragment {
                 .setTitle(R.string.action_block)
                 .setSummary(user.getScreenName() + "をブロックしますか？")
                 .setPositiveAction(action)
-                .setNegativeAction(EMPTY_ACTION)
+                .setNegativeAction(EMPTY_ACTION_USER)
                 .build();
 
     }
