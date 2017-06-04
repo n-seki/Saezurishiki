@@ -290,8 +290,8 @@
                     android:layout_height="match_parent"
                     android:visibility="@{tweet.user.protected ? View.INVISIBLE : View.VISIBLE}"
                     android:onClick="@{() -> listener.onClickReTweetButton(tweet, setting.reTweetButtonAction)}"
-                    android:longClickable="@{setting.reTweetButtonAction == ButtonActionPattern.TAP_AND_DIALOG}"
-                    android:onLongClick="@{(view) -> listener.onLongClickReTweetButton(tweet, setting.favoriteButtonAction)}">
+                    android:longClickable="@{setting.reTweetButtonAction == ButtonActionPattern.LONG}"
+                    android:onLongClick="@{(view) -> listener.onLongClickReTweetButton(tweet, setting.reTweetButtonAction)}">
 
                     <ImageView
                         android:id="@+id/reTweet_button"
