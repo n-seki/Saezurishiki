@@ -129,6 +129,7 @@ public class TimeLineAdapter extends ArrayAdapter<ListElement> {
 
         // FIXME: 2017/06/04
         binding.quotedStatusLayout.setVisibility(View.GONE);
+        binding.reTweeter.setVisibility(View.GONE);
 
         binding.setListener(mListener);
         binding.setSetting(setting);
