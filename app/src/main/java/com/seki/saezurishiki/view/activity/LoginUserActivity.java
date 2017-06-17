@@ -623,7 +623,12 @@ public class LoginUserActivity extends    AppCompatActivity
             if (!mFragmentController.hasFragment()) {
                 mDrawerToggle.setDrawerIndicatorEnabled(true);
                 mDisplayPosition = -1;
+
+                if (this.mViewPager.getCurrentItem() != TimeLinePager.POSITION_MESSAGE) {
+                    ((FloatingActionButton)LoginUserActivity.this.findViewById(R.id.edit_tweet_button)).show();
+                }
             }
+
             return;
         }
 
@@ -647,6 +652,10 @@ public class LoginUserActivity extends    AppCompatActivity
             mgr.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
         changeTitle();
+
+        if (this.mViewPager.getCurrentItem() != TimeLinePager.POSITION_MESSAGE) {
+            ((FloatingActionButton)LoginUserActivity.this.findViewById(R.id.edit_tweet_button)).show();
+        }
     }
 
 
