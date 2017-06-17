@@ -142,12 +142,6 @@ public class UserStreamTimeLineFragment extends TweetListFragment
             UserStreamTimeLineFragment.this.releaseSavedStatus();
         }
 
-        //表示されているアイテム中に未読tweetがある場合には背景色を変更する
-        //ここではtab変更は行わない
-        if (this.mAdapter.containsUnreadItem(firstVisibleItem, firstVisibleItem + visibleItemCount - 1)) {
-            changeTweetBackground(firstVisibleItem, visibleItemCount);
-        }
-
         if (previousFirstVisibleItem < firstVisibleItem) {
             if (firstVisibleItem + visibleItemCount + 10 == totalItemCount) {
                 //フッターの読み込みボタンをクリックしたことにする
@@ -156,11 +150,6 @@ public class UserStreamTimeLineFragment extends TweetListFragment
         }
 
         this.previousFirstVisibleItem = firstVisibleItem;
-    }
-
-
-    void changeTweetBackground(int firstVisibleItem, int visibleItemCount) {
-        ((NotificationListView)this.mListView).changeItemBackground(firstVisibleItem, visibleItemCount);
     }
 
 
@@ -272,9 +261,6 @@ public class UserStreamTimeLineFragment extends TweetListFragment
         if (!isUserVisible) return;
         if (this.mAdapter == null || this.mAdapter.isEmpty()) return;
 
-        final int first = this.mListView.getFirstVisiblePosition();
-        final int last = this.mListView.getLastVisiblePosition();
-        this.changeTweetBackground(first, last - 1);
         tabViewControl.requestChangeTabState(this);
     }
 
