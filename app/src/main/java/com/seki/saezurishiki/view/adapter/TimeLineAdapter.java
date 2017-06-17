@@ -143,6 +143,8 @@ public class TimeLineAdapter extends ArrayAdapter<ListElement> {
             binding.setReTweeter(null);
         }
 
+        binding.executePendingBindings();
+
         if (backgroundChange) {
             if (element.isSeen) {
                 convertView.setBackgroundColor(UIControlUtil.backgroundColor(mContext));
