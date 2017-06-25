@@ -486,10 +486,9 @@ public class LoginUserActivity extends    AppCompatActivity
 
 
     @Override
-    public void displayDirectMessageEditor(long messageId) {
-        //TODO
-//        Fragment directMessageEditor = DirectMessageFragment.getInstance(this.twitterAccount.getRepository().getDM(messageId).getSender());
-//        this.addFragment(R.id.home_container, directMessageEditor);
+    public void displayDirectMessageEditor(long userId) {
+        Fragment directMessageEditor = DirectMessageFragment.getInstance(userId);
+        this.addFragment(R.id.home_container, directMessageEditor);
     }
 
 

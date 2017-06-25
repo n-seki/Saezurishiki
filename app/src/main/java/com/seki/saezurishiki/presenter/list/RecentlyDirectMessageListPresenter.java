@@ -57,7 +57,9 @@ public class RecentlyDirectMessageListPresenter implements ModelObserver {
             item.see();
             this.view.updateList();
         }
-        this.view.openDirectMessageEditor(item.id);
+
+        final DirectMessageEntity message = this.model.getEntityFromCache(item.id);
+        this.view.openDirectMessageEditor(message.sender.getId());
     }
 
     private void onLoadDirectMessage(List<DirectMessageEntity> messages) {

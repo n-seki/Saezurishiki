@@ -42,4 +42,9 @@ class DirectMessageListModelImp extends ModelBaseImp implements DirectMessageLis
         final ModelMessage message = ModelMessage.of(ModelActionType.RECEIVE_DIRECT_MESSAGE, entity);
         this.userStreamObservable.notifyObserver(message);
     }
+
+    @Override
+    public DirectMessageEntity getEntityFromCache(long id) {
+        return this.twitterAccount.getRepository().getDM(id);
+    }
 }

@@ -32,6 +32,7 @@ public enum ModelActionType {
     COMPLETE_DESTROY_BLOCK(false, DisplayType.NO_DISPLAY),
 
     LOAD_DIRECT_MESSAGE(false, DisplayType.ADD),
+    LOAD_DIRECT_MESSAGE_CONVERSATION(false, DisplayType.ADD),
 
     ERROR(false, DisplayType.NO_DISPLAY);
 

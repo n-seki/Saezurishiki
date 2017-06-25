@@ -311,7 +311,8 @@ public abstract class TweetListFragment extends Fragment
     }
 
 
-    protected void loadTimeLine() {
+    protected void
+    loadTimeLine() {
         final long maxID = this.getLastId() - 1;
         this.presenter.load(new RequestInfo().maxID(maxID == -1 ? 0 : maxID).count(50));
     }

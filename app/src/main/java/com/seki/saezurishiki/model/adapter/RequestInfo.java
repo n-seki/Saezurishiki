@@ -5,12 +5,13 @@ import twitter4j.Query;
 
 public class RequestInfo {
 
-    long userID = -1;
-    long maxID = -1;
-    long sinceID = -1;
-    long targetID = -1;
-    String query = null;
-    int count = -1;
+    private long userID = -1;
+    private long maxID = -1;
+    private long sinceID = -1;
+    private long targetID = -1;
+    private String query = null;
+    private int count = -1;
+    private String message = null;
 
     public RequestInfo() {}
 
@@ -41,6 +42,11 @@ public class RequestInfo {
 
     public RequestInfo count(int count) {
         this.count = count;
+        return this;
+    }
+
+    public RequestInfo message(String message) {
+        this.message = message;
         return this;
     }
 

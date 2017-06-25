@@ -82,7 +82,7 @@ public final class FragmentController {
                 return Fragments.newReplyEditorFromUser(user);
 
             case FRAGMENT_ID_DIRECT_MESSAGE_EDITOR:
-                return DirectMessageFragment.getInstance(user);
+                return DirectMessageFragment.getInstance(user.getId());
 
             default:
                 throw new IllegalArgumentException("DrawerList item position is illegal! :" + fragmentId);

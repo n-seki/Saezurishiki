@@ -19,28 +19,26 @@ import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.application.SaezurishikiApp;
 import com.seki.saezurishiki.control.CustomToast;
 import com.seki.saezurishiki.control.UIControlUtil;
-import com.seki.saezurishiki.entity.UserEntity;
+import com.seki.saezurishiki.entity.DirectMessageEntity;
+import com.seki.saezurishiki.model.adapter.RequestInfo;
 import com.seki.saezurishiki.network.twitter.AsyncTwitterTask;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
 import com.seki.saezurishiki.network.twitter.TwitterError;
 import com.seki.saezurishiki.network.twitter.TwitterWrapper;
-import com.seki.saezurishiki.network.twitter.streamListener.DirectMessageUserStreamListener;
+import com.seki.saezurishiki.presenter.editor.DirectMessageEditorPresenter;
 import com.seki.saezurishiki.view.adapter.DirectMessageAdapter;
 import com.seki.saezurishiki.view.fragment.util.DataType;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import twitter4j.DirectMessage;
-import twitter4j.User;
 
 /**
  * ダイレクトメッセージ作成Fragment<br>
  * TextEditorに入力されている文字列をダイレクトメッセージとして送信します<br>
  * @author seki
  */
-public class DirectMessageFragment extends Fragment implements DirectMessageUserStreamListener {
+public class DirectMessageFragment extends Fragment implements /*DirectMessageUserStreamListener,*/ DirectMessageEditorPresenter.View {
 
     private long mUserID = 0L;
 
@@ -50,12 +48,16 @@ public class DirectMessageFragment extends Fragment implements DirectMessageUser
 
     private ListView mListView;
 
+    private EditText messageArea;
+
+    private DirectMessageEditorPresenter presenter;
+
     private TwitterAccount twitterAccount;
 
-    public static Fragment getInstance(UserEntity user) {
+    public static Fragment getInstance(long userId) {
         Fragment fragment = new DirectMessageFragment();
         Bundle data  = new Bundle();
-        data.putSerializable(DataType.USER, user);
+        data.putLong(DataType.USER_ID, userId);
         fragment.setArguments(data);
         return fragment;
     }
@@ -69,9 +71,9 @@ public class DirectMessageFragment extends Fragment implements DirectMessageUser
 
         SaezurishikiApp app = (SaezurishikiApp)getActivity().getApplication();
         this.twitterAccount = app.getTwitterAccount();
-        this.twitterAccount.addStreamListener(this);
+//        this.twitterAccount.addStreamListener(this);
 
-        mUserID = ((User)getArguments().getSerializable(DataType.USER)).getId();
+        mUserID = getArguments().getLong(DataType.USER_ID);
         mAdapter = new DirectMessageAdapter(getActivity(), R.layout.direct_message_layout);
         mTwitterTask = new TwitterWrapper(getActivity(), getLoaderManager(), this.twitterAccount);
 
@@ -87,51 +89,53 @@ public class DirectMessageFragment extends Fragment implements DirectMessageUser
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        presenter.onResume();
+
+        if (mAdapter.isEmpty()) {
+            presenter.load(new RequestInfo().userID(mUserID));
+        }
+    }
+
+    @Override
     public void onDestroy() {
-        this.twitterAccount.removeListener(this);
+//        this.twitterAccount.removeListener(this);
         super.onDestroy();
     }
 
     public void initComponents(final View rootView) {
         setupDirectMessageList(rootView);
 
+        this.messageArea = (EditText) rootView.findViewById(R.id.message_editor);
         Button sendButton = (Button)rootView.findViewById(R.id.send_button);
         sendButton.setOnClickListener(v -> DirectMessageFragment.this.onClickSendButton(rootView));
     }
 
 
     private void setupDirectMessageList(View rootView) {
-        List<Long> receiveMessage = this.twitterAccount.getRepository().getDMIdByUser(mUserID);
-        List<Long> sentMessage = this.twitterAccount.getRepository().getSentDMId(mUserID);
-
-        List<Long> allMessage = new ArrayList<>(receiveMessage);
-        allMessage.addAll(sentMessage);
-
-        Collections.sort(allMessage);
-
         mListView = (ListView)rootView.findViewById(R.id.list);
         mListView.setAdapter(mAdapter);
         mListView.setClickable(false);
-        mAdapter.addAll(allMessage);
-        mListView.setSelection(mListView.getCount()-1);
     }
 
 
     private void onClickSendButton(View rootView) {
-        EditText editText = (EditText) rootView.findViewById(R.id.message_editor);
-        String message = editText.getText().toString();
-        if (message.isEmpty()) {
-            CustomToast.show(getActivity(), R.string.please_write_text, Toast.LENGTH_SHORT);
-            return;
-        }
+//        EditText editText = (EditText) rootView.findViewById(R.id.message_editor);
+        String message = this.messageArea.getText().toString();
+        this.presenter.onClickSendButton(message);
+//        if (message.isEmpty()) {
+//            CustomToast.show(getActivity(), R.string.please_write_text, Toast.LENGTH_SHORT);
+//            return;
+//        }
 
-        DirectMessageFragment.this.sendDirectMessage(message);
-        editText.setText("");
-        InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        View view = getActivity().getCurrentFocus();
-        if (view != null) {
-            mgr.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
-        }
+//        DirectMessageFragment.this.sendDirectMessage(message);
+//        editText.setText("");
+//        InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+//        View view = getActivity().getCurrentFocus();
+//        if (view != null) {
+//            mgr.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+//        }
     }
 
     private void sendDirectMessage(final String message) {
@@ -157,13 +161,50 @@ public class DirectMessageFragment extends Fragment implements DirectMessageUser
         return "Direct Message";
     }
 
+//    @Override
+//    public void onDirectMessage(DirectMessage directMessage) {
+//        final long userId = directMessage.getSenderId();
+//        if ((userId != mUserID) && userId != this.twitterAccount.getLoginUserId()) {
+//            return;
+//        }
+//        mAdapter.add(directMessage.getId());
+//        mListView.setSelection(mListView.getCount() - 1);
+//    }
+
+
     @Override
-    public void onDirectMessage(DirectMessage directMessage) {
-        final long userId = directMessage.getSenderId();
-        if ((userId != mUserID) && userId != this.twitterAccount.getLoginUserId()) {
-            return;
-        }
-        mAdapter.add(directMessage.getId());
+    public void setPresenter(DirectMessageEditorPresenter presenter) {
+        this.presenter = presenter;
+    }
+
+    @Override
+    public void catchNewMessage(DirectMessageEntity message) {
+        this.mAdapter.add(message);
         mListView.setSelection(mListView.getCount() - 1);
+    }
+
+    @Override
+    public void loadMessages(List<Long> messageIds) {
+        this.mAdapter.addAll(messageIds);
+    }
+
+    @Override
+    public void showNoMessage() {
+        CustomToast.show(getActivity(), R.string.no_recently_message, Toast.LENGTH_SHORT);
+    }
+
+    @Override
+    public void showInputMessageEmpty() {
+        CustomToast.show(getActivity(), R.string.please_write_text, Toast.LENGTH_SHORT);
+    }
+
+    @Override
+    public void onSendMessageFinish() {
+        this.messageArea.setText("");
+        InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        View view = getActivity().getCurrentFocus();
+        if (view != null) {
+            mgr.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+        }
     }
 }
