@@ -155,7 +155,7 @@
     <string name="version">バージョン</string>
     <string name="about_version">バージョン情報</string>
     <string name="update_date">更新日</string>
-    <string name="last_update_date">リリース日 2017/06/25</string>
+    <string name="last_update_date">リリース日 2017/07/02</string>
     <string name="showing_loginUser">あなたです！</string>
     <string name="pref_category_operation">操作設定</string>
     <string name="pref_favorite_operation_Key">pref_favorite_operation_Key</string>
