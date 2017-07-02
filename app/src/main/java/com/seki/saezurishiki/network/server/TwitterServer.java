@@ -21,7 +21,6 @@ import twitter4j.User;
 public class TwitterServer  {
 
     private final StatusServer ALL_STATUS;
-    private final Map<Long, DirectMessageEntity> SENT_DM;
     private final Map<Long, DirectMessageEntity> DM;
     private final Map<Long, UserEntity> USER;
     
@@ -30,7 +29,6 @@ public class TwitterServer  {
 
     public TwitterServer(EntityMapper mapper) {
         ALL_STATUS = new StatusServer(mapper);
-        SENT_DM = new ConcurrentHashMap<>();
         DM = new ConcurrentHashMap<>();
         USER = new ConcurrentHashMap<>();
         this.mapper = mapper;
@@ -68,7 +66,6 @@ public class TwitterServer  {
     public  void clear() {
         ALL_STATUS.clear();
         DM.clear();
-        SENT_DM.clear();
     }
 
 
@@ -80,7 +77,7 @@ public class TwitterServer  {
 
     public DirectMessageEntity addSentDM(DirectMessage message) {
         final DirectMessageEntity dm = this.mapper.map(message);
-        SENT_DM.put(dm.getId(), dm);
+        DM.put(dm.getId(), dm);
         return dm;
     }
 
@@ -88,7 +85,7 @@ public class TwitterServer  {
 
     public List<Long> getSentDMId(long recipientUserId) {
         List<Long> list = new ArrayList<>();
-        Collection<DirectMessageEntity> messages = SENT_DM.values();
+        Collection<DirectMessageEntity> messages = DM.values();
         for (DirectMessageEntity message : messages) {
             if (message.recipientId == recipientUserId) {
                 list.add(message.getId());
@@ -136,7 +133,7 @@ public class TwitterServer  {
 
     public DirectMessageEntity findDM(long messageId) {
         if (DM.containsKey(messageId)) return DM.get(messageId);
-        return SENT_DM.get(messageId);
+        return DM.get(messageId);
     }
 
 

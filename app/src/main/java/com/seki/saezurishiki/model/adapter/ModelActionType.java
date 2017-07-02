@@ -20,6 +20,7 @@ public enum ModelActionType {
     COMPLETE_RETWEET(false, DisplayType.UPDATE),
     COMPLETE_DELETE_TWEET(false, DisplayType.DELETE),
     COMPLETE_POST_TWEET(false, DisplayType.NO_DISPLAY),
+    COMPLETE_SEND_MESSAGE(false, DisplayType.NO_DISPLAY),
 
     LOAD_FRIENDS(false, DisplayType.ADD),
     LOAD_FOLLOWERS(false, DisplayType.ADD),
@@ -32,6 +33,9 @@ public enum ModelActionType {
     COMPLETE_DESTROY_BLOCK(false, DisplayType.NO_DISPLAY),
 
     LOAD_DIRECT_MESSAGE(false, DisplayType.ADD),
+    LOAD_DIRECT_MESSAGE_CONVERSATION(false, DisplayType.ADD),
+
+    SEND(false, DisplayType.NO_DISPLAY),
 
     ERROR(false, DisplayType.NO_DISPLAY);
 

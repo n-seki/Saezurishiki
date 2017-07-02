@@ -25,6 +25,9 @@ class DirectMessageListModelImp extends ModelBaseImp implements DirectMessageLis
     public void request(RequestInfo info) {
         this.executor.execute(() -> {
             try {
+                final List<DirectMessage> sendDM = twitterAccount.twitter.getSentDirectMessages(info.toPaging());
+                this.twitterAccount.getRepository().addSentDM(sendDM);
+
                 final List<DirectMessage> result = this.twitterAccount.twitter.getDirectMessages(info.toPaging());
                 final List<DirectMessageEntity> directMessageList = this.twitterAccount.getRepository().addDM(result);
                 final ModelMessage message = ModelMessage.of(ModelActionType.LOAD_DIRECT_MESSAGE, directMessageList);
@@ -41,5 +44,10 @@ class DirectMessageListModelImp extends ModelBaseImp implements DirectMessageLis
         final DirectMessageEntity entity = this.twitterAccount.getRepository().addDM(directMessage);
         final ModelMessage message = ModelMessage.of(ModelActionType.RECEIVE_DIRECT_MESSAGE, entity);
         this.userStreamObservable.notifyObserver(message);
+    }
+
+    @Override
+    public DirectMessageEntity getEntityFromCache(long id) {
+        return this.twitterAccount.getRepository().getDM(id);
     }
 }

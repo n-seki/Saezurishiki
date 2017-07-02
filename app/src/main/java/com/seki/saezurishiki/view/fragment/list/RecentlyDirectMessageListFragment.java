@@ -18,7 +18,6 @@ import com.seki.saezurishiki.entity.DirectMessageEntity;
 import com.seki.saezurishiki.file.SharedPreferenceUtil;
 import com.seki.saezurishiki.model.adapter.RequestInfo;
 import com.seki.saezurishiki.network.ConnectionReceiver;
-import com.seki.saezurishiki.network.twitter.TwitterAccount;
 import com.seki.saezurishiki.presenter.list.RecentlyDirectMessageListPresenter;
 import com.seki.saezurishiki.view.adapter.DirectMessageAdapter;
 import com.seki.saezurishiki.view.adapter.ListElement;
@@ -33,7 +32,6 @@ public class RecentlyDirectMessageListFragment extends Fragment implements Conne
     private DirectMessageAdapter mAdapter;
     private CallBack mCallBack;
     private long mLastUnreadMessageId;
-    private TwitterAccount twitterAccount;
     private TabViewControl tabViewControl;
     private int tabPosition;
     private SwipeRefreshLayout refreshLayout;
@@ -59,7 +57,6 @@ public class RecentlyDirectMessageListFragment extends Fragment implements Conne
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SaezurishikiApp app = (SaezurishikiApp)getActivity().getApplication();
-        this.twitterAccount = app.getTwitterAccount();
         mAdapter = new DirectMessageAdapter(getActivity(), R.layout.direct_message_layout);
         mAdapter.setBackgroundColor();
         this.setting = new Setting();
@@ -179,8 +176,8 @@ public class RecentlyDirectMessageListFragment extends Fragment implements Conne
         this.refreshLayout.setRefreshing(state);
     }
 
-    public void openDirectMessageEditor(long messageId) {
-        this.mCallBack.displayDirectMessageEditor(messageId);
+    public void openDirectMessageEditor(long userId) {
+        this.mCallBack.displayDirectMessageEditor(userId);
     }
 
     @Override
