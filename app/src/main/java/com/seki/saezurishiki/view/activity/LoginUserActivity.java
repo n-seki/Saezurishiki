@@ -487,7 +487,7 @@ public class LoginUserActivity extends    AppCompatActivity
 
     @Override
     public void displayDirectMessageEditor(long userId) {
-        Fragment directMessageEditor = DirectMessageFragment.getInstance(userId);
+        Fragment directMessageEditor = Fragments.newDirectMessageEditor(userId);
         this.addFragment(R.id.home_container, directMessageEditor);
     }
 

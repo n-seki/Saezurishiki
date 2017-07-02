@@ -1,6 +1,10 @@
 package com.seki.saezurishiki.presenter.editor;
 
+import android.os.Handler;
+import android.os.Looper;
+
 import com.seki.saezurishiki.entity.DirectMessageEntity;
+import com.seki.saezurishiki.model.adapter.ModelActionType;
 import com.seki.saezurishiki.model.adapter.ModelMessage;
 import com.seki.saezurishiki.model.adapter.RequestInfo;
 import com.seki.saezurishiki.model.adapter.SupportCursorList;
@@ -25,10 +29,11 @@ public class DirectMessageEditorPresenter implements ModelObserver {
         void onSendMessageFinish();
     }
 
-    DirectMessageEditorPresenter(View view, DirectMessageEditorModel model, long opponentUserId) {
+    public DirectMessageEditorPresenter(View view, DirectMessageEditorModel model, long opponentUserId) {
         this.view = view;
         this.model = model;
         this.opponentUserId = opponentUserId;
+        this.view.setPresenter(this);
     }
 
     public void onResume() {
@@ -40,7 +45,7 @@ public class DirectMessageEditorPresenter implements ModelObserver {
     }
 
     public void load(RequestInfo info) {
-        this.model.request(info);
+        this.model.request(info.userID(this.opponentUserId));
     }
 
     public void onClickSendButton(String message) {
@@ -49,15 +54,20 @@ public class DirectMessageEditorPresenter implements ModelObserver {
             return;
         }
 
-        final RequestInfo info = new RequestInfo().userID(this.opponentUserId).message(message);
+        final RequestInfo info = new RequestInfo().userID(this.opponentUserId).message(message).actionType(ModelActionType.SEND);
         this.model.request(info);
 
         this.view.onSendMessageFinish();
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void update(ModelObservable observable, ModelMessage message) {
+        new Handler(Looper.getMainLooper()).post(() -> dispatch(message));
+    }
+
+
+    @SuppressWarnings("unchecked")
+    private void dispatch(ModelMessage message) {
 
         switch (message.type) {
             case RECEIVE_DIRECT_MESSAGE:

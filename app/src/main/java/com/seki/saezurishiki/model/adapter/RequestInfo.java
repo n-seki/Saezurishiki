@@ -12,6 +12,7 @@ public class RequestInfo {
     private String query = null;
     private int count = -1;
     private String message = null;
+    private ModelActionType actionType = null;
 
     public RequestInfo() {}
 
@@ -50,6 +51,19 @@ public class RequestInfo {
         return this;
     }
 
+    public RequestInfo actionType(ModelActionType type) {
+        this.actionType = type;
+        return this;
+    }
+
+    public ModelActionType getType() {
+        return this.actionType;
+    }
+
+    public String getMessage() {
+        return this.message;
+    }
+
     public Paging toPaging() {
         final Paging paging = new Paging();
 
@@ -74,6 +88,8 @@ public class RequestInfo {
 
         return query;
     }
+
+
 
     public long toTargetID() {
         return this.targetID;

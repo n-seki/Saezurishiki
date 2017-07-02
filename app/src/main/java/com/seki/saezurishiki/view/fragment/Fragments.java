@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.entity.UserEntity;
 import com.seki.saezurishiki.model.impl.ModelContainer;
+import com.seki.saezurishiki.presenter.editor.DirectMessageEditorPresenter;
 import com.seki.saezurishiki.presenter.editor.TweetEditorPresenter;
 import com.seki.saezurishiki.presenter.list.ConversationPresenter;
 import com.seki.saezurishiki.presenter.list.FavoriteListPresenter;
@@ -16,6 +17,7 @@ import com.seki.saezurishiki.presenter.list.RecentlyDirectMessageListPresenter;
 import com.seki.saezurishiki.presenter.list.ReplyTimeLinePresenter;
 import com.seki.saezurishiki.presenter.list.SearchPresenter;
 import com.seki.saezurishiki.presenter.list.UserTweetListPresenter;
+import com.seki.saezurishiki.view.fragment.editor.DirectMessageFragment;
 import com.seki.saezurishiki.view.fragment.editor.EditTweetFragment;
 import com.seki.saezurishiki.view.fragment.list.ConversationFragment;
 import com.seki.saezurishiki.view.fragment.list.FavoritesFragment;
@@ -115,6 +117,12 @@ public final class Fragments {
     public static Fragment newFollowerListFragment(long userId) {
         final UsersListFragment fragment = FollowerListFragment.newInstance();
         new FollowerListPresenter(fragment, ModelContainer.getFollowerListMode(), userId);
+        return fragment;
+    }
+
+    public static Fragment newDirectMessageEditor(long userId) {
+        final DirectMessageFragment fragment = DirectMessageFragment.getInstance();
+        new DirectMessageEditorPresenter(fragment, ModelContainer.getDirectMessageEditorModel(), userId);
         return fragment;
     }
 }

@@ -25,6 +25,7 @@ public final class ModelContainer {
     private static UserListModel  friendListModel;
     private static UserListModel  followerListMode;
     private static DirectMessageListModel directMessageListModel;
+    private static DirectMessageEditorModel directMessageEditorModel;
 
     private ModelContainer() {
         //no instance
@@ -44,6 +45,7 @@ public final class ModelContainer {
         friendListModel = new FriendListModel(account);
         followerListMode = new FollowerListModel(account);
         directMessageListModel = new DirectMessageListModelImp(account);
+        directMessageEditorModel = new DirectMessageEditorModel(account);
 
     }
 
@@ -61,6 +63,7 @@ public final class ModelContainer {
         friendListModel = null;
         followerListMode = null;
         directMessageListModel = null;
+        directMessageEditorModel = null;
     }
 
     public static UserScreenModel getUserScreenModel() {
@@ -109,5 +112,9 @@ public final class ModelContainer {
 
     public static DirectMessageListModel getDirectMessageListModel() {
         return directMessageListModel;
+    }
+
+    public static DirectMessageEditorModel getDirectMessageEditorModel() {
+        return directMessageEditorModel;
     }
 }
