@@ -47,6 +47,10 @@ public class RemoteRepositoryImp implements Repository {
         return instance;
     }
 
+    public static boolean isAlive() {
+        return instance != null;
+    }
+
     public Twitter getTwitter() {
         return this.twitter;
     }
