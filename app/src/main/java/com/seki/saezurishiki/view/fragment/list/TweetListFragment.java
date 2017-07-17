@@ -50,8 +50,6 @@ public abstract class TweetListFragment extends Fragment
 
     protected FragmentControl fragmentControl;
 
-    protected TwitterAccount twitterAccount;
-
     TweetListPresenter presenter;
 
     final int NEW_LOADING = -0x0003;
@@ -67,8 +65,6 @@ public abstract class TweetListFragment extends Fragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SaezurishikiApp app = (SaezurishikiApp)getActivity().getApplication();
-        this.twitterAccount = app.getTwitterAccount();
         setRetainInstance(true);
     }
 

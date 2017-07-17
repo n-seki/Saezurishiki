@@ -8,6 +8,7 @@ import com.seki.saezurishiki.model.adapter.SupportCursorList;
 import com.seki.saezurishiki.model.util.ModelObservable;
 import com.seki.saezurishiki.model.util.ModelObserver;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
+import com.seki.saezurishiki.repository.RemoteRepositoryImp;
 
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -21,12 +22,12 @@ import twitter4j.User;
 
 class FriendListModel implements UserListModel {
 
-    private final TwitterAccount account;
+    private final RemoteRepositoryImp repository;
     private final Executor executor;
     private final ModelObservable observable;
 
-    FriendListModel(TwitterAccount account) {
-        this.account = account;
+    FriendListModel() {
+        this.repository = RemoteRepositoryImp.getInstance();
         this.executor = Executors.newCachedThreadPool();
         this.observable = new ModelObservable();
     }
@@ -34,11 +35,10 @@ class FriendListModel implements UserListModel {
 
     @Override
     public void request(long userId, long nextCursor) {
-        final Twitter twitter = this.account.twitter;
         executor.execute(() -> {
             try {
-                PagableResponseList<User> result = twitter.getFriendsList(userId, nextCursor);
-                final List<UserEntity> users = account.getRepository().addUsers(result);
+                PagableResponseList<User> result = this.repository.getTwitter().getFriendsList(userId, nextCursor);
+                final List<UserEntity> users = this.repository.addUsers(result);
                 final SupportCursorList<UserEntity> list = new SupportCursorList<>(users, userId, result.getNextCursor());
                 final ModelMessage message = ModelMessage.of(ModelActionType.LOAD_FRIENDS, list);
                 observable.notifyObserver(message);

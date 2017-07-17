@@ -16,9 +16,9 @@ import twitter4j.User;
 
 abstract class TweetListModelImp extends ModelBaseImp implements TweetListModel {
 
-    TweetListModelImp(TwitterAccount twitterAccount) {
-        super(twitterAccount);
-        this.twitterAccount.addStreamListener(this);
+    TweetListModelImp() {
+        super();
+        this.streamManager.addListener(this);
     }
 
     @Override
@@ -27,7 +27,7 @@ abstract class TweetListModelImp extends ModelBaseImp implements TweetListModel 
 
     @Override
     public void onStatus(Status status) {
-        final TweetEntity tweet = this.twitterAccount.getRepository().map(status);
+        final TweetEntity tweet = this.repository.map(status);
         final ModelMessage message = ModelMessage.of(ModelActionType.RECEIVE_TWEET, tweet);
         this.userStreamObservable.notifyObserver(message);
     }
@@ -40,18 +40,18 @@ abstract class TweetListModelImp extends ModelBaseImp implements TweetListModel 
 
     @Override
     public void onFavorite(User sourceUser, User targetUser, Status targetTweet) {
-        final TweetEntity tweet = this.twitterAccount.getRepository().map(targetTweet);
-        final UserEntity source = this.twitterAccount.getRepository().map(sourceUser);
-        final UserEntity target = this.twitterAccount.getRepository().map(targetUser);
+        final TweetEntity tweet = this.repository.map(targetTweet);
+        final UserEntity source = this.repository.map(sourceUser);
+        final UserEntity target = this.repository.map(targetUser);
         final ModelMessage message = ModelMessage.of(ModelActionType.RECEIVE_FAVORITE, tweet, source, target);
         this.userStreamObservable.notifyObserver(message);
     }
 
     @Override
     public void onUnFavorite(User sourceUser, User targetUser, Status targetTweet) {
-        final TweetEntity tweet = this.twitterAccount.getRepository().map(targetTweet);
-        final UserEntity source = this.twitterAccount.getRepository().map(sourceUser);
-        final UserEntity target = this.twitterAccount.getRepository().map(targetUser);
+        final TweetEntity tweet = this.repository.map(targetTweet);
+        final UserEntity source = this.repository.map(sourceUser);
+        final UserEntity target = this.repository.map(targetUser);
         final ModelMessage message = ModelMessage.of(ModelActionType.RECEIVE_UN_FAVORITE, tweet, source, target);
         this.userStreamObservable.notifyObserver(message);
     }
@@ -61,9 +61,9 @@ abstract class TweetListModelImp extends ModelBaseImp implements TweetListModel 
     public void favorite(final TweetEntity tweetEntity) {
         this.executor.execute(() -> {
             try {
-                final Status result = twitterAccount.twitter.createFavorite(tweetEntity.getId());
-                final TweetEntity tweet = twitterAccount.getRepository().map(result);
-                twitterAccount.getRepository().addStatus(tweet);
+                final Status result = this.repository.getTwitter().createFavorite(tweetEntity.getId());
+                final TweetEntity tweet = this.repository.map(result);
+                this.repository.addStatus(tweet);
                 final ModelMessage message = ModelMessage.of(ModelActionType.COMPLETE_FAVORITE, tweet);
                 observable.notifyObserver(message);
             } catch (TwitterException e) {
@@ -76,9 +76,9 @@ abstract class TweetListModelImp extends ModelBaseImp implements TweetListModel 
     public void unFavorite(final TweetEntity tweetEntity) {
         this.executor.execute(() -> {
             try {
-                final Status result = twitterAccount.twitter.destroyFavorite(tweetEntity.getId());
-                final TweetEntity tweet = twitterAccount.getRepository().map(result);
-                twitterAccount.getRepository().addStatus(tweet);
+                final Status result = this.repository.getTwitter().destroyFavorite(tweetEntity.getId());
+                final TweetEntity tweet = this.repository.map(result);
+                this.repository.addStatus(tweet);
                 final ModelMessage message = ModelMessage.of(ModelActionType.COMPLETE_UN_FAVORITE, tweet);
                 observable.notifyObserver(message);
             } catch (TwitterException e) {
@@ -91,8 +91,8 @@ abstract class TweetListModelImp extends ModelBaseImp implements TweetListModel 
     public void reTweet(final TweetEntity tweetEntity) {
         this.executor.execute(() -> {
             try {
-                final Status result = twitterAccount.twitter.retweetStatus(tweetEntity.getId());
-                final TweetEntity tweet = twitterAccount.getRepository().map(result);
+                final Status result = this.repository.getTwitter().retweetStatus(tweetEntity.getId());
+                final TweetEntity tweet = this.repository.map(result);
                 final ModelMessage message = ModelMessage.of(ModelActionType.COMPLETE_RETWEET, tweet);
                 observable.notifyObserver(message);
             } catch (TwitterException e) {
@@ -105,7 +105,7 @@ abstract class TweetListModelImp extends ModelBaseImp implements TweetListModel 
     public void delete(final TweetEntity tweetEntity) {
         this.executor.execute(() -> {
             try {
-                final Status result = twitterAccount.twitter.destroyStatus(tweetEntity.getId());
+                final Status result = this.repository.getTwitter().destroyStatus(tweetEntity.getId());
                 final ModelMessage message = ModelMessage.of(ModelActionType.COMPLETE_DELETE_TWEET, result);
                 observable.notifyObserver(message);
             } catch (TwitterException e) {
@@ -116,7 +116,7 @@ abstract class TweetListModelImp extends ModelBaseImp implements TweetListModel 
 
     @Override
     public boolean isDelete(final TweetEntity tweetEntity) {
-        return this.twitterAccount.getRepository().hasDeletionNotice(tweetEntity.getId());
+        return this.repository.hasDeletionNotice(tweetEntity.getId());
     }
 
 }

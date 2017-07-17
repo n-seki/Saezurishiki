@@ -19,9 +19,9 @@ import twitter4j.TwitterException;
 
 public class DirectMessageEditorModel extends ModelBaseImp implements DirectMessageListModel, DirectMessageUserStreamListener {
 
-    DirectMessageEditorModel(TwitterAccount twitterAccount) {
-        super(twitterAccount);
-        this.twitterAccount.addStreamListener(this);
+    DirectMessageEditorModel() {
+        super();
+        this.streamManager.addListener(this);
     }
 
     @Override
@@ -33,8 +33,8 @@ public class DirectMessageEditorModel extends ModelBaseImp implements DirectMess
         }
 
         this.executor.execute(() -> {
-            List<Long> receiveMessage = this.twitterAccount.getRepository().getDMIdByUser(info.getUserID());
-            List<Long> sentMessage = this.twitterAccount.getRepository().getSentDMId(info.getUserID());
+            List<Long> receiveMessage = this.repository.getDMIdByUser(info.getUserID());
+            List<Long> sentMessage = this.repository.getSentDMId(info.getUserID());
 
             List<Long> allMessage = new ArrayList<>(receiveMessage);
             allMessage.addAll(sentMessage);
@@ -51,10 +51,9 @@ public class DirectMessageEditorModel extends ModelBaseImp implements DirectMess
 
     private void sendMessage(RequestInfo info) {
         this.executor.execute(() -> {
-            final Twitter twitter = this.twitterAccount.twitter;
             try {
-                final DirectMessage dm = twitter.sendDirectMessage(info.getUserID(), info.getMessage());
-                final DirectMessageEntity entity = this.twitterAccount.getRepository().addSentDM(dm);
+                final DirectMessage dm = this.repository.getTwitter().sendDirectMessage(info.getUserID(), info.getMessage());
+                final DirectMessageEntity entity = this.repository.addSentDM(dm);
                 ModelMessage message = ModelMessage.of(ModelActionType.COMPLETE_SEND_MESSAGE, entity);
                 observable.notifyObserver(message);
             } catch (TwitterException e) {
@@ -66,7 +65,7 @@ public class DirectMessageEditorModel extends ModelBaseImp implements DirectMess
 
     @Override
     public void onDirectMessage(DirectMessage directMessage) {
-        final DirectMessageEntity entity = this.twitterAccount.getRepository().addDM(directMessage);
+        final DirectMessageEntity entity = this.repository.addDM(directMessage);
         final ModelMessage message = ModelMessage.of(ModelActionType.RECEIVE_DIRECT_MESSAGE, entity);
         this.userStreamObservable.notifyObserver(message);
     }

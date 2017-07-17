@@ -12,18 +12,17 @@ import twitter4j.TwitterException;
 
 class ConversationModel extends TweetListModelImp {
 
-    ConversationModel(TwitterAccount twitterAccount) {
-        super(twitterAccount);
+    ConversationModel() {
+        super();
     }
 
     @Override
     public void request(final RequestInfo info) {
-        final Twitter twitter = this.twitterAccount.twitter;
         this.executor.execute(() -> {
             try {
-                final Status status = twitter.showStatus(info.toTargetID());
-                final TweetEntity tweet = twitterAccount.getRepository().map(status);
-                twitterAccount.getRepository().addStatus(tweet);
+                final Status status = this.repository.getTwitter().showStatus(info.toTargetID());
+                final TweetEntity tweet = this.repository.map(status);
+                this.repository.addStatus(tweet);
                 final ModelMessage message = ModelMessage.of(ModelActionType.LOAD_TWEET, tweet);
                 observable.notifyObserver(message);
             } catch (TwitterException e) {

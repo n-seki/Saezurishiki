@@ -201,4 +201,17 @@ public final class TwitterUtil {
     }
 
 
+    public static final class AccountConfig {
+        public final AccessToken token;
+        public final long loginUserId;
+        public final Configuration configuration;
+
+        public AccountConfig(Context context) {
+            this.token = TwitterUtil.createLoginUserAccessToken(context);
+            this.loginUserId = TwitterUtil.createLoginUserId(context);
+            this.configuration = TwitterUtil.createConfiguration(context);
+        }
+    }
+
+
 }

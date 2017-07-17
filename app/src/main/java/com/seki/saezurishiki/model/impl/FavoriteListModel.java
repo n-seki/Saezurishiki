@@ -16,18 +16,17 @@ import twitter4j.TwitterException;
 class FavoriteListModel extends TweetListModelImp {
 
 
-    FavoriteListModel(TwitterAccount twitterAccount) {
-        super(twitterAccount);
+    FavoriteListModel() {
+        super();
     }
 
     @Override
     public void request(final RequestInfo info) {
-        final Twitter twitter = this.twitterAccount.twitter;
         this.executor.execute(() -> {
             try {
-                final ResponseList<Status> result = twitter.getFavorites(info.getUserID(), info.toPaging());
-                final List<TweetEntity> tweets = twitterAccount.getRepository().map(result);
-                twitterAccount.getRepository().add(result);
+                final ResponseList<Status> result = this.repository.getTwitter().getFavorites(info.getUserID(), info.toPaging());
+                final List<TweetEntity> tweets = this.repository.map(result);
+                this.repository.add(result);
                 final ModelMessage message = ModelMessage.of(ModelActionType.LOAD_FAVORITE_LIST, tweets);
                 observable.notifyObserver(message);
             } catch (TwitterException e) {

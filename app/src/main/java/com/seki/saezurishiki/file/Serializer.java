@@ -3,6 +3,8 @@ package com.seki.saezurishiki.file;
 import android.content.Context;
 import android.support.annotation.Nullable;
 
+import com.seki.saezurishiki.entity.UserEntity;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
@@ -14,7 +16,7 @@ public class Serializer {
 
     private final static String LOGIN_USER_FILE = "loginUser.dat";
 
-    public static void saveUser(Context context, User user) {
+    public static void saveUser(Context context, UserEntity user) {
         if ( user == null ) {
             return;
         }
@@ -40,8 +42,8 @@ public class Serializer {
 
 
 
-    public static User loadUser(Context context) {
-        return load(context, User.class, LOGIN_USER_FILE);
+    public static UserEntity loadUser(Context context) {
+        return load(context, UserEntity.class, LOGIN_USER_FILE);
     }
 
 

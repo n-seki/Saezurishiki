@@ -3,17 +3,18 @@ package com.seki.saezurishiki.model.impl;
 import com.seki.saezurishiki.entity.UserEntity;
 import com.seki.saezurishiki.model.GetUserById;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
+import com.seki.saezurishiki.repository.RemoteRepositoryImp;
 
 public class GetUserByIdImp implements GetUserById {
 
-    private final TwitterAccount account;
+    private final RemoteRepositoryImp repository;
 
-    GetUserByIdImp(TwitterAccount account) {
-        this.account = account;
+    GetUserByIdImp() {
+        this.repository = RemoteRepositoryImp.getInstance();
     }
 
     @Override
     public UserEntity get(long id) {
-        return this.account.getRepository().getUser(id);
+        return this.repository.getUser(id);
     }
 }

@@ -188,9 +188,7 @@ public class EditTweetFragment extends Fragment implements TweetEditorPresenter.
 
         mEditorType = data.getInt(EDITOR_TYPE);
 
-        final SaezurishikiApp app = (SaezurishikiApp)getActivity().getApplication();
-        final TwitterAccount twitterAccount = app.getTwitterAccount();
-        this.loginUserId = twitterAccount.getLoginUserId();
+        this.loginUserId = TwitterAccount.getLoginUserId();
 
         setHasOptionsMenu(true);
     }

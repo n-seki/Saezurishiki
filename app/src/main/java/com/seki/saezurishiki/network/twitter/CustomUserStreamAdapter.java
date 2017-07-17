@@ -1,10 +1,9 @@
 package com.seki.saezurishiki.network.twitter;
 
-import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 
-import com.seki.saezurishiki.network.server.TwitterServer;
+import com.seki.saezurishiki.repository.RemoteRepositoryImp;
 import com.seki.saezurishiki.network.twitter.streamListener.CustomUserStreamListener;
 import com.seki.saezurishiki.network.twitter.streamListener.DirectMessageUserStreamListener;
 import com.seki.saezurishiki.network.twitter.streamListener.StatusUserStreamListener;
@@ -34,24 +33,20 @@ class CustomUserStreamAdapter extends UserStreamAdapter {
     private Handler onFollowHander;
     private Handler onUnFollowHander;
 
-    //private List<CustomUserStreamListener> mUserStreamListeners;
     private final List<StatusUserStreamListener> statusListeners;
     private final List<DirectMessageUserStreamListener> directMessageListeners;
     private final List<UserStreamUserListener> userStreamUserListeners;
 
-    private final TwitterServer repository;
+    private final RemoteRepositoryImp repository;
     private final long loginUserId;
 
-    private final Context mContext;
-
-    CustomUserStreamAdapter(Context context, TwitterAccount twitterAccount) {
-        mContext = context;
+    CustomUserStreamAdapter(RemoteRepositoryImp repository) {
         this.statusListeners = new ArrayList<>();
         this.directMessageListeners = new ArrayList<>();
         this.userStreamUserListeners = new ArrayList<>();
 
-        this.repository  = twitterAccount.getRepository();
-        this.loginUserId = twitterAccount.getLoginUserId();
+        this.repository  = repository;
+        this.loginUserId = TwitterAccount.getLoginUserId();
 
         mOnStatusHandler = new Handler() {
             @Override

@@ -29,8 +29,12 @@ import android.widget.Toast;
 import com.seki.saezurishiki.application.SaezurishikiApp;
 import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.control.Setting;
+import com.seki.saezurishiki.entity.DirectMessageEntity;
 import com.seki.saezurishiki.entity.UserEntity;
 import com.seki.saezurishiki.model.impl.ModelContainer;
+import com.seki.saezurishiki.network.twitter.UserStreamManager;
+import com.seki.saezurishiki.presenter.activity.LoginUserPresenter;
+import com.seki.saezurishiki.repository.RemoteRepositoryImp;
 import com.seki.saezurishiki.view.adapter.DrawerButtonListAdapter;
 import com.seki.saezurishiki.control.CustomToast;
 import com.seki.saezurishiki.control.FragmentController;
@@ -80,10 +84,10 @@ public class LoginUserActivity extends    AppCompatActivity
                                implements ViewPager.OnPageChangeListener,
                                           EditTweetFragment.Callback,
                                           ConnectionReceiver.Observer,
-                                          CustomUserStreamListener,
                                           RecentlyDirectMessageListFragment.CallBack,
                                           TabViewControl,
-                                          FragmentControl {
+                                          FragmentControl,
+                                          LoginUserPresenter.View {
 
     private ConnectionReceiver mReceiver;
 
@@ -95,13 +99,11 @@ public class LoginUserActivity extends    AppCompatActivity
 
     private int mDisplayPosition = -1;
 
-    private TwitterWrapper mTwitterTask;
-
     private FragmentController mFragmentController;
 
     private ActionBarDrawerToggle mDrawerToggle;
 
-    private User mLoginUser;
+    private UserEntity mLoginUser;
 
     private ViewPager mViewPager;
 
@@ -111,10 +113,9 @@ public class LoginUserActivity extends    AppCompatActivity
 
     private TwitterUserDrawerView userDrawerView;
 
-    private Setting setting;
-
-
     private TwitterAccount twitterAccount;
+
+    private LoginUserPresenter presenter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -135,13 +136,11 @@ public class LoginUserActivity extends    AppCompatActivity
             return;
         }
 
-        SaezurishikiApp saezurishikiApp = (SaezurishikiApp)getApplication();
-        saezurishikiApp.createTwitterAccount();
-        this.twitterAccount = saezurishikiApp.getTwitterAccount();
-
+        this.twitterAccount = TwitterAccount.onCreate(this);
+        new LoginUserPresenter(ModelContainer.getLoginUserScreen(), this);
         Setting.init(this);
-        this.setting = new Setting();
-        final int theme = this.setting.getTheme();
+        final Setting setting = new Setting();
+        final int theme = setting.getTheme();
         setTheme(theme);
         setContentView(R.layout.activity_home);
 
@@ -149,19 +148,15 @@ public class LoginUserActivity extends    AppCompatActivity
         mReceiver = new ConnectionReceiver(this);
         registerReceiver(mReceiver, filter);
 
-        mTwitterTask = new TwitterWrapper(this, getSupportLoaderManager(), this.twitterAccount);
-        ModelContainer.start(twitterAccount);
+        //mTwitterTask = new TwitterWrapper(this, getSupportLoaderManager(), this.twitterAccount);
 
-        this.loadUser();
+        this.presenter.loadUser();
         this.setupActionBar();
         this.setupNavigationDrawer(theme);
         this.setupTweetButton(theme);
         this.setupTimeLine(theme);
 
         mFragmentController = new FragmentController(getSupportFragmentManager());
-
-        twitterAccount.startUserStream();
-        twitterAccount.addStreamListener(this);
     }
 
     /**
@@ -227,7 +222,7 @@ public class LoginUserActivity extends    AppCompatActivity
                 LoginUserActivity.this.displayBiography(mLoginUser.getId());
                 return;
             }
-            LoginUserActivity.this.displayFragment(action, twitterAccount.getRepository().map(mLoginUser));
+            LoginUserActivity.this.displayFragment(action, mLoginUser);
         }
     };
 
@@ -287,8 +282,16 @@ public class LoginUserActivity extends    AppCompatActivity
 
 
     @Override
+    public void onResume() {
+        super.onResume();
+        this.presenter.onResume();
+    }
+
+
+    @Override
     public void onPause() {
         super.onPause();
+        this.presenter.onPause();
         CustomToast.cancelToast();
     }
 
@@ -302,10 +305,8 @@ public class LoginUserActivity extends    AppCompatActivity
 
     void applicationFinalizer() {
         ModelContainer.destroy();
-        if (this.twitterAccount != null) {
-            this.twitterAccount.removeListener(this);
-            this.twitterAccount.onActivityDestroyed(this);
-        }
+        UserStreamManager.getInstance().destroy();
+        RemoteRepositoryImp.getInstance().clear();
 
         if ( mReceiver != null) {
             unregisterReceiver(mReceiver);
@@ -368,48 +369,16 @@ public class LoginUserActivity extends    AppCompatActivity
     @Override
     public void onConnect() {
         CustomToast.show(this, R.string.connect, Toast.LENGTH_SHORT);
-        this.loadUser();
-
-        twitterAccount.startUserStream();
+        this.presenter.loadUser();
+        UserStreamManager.getInstance().start();
     }
 
 
     @Override
     public void onDisconnect() {
-        twitterAccount.stopUserStream();
+        UserStreamManager.getInstance().stop();
         CustomToast.show(this, R.string.disconnect, Toast.LENGTH_SHORT);
     }
-
-
-    protected void loadUser() {
-        AsyncTwitterTask.AfterTask<User> afterTask = LoginUserActivity.this::onLoadUser;
-
-        AsyncTwitterTask.OnCancelTask cancelTask = () -> {
-            User user = Serializer.loadUser(LoginUserActivity.this);
-            if (user == null) return;
-            mLoginUser = user;
-            //TODO
-            userDrawerView.updateUser(this.twitterAccount.getRepository().map(mLoginUser));
-        };
-
-        mTwitterTask.showUser(this.twitterAccount.getLoginUserId(), afterTask, cancelTask);
-    }
-
-
-    void onLoadUser(TwitterTaskResult<User> result) {
-        if (result.isException()) {
-            TwitterError.showText(this, result.getException());
-            User user = Serializer.loadUser(this);
-            if (user == null) return;
-            mLoginUser = user;
-        } else {
-            mLoginUser = result.getResult();
-        }
-
-        //TODO
-        this.userDrawerView.updateUser(this.twitterAccount.getRepository().map(mLoginUser));
-    }
-
 
     private void replaceTitle(String title) {
         ActionBar actionBar = getSupportActionBar();
@@ -423,65 +392,51 @@ public class LoginUserActivity extends    AppCompatActivity
         actionBar.setTitle(title);
     }
 
-
     @Override
-    public void onStatus(Status status) {
-        if (status.getInReplyToUserId() == this.twitterAccount.getLoginUserId()) {
-            CustomToast.show(this, getString(R.string.reply_from) + status.getUser().getName() + "\n" + status.getText(), Toast.LENGTH_LONG);
-        }
-
-        if (status.getUser().getId() == this.twitterAccount.getLoginUserId()) {
-            this.userDrawerView.incrementCount(FragmentController.FRAGMENT_ID_TWEET);
-        }
+    public void showReceiveReplyMessage(TweetEntity reply) {
+        CustomToast.show(this, getString(R.string.reply_from) + reply.user.getName() + "\n" + reply.text, Toast.LENGTH_LONG);
     }
 
     @Override
-    public void onDeletionNotice(StatusDeletionNotice deletionNotice) {
-        if (this.twitterAccount.getRepository().hasStatus(deletionNotice.getStatusId())) {
-            TweetEntity target = this.twitterAccount.getRepository().getTweet(deletionNotice.getStatusId());
-            CustomToast.show(this, getString(R.string.delete) + target.user.getName() + "\n" + target.text, Toast.LENGTH_LONG);
-        }
-
-        if (deletionNotice.getUserId() == this.twitterAccount.getLoginUserId()) {
-            this.userDrawerView.decrementCount(FragmentController.FRAGMENT_ID_TWEET);
-        }
+    public void onCompletePost() {
+        this.userDrawerView.incrementCount(FragmentController.FRAGMENT_ID_TWEET);
     }
 
     @Override
-    public void onFavorite(User sourceUser, User targetUser, Status favoriteStatus) {
-        if ( sourceUser.getId() == this.twitterAccount.getLoginUserId()) {
-            CustomToast.show(this, R.string.favorite_complete, Toast.LENGTH_LONG);
-            this.userDrawerView.incrementCount(FragmentController.FRAGMENT_ID_FAVORITE);
-            return;
-        }
-
-        //自分がお気に入りされた
-        if ( targetUser.getId() == this.twitterAccount.getLoginUserId()) {
-            CustomToast.show(this, getString(R.string.favorite_by) + "\n" + sourceUser.getName() + "\n" + favoriteStatus.getText(), Toast.LENGTH_LONG);
-        }
+    public void showReceiveDeletionMessage(TweetEntity deletedTweet) {
+        CustomToast.show(this, getString(R.string.delete) + deletedTweet.user.getName() + "\n" + deletedTweet.text, Toast.LENGTH_LONG);
     }
 
     @Override
-    public void onUnFavorite(User sourceUser, User targetUser, Status unFavoriteStatus) {
-        //自分がお気に入りから外した
-        if (sourceUser.getId() == this.twitterAccount.getLoginUserId()) {
-            CustomToast.show(this, R.string.unfavorite_complete, Toast.LENGTH_LONG);
-            this.userDrawerView.decrementCount(FragmentController.FRAGMENT_ID_FAVORITE);
-            return;
-        }
-
-        //自分がお気に入りを外された
-        if (targetUser.getId() == this.twitterAccount.getLoginUserId()) {
-            CustomToast.show(this, getString(R.string.unfavorite_by) + "\n" + sourceUser.getName() + "\n" + unFavoriteStatus.getText(), Toast.LENGTH_LONG);
-        }
+    public void onCompleteDeleteTweet() {
+        this.userDrawerView.decrementCount(FragmentController.FRAGMENT_ID_TWEET);
     }
 
+    @Override
+    public void showFavoritedMessage(TweetEntity tweet, UserEntity user) {
+        CustomToast.show(this, getString(R.string.favorite_by) + "\n" + user.getName() + "\n" + tweet.text, Toast.LENGTH_LONG);
+    }
 
     @Override
-    public void onDirectMessage(DirectMessage directMessage) {
-        if (directMessage.getSenderId() != this.twitterAccount.getLoginUserId()) {
-            CustomToast.show(this, R.string.message_by + directMessage.getSender().getName() + "\n" + directMessage.getText(), Toast.LENGTH_LONG);
-        }
+    public void onCompleteFavorite() {
+        CustomToast.show(this, R.string.favorite_complete, Toast.LENGTH_LONG);
+        this.userDrawerView.incrementCount(FragmentController.FRAGMENT_ID_FAVORITE);
+    }
+
+    @Override
+    public void showUnFavoritedMessage(TweetEntity tweet, UserEntity user) {
+        CustomToast.show(this, getString(R.string.unfavorite_by) + "\n" + user.getName() + "\n" + tweet.text, Toast.LENGTH_LONG);
+    }
+
+    @Override
+    public void onCompleteUnFavorite() {
+        CustomToast.show(this, R.string.unfavorite_complete, Toast.LENGTH_LONG);
+        this.userDrawerView.decrementCount(FragmentController.FRAGMENT_ID_FAVORITE);
+    }
+
+    @Override
+    public void showReceivedDirectMessage(DirectMessageEntity directMessage) {
+        CustomToast.show(this, R.string.message_by + directMessage.sender.getName() + "\n" + directMessage.text, Toast.LENGTH_LONG);
     }
 
 
@@ -591,11 +546,11 @@ public class LoginUserActivity extends    AppCompatActivity
     @SuppressWarnings("unchecked")
     private void showLogoutDialog() {
         DialogFragment dialogFragment =
-                new YesNoSelectDialog.Builder<User>()
+                new YesNoSelectDialog.Builder<UserEntity>()
                         .setItem(mLoginUser)
                         .setSummary("ログアウトしますか？")
-                        .setPositiveAction((YesNoSelectDialog.Listener<User>) item -> LoginUserActivity.this.logout())
-                        .setNegativeAction((YesNoSelectDialog.Listener<User>) item -> {
+                        .setPositiveAction((YesNoSelectDialog.Listener<UserEntity>) item -> LoginUserActivity.this.logout())
+                        .setNegativeAction((YesNoSelectDialog.Listener<UserEntity>) item -> {
                             //do nothing
                         })
                         .build();
@@ -668,20 +623,14 @@ public class LoginUserActivity extends    AppCompatActivity
 
 
     public void postTweet(StatusUpdate status) {
-        mTwitterTask.post(status, LoginUserActivity.this::onPostTweet);
+        this.presenter.postTweet(status);
     }
 
-
-    void onPostTweet(TwitterTaskResult<Status> result) {
-        if (result.isException()) {
-            CustomToast.show(this, R.string.tweet_fail, Toast.LENGTH_SHORT);
-            CustomToast.show(this, result.getException().getMessage(), Toast.LENGTH_LONG);
-            return;
-        }
-
+    @Override
+    public void onCompletePostTweet(TweetEntity tweet) {
         Toast.makeText(this, R.string.tweet_complete, Toast.LENGTH_SHORT).show();
 
-        HashtagEntity[] hashTagEntity = result.getResult().getHashtagEntities();
+        HashtagEntity[] hashTagEntity = tweet.hashtagEntities;
 
         if (hashTagEntity == null || hashTagEntity.length == 0) {
             mHashTagEntities = null;
@@ -725,7 +674,7 @@ public class LoginUserActivity extends    AppCompatActivity
     public void logout() {
         Intent intent = new Intent(this, TwitterOauthActivity.class);
         startActivity(intent);
-        twitterAccount.logout();
+        twitterAccount.logout(this);
         finish();
     }
 
@@ -760,19 +709,15 @@ public class LoginUserActivity extends    AppCompatActivity
         this.addFragment(R.id.home_container, fragment);
     }
 
+
     @Override
-    public void onFollow(User source, User followedUser) {
+    public void onLoadLoginUser(UserEntity user) {
+        this.mLoginUser = user;
+        this.userDrawerView.updateUser(user);
     }
 
     @Override
-    public void onRemove(User source, User removedUser) {
-    }
-
-    @Override
-    public void onBlock(User source, User blockedUser) {
-    }
-
-    @Override
-    public void onUnblock(User source, User unblockedUser) {
+    public void setPresenter(LoginUserPresenter presenter) {
+        this.presenter = presenter;
     }
 }

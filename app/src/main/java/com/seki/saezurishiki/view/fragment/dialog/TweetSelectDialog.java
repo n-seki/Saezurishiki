@@ -11,9 +11,9 @@ import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.application.SaezurishikiApp;
 import com.seki.saezurishiki.control.Setting;
 import com.seki.saezurishiki.control.StatusUtil;
-import com.seki.saezurishiki.control.UIControlUtil;
 import com.seki.saezurishiki.entity.TweetEntity;
-import com.seki.saezurishiki.network.server.TwitterServer;
+import com.seki.saezurishiki.network.twitter.TwitterAccount;
+import com.seki.saezurishiki.repository.RemoteRepositoryImp;
 import com.seki.saezurishiki.view.fragment.dialog.adapter.DialogSelectAction;
 import com.seki.saezurishiki.view.fragment.util.DataType;
 
@@ -54,14 +54,13 @@ public class TweetSelectDialog extends DialogFragment {
 
         long id = getArguments().getLong(DataType.STATUS_ID);
 
-        SaezurishikiApp app = (SaezurishikiApp) getActivity().getApplication();
-        TwitterServer repository = app.getTwitterAccount().getRepository();
+        RemoteRepositoryImp repository = RemoteRepositoryImp.getInstance();
         this.theme = new Setting().getTheme();
 
         TweetEntity status = repository.getTweet(id);
         mStatus = status.isRetweet ? repository.getTweet(status.retweetedStatusId) : status;
         mIsDelete = repository.hasDeletionNotice(mStatus.getId());
-        this.loginUserId = app.getTwitterAccount().getLoginUserId();
+        this.loginUserId = TwitterAccount.getLoginUserId();
     }
 
 

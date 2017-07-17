@@ -1,11 +1,10 @@
 package com.seki.saezurishiki.network.twitter;
 
-import android.content.Context;
-
 import com.seki.saezurishiki.network.twitter.streamListener.CustomUserStreamListener;
 import com.seki.saezurishiki.network.twitter.streamListener.DirectMessageUserStreamListener;
 import com.seki.saezurishiki.network.twitter.streamListener.StatusUserStreamListener;
 import com.seki.saezurishiki.network.twitter.streamListener.UserStreamUserListener;
+import com.seki.saezurishiki.repository.RemoteRepositoryImp;
 
 import twitter4j.TwitterStream;
 import twitter4j.TwitterStreamFactory;
@@ -14,18 +13,36 @@ import twitter4j.TwitterStreamFactory;
  * TwitterStream管理クラス
  * @author seki
  */
-final class UserStreamManager {
+public final class UserStreamManager {
 
     private TwitterStream mTwitterStream;
     private final CustomUserStreamAdapter streamAdapter;
     private boolean isStartStream = false;
 
-    UserStreamManager(TwitterAccount twitterAccount, Context context) {
-        mTwitterStream = new TwitterStreamFactory(twitterAccount.conf).getInstance(twitterAccount.accessToken);
-        streamAdapter = new CustomUserStreamAdapter(context, twitterAccount);
+    private static UserStreamManager instance;
+
+    private UserStreamManager(TwitterAccount twitterAccount) {
+        mTwitterStream = new TwitterStreamFactory(twitterAccount.config.configuration).getInstance(twitterAccount.config.token);
+        streamAdapter = new CustomUserStreamAdapter(RemoteRepositoryImp.getInstance());
     }
 
-    void start() {
+    static void onCreate(TwitterAccount twitterAccount) {
+        if (instance != null) {
+            instance.destroy();
+        }
+
+        instance = new UserStreamManager(twitterAccount);
+    }
+
+    public static UserStreamManager getInstance() {
+        if (instance == null) {
+            throw new NullPointerException("singleton instance is null");
+        }
+
+        return instance;
+    }
+
+    public void start() {
         if ( isStartStream ) {
             return;
         }
@@ -38,7 +55,7 @@ final class UserStreamManager {
     }
 
 
-    void stop() {
+    public void stop() {
         if ( !isStartStream ) {
             return;
         }
@@ -49,7 +66,7 @@ final class UserStreamManager {
     }
 
 
-    void destroy() {
+    public void destroy() {
         if (mTwitterStream == null) {
             return;
         }
@@ -60,10 +77,11 @@ final class UserStreamManager {
         streamAdapter.clearListener();
         //streamAdapter = null;
         isStartStream = false;
+        instance = null;
     }
 
 
-    synchronized void addListener(CustomUserStreamListener listener) {
+    public synchronized void addListener(CustomUserStreamListener listener) {
         this.streamAdapter.addListener(listener);
     }
 
@@ -97,4 +115,5 @@ final class UserStreamManager {
         this.streamAdapter.removeListener(listener);
         this.streamAdapter.removeListener(listener);
     }
+
 }

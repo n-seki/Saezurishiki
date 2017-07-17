@@ -4,6 +4,7 @@ import com.seki.saezurishiki.model.DirectMessageListModel;
 import com.seki.saezurishiki.model.GetDirectMessageById;
 import com.seki.saezurishiki.model.GetTweetById;
 import com.seki.saezurishiki.model.GetUserById;
+import com.seki.saezurishiki.model.LoginUserScreen;
 import com.seki.saezurishiki.model.TweetListModel;
 import com.seki.saezurishiki.model.UserListModel;
 import com.seki.saezurishiki.model.UserScreenModel;
@@ -26,27 +27,10 @@ public final class ModelContainer {
     private static UserListModel  followerListMode;
     private static DirectMessageListModel directMessageListModel;
     private static DirectMessageEditorModel directMessageEditorModel;
+    private static LoginUserScreen loginUserScreen;
 
     private ModelContainer() {
         //no instance
-    }
-
-    public static void start(final TwitterAccount account) {
-        userScreenModel = new UserScreenModelImp(account);
-        homeTweetListModel = new HomeTweetListModel(account);
-        replyTweetListModel = new ReplyTweetListModel(account);
-        favoriteListModel = new FavoriteListModel(account);
-        userTweetListModel = new UserTweetListModel(account);
-        conversationModel = new ConversationModel(account);
-        searchTweetModel = new SearchTweetModel(account);
-        getTweetById = new GetTweetByIdImp(account);
-        getUserById = new GetUserByIdImp(account);
-        getDirectMessageById = new GetDirectMessageByIdImp(account);
-        friendListModel = new FriendListModel(account);
-        followerListMode = new FollowerListModel(account);
-        directMessageListModel = new DirectMessageListModelImp(account);
-        directMessageEditorModel = new DirectMessageEditorModel(account);
-
     }
 
     public static void destroy() {
@@ -64,57 +48,111 @@ public final class ModelContainer {
         followerListMode = null;
         directMessageListModel = null;
         directMessageEditorModel = null;
+        loginUserScreen = null;
     }
 
     public static UserScreenModel getUserScreenModel() {
+        if (userScreenModel == null) {
+            userScreenModel = new UserScreenModelImp();
+        }
         return userScreenModel;
     }
 
     public static TweetListModel getHomeTweetListModel() {
+        if (homeTweetListModel == null) {
+            homeTweetListModel = new HomeTweetListModel();
+        }
         return homeTweetListModel;
     }
 
     public static TweetListModel getReplyTweetListModel() {
+        if (replyTweetListModel == null) {
+            replyTweetListModel = new ReplyTweetListModel();
+        }
         return replyTweetListModel;
     }
 
     public static TweetListModel getFavoriteListModel() {
+        if (favoriteListModel == null) {
+            favoriteListModel = new FavoriteListModel();
+        }
         return favoriteListModel;
     }
 
     public static  TweetListModel getUserTweetListModel() {
+        if (userTweetListModel == null) {
+            userTweetListModel = new UserTweetListModel();
+        }
         return userTweetListModel;
     }
 
     public static TweetListModel getConversationModel() {
+        if (conversationModel == null) {
+            conversationModel = new ConversationModel();
+        }
         return conversationModel;
     }
 
-    public static TweetListModel getSearchTweetModel() { return searchTweetModel;}
+    public static TweetListModel getSearchTweetModel() {
+        if (searchTweetModel == null) {
+            searchTweetModel = new SearchTweetModel();
+        }
+        return searchTweetModel;
+    }
 
-    public static GetTweetById getRepositoryAccessor() { return getTweetById; }
+    public static GetTweetById getRepositoryAccessor() {
+        if (getTweetById == null) {
+            getTweetById = new GetTweetByIdImp();
+        }
+        return getTweetById;
+    }
 
     public static GetUserById getUserById() {
+        if (getUserById == null) {
+            getUserById = new GetUserByIdImp();
+        }
         return getUserById;
     }
 
     public static GetDirectMessageById getDirectMessageById() {
+        if (getDirectMessageById == null) {
+            getDirectMessageById = new GetDirectMessageByIdImp();
+        }
         return getDirectMessageById;
     }
 
     public static UserListModel getFriendListModel() {
+        if (friendListModel == null) {
+            friendListModel = new FriendListModel();
+        }
         return friendListModel;
     }
 
     public static UserListModel getFollowerListMode() {
+        if (followerListMode == null) {
+            followerListMode = new FollowerListModel();
+        }
         return followerListMode;
     }
 
     public static DirectMessageListModel getDirectMessageListModel() {
+        if (directMessageListModel == null) {
+            directMessageListModel = new DirectMessageListModelImp();
+        }
         return directMessageListModel;
     }
 
     public static DirectMessageEditorModel getDirectMessageEditorModel() {
+        if (directMessageEditorModel == null) {
+            directMessageEditorModel = new DirectMessageEditorModel();
+        }
         return directMessageEditorModel;
+    }
+
+    public static LoginUserScreen getLoginUserScreen() {
+        if (loginUserScreen == null) {
+            loginUserScreen = new LoginUserScreenImp();
+        }
+        return loginUserScreen;
     }
 }

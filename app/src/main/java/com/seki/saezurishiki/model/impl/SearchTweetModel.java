@@ -14,18 +14,17 @@ import twitter4j.TwitterException;
 
 class SearchTweetModel extends TweetListModelImp {
 
-    SearchTweetModel(TwitterAccount twitterAccount) {
-        super(twitterAccount);
+    SearchTweetModel() {
+        super();
     }
 
     @Override
     public void request(final RequestInfo info) {
-        final Twitter twitter = this.twitterAccount.twitter;
         this.executor.execute(() -> {
             try {
-                final QueryResult result = twitter.search(info.toQuery());
-                final List<TweetEntity> tweets = twitterAccount.getRepository().map(result.getTweets());
-                twitterAccount.getRepository().add(result.getTweets());
+                final QueryResult result = this.repository.getTwitter().search(info.toQuery());
+                final List<TweetEntity> tweets = this.repository.map(result.getTweets());
+                this.repository.add(result.getTweets());
                 final ModelMessage message = ModelMessage.of(ModelActionType.LOAD_SEARCH, tweets);
                 observable.notifyObserver(message);
             } catch (TwitterException e) {

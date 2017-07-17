@@ -16,16 +16,16 @@ import twitter4j.User;
 
 class UserScreenModelImp extends ModelBaseImp implements UserScreenModel {
 
-    UserScreenModelImp(TwitterAccount account) {
-        super(account);
+    UserScreenModelImp() {
+        super();
     }
 
     @Override
     public void getUser(long userId) {
         this.executor.execute(() -> {
             try {
-                final User result = this.twitterAccount.twitter.showUser(userId);
-                final UserEntity user = this.twitterAccount.getRepository().map(result);
+                final User result = this.repository.getTwitter().showUser(userId);
+                final UserEntity user = this.repository.map(result);
                 final ModelMessage message = ModelMessage.of(ModelActionType.LOAD_USER, user);
                 observable.notifyObserver(message);
             } catch (TwitterException e) {
@@ -38,22 +38,21 @@ class UserScreenModelImp extends ModelBaseImp implements UserScreenModel {
     public void getRelationship(long userId) {
         this.executor.execute(() -> {
             try {
-                final Relationship result = this.twitterAccount.twitter.showFriendship(this.twitterAccount.getLoginUserId(), userId);
+                final Relationship result = this.repository.getTwitter().showFriendship(TwitterAccount.getLoginUserId(), userId);
                 final ModelMessage message = ModelMessage.of(ModelActionType.LOAD_RELATIONSHIP, result);
                 observable.notifyObserver(message);
             } catch (TwitterException e) {
                 e.printStackTrace();
             }
         });
-
     }
 
     @Override
     public void follow(long userId) {
         this.executor.execute(() -> {
             try {
-                final User result = this.twitterAccount.twitter.createFriendship(userId);
-                final UserEntity user = this.twitterAccount.getRepository().map(result);
+                final User result = this.repository.getTwitter().createFriendship(userId);
+                final UserEntity user = this.repository.map(result);
                 final ModelMessage message = ModelMessage.of(ModelActionType.COMPLETE_FOLLOW, user);
                 observable.notifyObserver(message);
             } catch (TwitterException e) {
@@ -66,8 +65,8 @@ class UserScreenModelImp extends ModelBaseImp implements UserScreenModel {
     public void remove(long userId) {
         this.executor.execute(() -> {
             try {
-                final User result = this.twitterAccount.twitter.destroyFriendship(userId);
-                final UserEntity user = this.twitterAccount.getRepository().map(result);
+                final User result = this.repository.getTwitter().destroyFriendship(userId);
+                final UserEntity user = this.repository.map(result);
                 final ModelMessage message = ModelMessage.of(ModelActionType.COMPLETE_REMOVE, user);
                 observable.notifyObserver(message);
             } catch (TwitterException e) {
@@ -80,8 +79,8 @@ class UserScreenModelImp extends ModelBaseImp implements UserScreenModel {
     public void block(long userId) {
         this.executor.execute(() -> {
             try {
-                final User result = this.twitterAccount.twitter.createBlock(userId);
-                final UserEntity user = this.twitterAccount.getRepository().map(result);
+                final User result = this.repository.getTwitter().createBlock(userId);
+                final UserEntity user = this.repository.map(result);
                 final ModelMessage message = ModelMessage.of(ModelActionType.COMPLETE_BLOCK, user);
                 observable.notifyObserver(message);
             } catch (TwitterException e) {
@@ -94,8 +93,8 @@ class UserScreenModelImp extends ModelBaseImp implements UserScreenModel {
     public void destroyBlock(long userId) {
         this.executor.execute(() -> {
             try {
-                final User result = this.twitterAccount.twitter.destroyBlock(userId);
-                final UserEntity user = this.twitterAccount.getRepository().map(result);
+                final User result = this.repository.getTwitter().destroyBlock(userId);
+                final UserEntity user = this.repository.map(result);
                 final ModelMessage message = ModelMessage.of(ModelActionType.COMPLETE_DESTROY_BLOCK, user);
                 observable.notifyObserver(message);
             } catch (TwitterException e) {
@@ -108,8 +107,8 @@ class UserScreenModelImp extends ModelBaseImp implements UserScreenModel {
     public void postTweet(StatusUpdate tweet) {
         this.executor.execute(() -> {
             try {
-                final Status result = this.twitterAccount.twitter.updateStatus(tweet);
-                final TweetEntity user = this.twitterAccount.getRepository().map(result);
+                final Status result = this.repository.getTwitter().updateStatus(tweet);
+                final TweetEntity user = this.repository.map(result);
                 final ModelMessage message = ModelMessage.of(ModelActionType.COMPLETE_POST_TWEET, user);
                 observable.notifyObserver(message);
             } catch (TwitterException e) {
