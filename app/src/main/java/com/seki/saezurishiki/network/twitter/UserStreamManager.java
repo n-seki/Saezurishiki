@@ -42,6 +42,10 @@ public final class UserStreamManager {
         return instance;
     }
 
+    public static boolean isAlive() {
+        return instance != null;
+    }
+
     public void start() {
         if ( isStartStream ) {
             return;

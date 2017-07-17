@@ -305,10 +305,16 @@ public class LoginUserActivity extends    AppCompatActivity
 
     void applicationFinalizer() {
         ModelContainer.destroy();
-        UserStreamManager.getInstance().destroy();
-        RemoteRepositoryImp.getInstance().clear();
 
-        if ( mReceiver != null) {
+        if (UserStreamManager.isAlive()) {
+            UserStreamManager.getInstance().destroy();
+        }
+
+        if (RemoteRepositoryImp.isAlive()) {
+            RemoteRepositoryImp.getInstance().clear();
+        }
+
+        if (mReceiver != null) {
             unregisterReceiver(mReceiver);
         }
 
