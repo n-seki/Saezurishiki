@@ -5,6 +5,7 @@ import com.seki.saezurishiki.model.GetDirectMessageById;
 import com.seki.saezurishiki.model.GetTweetById;
 import com.seki.saezurishiki.model.GetUserById;
 import com.seki.saezurishiki.model.LoginUserScreen;
+import com.seki.saezurishiki.model.TweetEditorModel;
 import com.seki.saezurishiki.model.TweetListModel;
 import com.seki.saezurishiki.model.UserListModel;
 import com.seki.saezurishiki.model.UserScreenModel;
@@ -28,6 +29,7 @@ public final class ModelContainer {
     private static DirectMessageListModel directMessageListModel;
     private static DirectMessageEditorModel directMessageEditorModel;
     private static LoginUserScreen loginUserScreen;
+    private static TweetEditorModel tweetEditorModel;
 
     private ModelContainer() {
         //no instance
@@ -49,6 +51,7 @@ public final class ModelContainer {
         directMessageListModel = null;
         directMessageEditorModel = null;
         loginUserScreen = null;
+        tweetEditorModel = null;
     }
 
     public static UserScreenModel getUserScreenModel() {
@@ -154,5 +157,12 @@ public final class ModelContainer {
             loginUserScreen = new LoginUserScreenImp();
         }
         return loginUserScreen;
+    }
+
+    public static TweetEditorModel getTweetEditorModel() {
+        if (tweetEditorModel == null) {
+            tweetEditorModel = new TweetEditorModelImp();
+        }
+        return tweetEditorModel;
     }
 }

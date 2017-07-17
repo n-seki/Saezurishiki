@@ -51,10 +51,6 @@ public class LoginUserPresenter implements ModelObserver {
         this.model.getLoginUser();
     }
 
-    public void postTweet(StatusUpdate statusUpdate) {
-        this.model.postTweet(statusUpdate);
-    }
-
     @Override
     public void update(ModelObservable observable, ModelMessage message) {
         new Handler(Looper.getMainLooper()).post(() -> this.dispatch(message));

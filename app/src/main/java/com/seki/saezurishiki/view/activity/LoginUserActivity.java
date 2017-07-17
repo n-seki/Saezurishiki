@@ -613,18 +613,12 @@ public class LoginUserActivity extends    AppCompatActivity
     }
 
 
-
     public void displayBiography(long userID) {
         Intent intent = new Intent(this, UserActivity.class);
         intent.putExtra(UserActivity.USER_ID, userID);
         startActivity(intent);
     }
 
-
-
-    public void postTweet(StatusUpdate status) {
-        this.presenter.postTweet(status);
-    }
 
     @Override
     public void onCompletePostTweet(TweetEntity tweet) {

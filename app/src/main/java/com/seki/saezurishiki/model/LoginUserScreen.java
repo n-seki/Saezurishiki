@@ -6,5 +6,4 @@ import twitter4j.StatusUpdate;
 
 public interface LoginUserScreen extends ModelBase, CustomUserStreamListener {
     void getLoginUser();
-    void postTweet(StatusUpdate status);
 }

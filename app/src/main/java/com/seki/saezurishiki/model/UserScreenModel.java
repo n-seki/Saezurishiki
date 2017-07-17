@@ -9,5 +9,4 @@ public interface UserScreenModel extends ModelBase {
     void remove(long userId);
     void block(long userId);
     void destroyBlock(long userId);
-    void postTweet(StatusUpdate tweet);
 }
