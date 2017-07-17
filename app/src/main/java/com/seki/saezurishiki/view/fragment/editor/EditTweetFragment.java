@@ -464,7 +464,7 @@ public class EditTweetFragment extends Fragment implements TweetEditorPresenter.
         if (Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
             Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
-            intent.setType("image/jpeg");
+            intent.setType("image/*");
             return intent;
         }
 
