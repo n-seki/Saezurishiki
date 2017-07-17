@@ -1,14 +1,21 @@
 package com.seki.saezurishiki.presenter.editor;
 
 
+import com.seki.saezurishiki.model.TweetEditorModel;
+
+import twitter4j.StatusUpdate;
+
 public class TweetEditorPresenter {
 
     final private View view;
 
     private final int MAX_MESSAGE_LENGTH = 140;
 
-    public TweetEditorPresenter(View view) {
+    final private TweetEditorModel model;
+
+    public TweetEditorPresenter(View view, TweetEditorModel model) {
         this.view = view;
+        this.model = model;
         this.view.setPresenter(this);
     }
 
@@ -38,6 +45,11 @@ public class TweetEditorPresenter {
 
         this.view.hideSoftKeyBoard();
         this.view.postTweet(message);
+    }
+
+
+    public void postTweet(StatusUpdate tweet) {
+        this.model.postTweet(tweet);
     }
 
 

@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 
 import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.entity.UserEntity;
+import com.seki.saezurishiki.model.TweetEditorModel;
 import com.seki.saezurishiki.model.impl.ModelContainer;
 import com.seki.saezurishiki.presenter.editor.DirectMessageEditorPresenter;
 import com.seki.saezurishiki.presenter.editor.TweetEditorPresenter;
@@ -86,25 +87,29 @@ public final class Fragments {
 
     public static Fragment newNormalEditor() {
         final EditTweetFragment fragment = EditTweetFragment.newNormalEditor();
-        new TweetEditorPresenter(fragment);
+        final TweetEditorModel model = ModelContainer.getTweetEditorModel();
+        new TweetEditorPresenter(fragment, model);
         return fragment;
     }
 
     public static Fragment newEditorWithHashTag(HashtagEntity[] hashTagEntities) {
         final EditTweetFragment fragment = EditTweetFragment.newEditorWithHashTag(hashTagEntities);
-        new TweetEditorPresenter(fragment);
+        final TweetEditorModel model = ModelContainer.getTweetEditorModel();
+        new TweetEditorPresenter(fragment, model);
         return fragment;
     }
 
    public static Fragment newReplyEditorFromStatus(TweetEntity tweet) {
         final EditTweetFragment fragment = EditTweetFragment.newReplyEditorFromStatus(tweet);
-        new TweetEditorPresenter(fragment);
+       final TweetEditorModel model = ModelContainer.getTweetEditorModel();
+        new TweetEditorPresenter(fragment, model);
         return fragment;
    }
 
     public static Fragment newReplyEditorFromUser(UserEntity user) {
         final EditTweetFragment fragment = EditTweetFragment.newReplyEditorFromUser(user);
-        new TweetEditorPresenter(fragment);
+        final TweetEditorModel model = ModelContainer.getTweetEditorModel();
+        new TweetEditorPresenter(fragment, model);
         return fragment;
     }
 

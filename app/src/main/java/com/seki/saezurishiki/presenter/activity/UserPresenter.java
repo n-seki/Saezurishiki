@@ -201,10 +201,6 @@ public class UserPresenter implements ModelObserver {
         this.view.showCompleteDestroyBlockMessage();
     }
 
-    public void postTweet(StatusUpdate tweet) {
-        this.model.postTweet(tweet);
-    }
-
     private void onPostTweet(TweetEntity tweet) {
         this.view.showCompletePostTweetMessage();
     }

@@ -82,7 +82,6 @@ public class EditTweetFragment extends Fragment implements TweetEditorPresenter.
 
     public interface Callback {
         void removeEditTweetFragment(Fragment tweetEditFragment);
-        void postTweet(StatusUpdate status);
     }
 
 
@@ -395,7 +394,7 @@ public class EditTweetFragment extends Fragment implements TweetEditorPresenter.
             status.setMedia(mFileName, media);
         }
 
-        mCallback.postTweet(status);
+        this.presenter.postTweet(status);
         mCallback.removeEditTweetFragment(this);
     }
 

@@ -295,11 +295,6 @@ public class UserActivity extends    AppCompatActivity
     }
 
     @Override
-    public void postTweet(StatusUpdate status) {
-        this.presenter.postTweet(status);
-    }
-
-    @Override
     public void showCompletePostTweetMessage() {
         CustomToast.show(UserActivity.this, R.string.reply_complete, Toast.LENGTH_SHORT);
     }

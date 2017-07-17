@@ -36,19 +36,6 @@ public class LoginUserScreenImp extends ModelBaseImp implements LoginUserScreen 
         });
     }
 
-    @Override
-    public void postTweet(StatusUpdate status) {
-        this.executor.execute(() -> {
-            try {
-                final Status postedStatus = this.repository.getTwitter().updateStatus(status);
-                final TweetEntity postedTweet = this.repository.map(postedStatus);
-                final ModelMessage message = ModelMessage.of(ModelActionType.COMPLETE_POST_TWEET, postedTweet);
-                observable.notifyObserver(message);
-            } catch (TwitterException e) {
-                observable.notifyObserver(ModelMessage.error(e));
-            }
-        });
-    }
 
     @Override
     public void addObserver(ModelObserver observer){

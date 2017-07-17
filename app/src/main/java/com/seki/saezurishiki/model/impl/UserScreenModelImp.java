@@ -102,18 +102,4 @@ class UserScreenModelImp extends ModelBaseImp implements UserScreenModel {
             }
         });
     }
-
-    @Override
-    public void postTweet(StatusUpdate tweet) {
-        this.executor.execute(() -> {
-            try {
-                final Status result = this.repository.getTwitter().updateStatus(tweet);
-                final TweetEntity user = this.repository.map(result);
-                final ModelMessage message = ModelMessage.of(ModelActionType.COMPLETE_POST_TWEET, user);
-                observable.notifyObserver(message);
-            } catch (TwitterException e) {
-                e.printStackTrace();
-            }
-        });
-    }
 }
