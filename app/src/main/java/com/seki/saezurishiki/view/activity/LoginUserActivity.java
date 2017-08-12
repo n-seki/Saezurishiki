@@ -26,54 +26,43 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
-import com.seki.saezurishiki.application.SaezurishikiApp;
 import com.seki.saezurishiki.R;
+import com.seki.saezurishiki.control.CustomToast;
+import com.seki.saezurishiki.control.FragmentController;
+import com.seki.saezurishiki.control.ScreenNav;
 import com.seki.saezurishiki.control.Setting;
+import com.seki.saezurishiki.control.UIControlUtil;
 import com.seki.saezurishiki.entity.DirectMessageEntity;
+import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.entity.UserEntity;
+import com.seki.saezurishiki.file.CachManager;
+import com.seki.saezurishiki.file.EncryptUtil;
+import com.seki.saezurishiki.file.Serializer;
 import com.seki.saezurishiki.model.impl.ModelContainer;
+import com.seki.saezurishiki.network.ConnectionReceiver;
+import com.seki.saezurishiki.network.twitter.TwitterAccount;
+import com.seki.saezurishiki.network.twitter.TwitterUtil;
 import com.seki.saezurishiki.network.twitter.UserStreamManager;
 import com.seki.saezurishiki.presenter.activity.LoginUserPresenter;
 import com.seki.saezurishiki.repository.RemoteRepositoryImp;
 import com.seki.saezurishiki.view.adapter.DrawerButtonListAdapter;
-import com.seki.saezurishiki.control.CustomToast;
-import com.seki.saezurishiki.control.FragmentController;
 import com.seki.saezurishiki.view.adapter.TimeLinePager;
-import com.seki.saezurishiki.control.UIControlUtil;
-import com.seki.saezurishiki.entity.TweetEntity;
-import com.seki.saezurishiki.file.CachManager;
-import com.seki.saezurishiki.file.EncryptUtil;
-import com.seki.saezurishiki.file.Serializer;
-import com.seki.saezurishiki.view.fragment.Fragments;
-import com.seki.saezurishiki.view.fragment.editor.DirectMessageFragment;
-import com.seki.saezurishiki.view.fragment.editor.EditTweetFragment;
-import com.seki.saezurishiki.view.fragment.other.LicenseFragment;
-import com.seki.saezurishiki.view.fragment.list.RecentlyDirectMessageListFragment;
-import com.seki.saezurishiki.view.fragment.other.SettingFragment;
-import com.seki.saezurishiki.view.fragment.dialog.YesNoSelectDialog;
-import com.seki.saezurishiki.network.ConnectionReceiver;
-import com.seki.saezurishiki.network.twitter.AsyncTwitterTask;
-import com.seki.saezurishiki.network.twitter.TwitterAccount;
-import com.seki.saezurishiki.network.twitter.TwitterError;
-import com.seki.saezurishiki.network.twitter.TwitterTaskResult;
-import com.seki.saezurishiki.network.twitter.TwitterWrapper;
-import com.seki.saezurishiki.network.twitter.TwitterUtil;
-import com.seki.saezurishiki.network.twitter.streamListener.CustomUserStreamListener;
-import com.seki.saezurishiki.view.customview.NotificationTabLayout;
-import com.seki.saezurishiki.view.customview.TwitterUserDrawerView;
 import com.seki.saezurishiki.view.control.FragmentControl;
 import com.seki.saezurishiki.view.control.TabManagedView;
 import com.seki.saezurishiki.view.control.TabViewControl;
+import com.seki.saezurishiki.view.customview.NotificationTabLayout;
+import com.seki.saezurishiki.view.customview.TwitterUserDrawerView;
+import com.seki.saezurishiki.view.fragment.dialog.YesNoSelectDialog;
+import com.seki.saezurishiki.view.fragment.editor.EditTweetFragment;
+import com.seki.saezurishiki.view.fragment.list.RecentlyDirectMessageListFragment;
 import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.Contract;
 
-import twitter4j.DirectMessage;
+import java.util.HashMap;
+import java.util.Map;
+
 import twitter4j.HashtagEntity;
-import twitter4j.Status;
-import twitter4j.StatusDeletionNotice;
-import twitter4j.StatusUpdate;
-import twitter4j.User;
 
 /**
  * ログインユーザーに関する情報を管理するためのActivity<br>
@@ -148,8 +137,6 @@ public class LoginUserActivity extends    AppCompatActivity
         mReceiver = new ConnectionReceiver(this);
         registerReceiver(mReceiver, filter);
 
-        //mTwitterTask = new TwitterWrapper(this, getSupportLoaderManager(), this.twitterAccount);
-
         this.presenter.loadUser();
         this.setupActionBar();
         this.setupNavigationDrawer(theme);
@@ -194,10 +181,12 @@ public class LoginUserActivity extends    AppCompatActivity
     private void setupTweetButton(int theme) {
         FloatingActionButton editTweetButton = (FloatingActionButton) findViewById(R.id.edit_tweet_button);
         editTweetButton.setOnClickListener(v -> {
-            Fragment fragment = mHashTagEntities == null ? Fragments.newNormalEditor()
-                    : Fragments.newEditorWithHashTag(mHashTagEntities);
+            final Map<String, Object> args = new HashMap<>();
+            if (mHashTagEntities != null) {
+                args.put("hashTag", mHashTagEntities);
+            }
 
-            LoginUserActivity.this.addFragment(R.id.home_container, fragment);
+            LoginUserActivity.this.addFragment(ScreenNav.TWEET_EDITOR, args);
         });
         editTweetButton.setBackgroundTintList(UIControlUtil.buttonTint(this, theme));
     }
@@ -213,17 +202,17 @@ public class LoginUserActivity extends    AppCompatActivity
     }
 
 
-    private final AdapterView.OnItemClickListener drawerItemClickListener = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            final int action = LoginUserActivity.this.userDrawerView.getButtonAtPosition(position).getAction();
-            if (action == UserActivity.SHOW_ACTIVITY) {
-                LoginUserActivity.this.mDrawerLayout.closeDrawer(GravityCompat.START);
-                LoginUserActivity.this.displayBiography(mLoginUser.getId());
-                return;
-            }
-            LoginUserActivity.this.displayFragment(action, mLoginUser);
-        }
+    private final AdapterView.OnItemClickListener drawerItemClickListener = (parent, view, position, id) -> {
+        mDrawerLayout.closeDrawer(GravityCompat.START);
+        final ScreenNav screenNav = LoginUserActivity.this.userDrawerView.getButtonAtPosition(position).screenNav;
+        final Map<String, Object> args = new HashMap<>();
+        args.put("user", mLoginUser);
+        screenNav.transition(this, getSupportFragmentManager(), R.id.home_container, args,
+                fragment -> {
+                    replaceTitle(fragment.toString());
+                    changeActionBarIndicatorState();
+                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                });
     };
 
 
@@ -242,18 +231,6 @@ public class LoginUserActivity extends    AppCompatActivity
         tabLayout.setup(theme);
     }
 
-
-
-    private void displayFragment(int position, UserEntity user) {
-        if (mDisplayPosition == position) {
-            mDrawerLayout.closeDrawer(GravityCompat.START);
-            return;
-        }
-
-        addFragment(R.id.home_container, mFragmentController.createFragment(position, user));
-        mDrawerLayout.closeDrawer(GravityCompat.START);
-        mDisplayPosition = position;
-    }
 
 
     @Override
@@ -357,11 +334,13 @@ public class LoginUserActivity extends    AppCompatActivity
     }
 
 
-    private void addFragment(int containerViewId, Fragment fragment) {
-        mFragmentController.add(fragment, containerViewId);
-        replaceTitle(fragment.toString());
-        changeActionBarIndicatorState();
-        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+    private void addFragment(ScreenNav screenNav, Map<String, Object> args) {
+        screenNav.transition(this, getSupportFragmentManager(), R.id.home_container, args,
+                fragment -> {
+                    replaceTitle(fragment.toString());
+                    changeActionBarIndicatorState();
+                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                });
     }
 
 
@@ -448,8 +427,9 @@ public class LoginUserActivity extends    AppCompatActivity
 
     @Override
     public void displayDirectMessageEditor(long userId) {
-        Fragment directMessageEditor = Fragments.newDirectMessageEditor(userId);
-        this.addFragment(R.id.home_container, directMessageEditor);
+        final Map<String, Object> args = new HashMap<>();
+        args.put("userId", userId);
+        this.addFragment(ScreenNav.MESSAGE_EDITOR, args);
     }
 
 
@@ -494,13 +474,15 @@ public class LoginUserActivity extends    AppCompatActivity
 
         @Override
         public boolean onQueryTextSubmit(String query) {
-            Fragment searcher = Fragments.createInjectSearchFragment(mLoginUser.getId(), query);
-            LoginUserActivity.this.addFragment(R.id.home_container, searcher);
+            final Map<String, Object> args = new HashMap<>();
+            args.put("user", mLoginUser);
+            args.put("query", query);
+            LoginUserActivity.this.addFragment(ScreenNav.SEARCH, args);
 
-            ActionBar actionBar = getSupportActionBar();
-            if ( actionBar != null ) {
-                //actionBar.collapseActionView();
-            }
+//            ActionBar actionBar = getSupportActionBar();
+//            if ( actionBar != null ) {
+//                //actionBar.collapseActionView();
+//            }
 
             mSearchView.clearFocus();
 
@@ -520,8 +502,7 @@ public class LoginUserActivity extends    AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_settings:
-                Fragment fragment = SettingFragment.getInstance();
-                addFragment(R.id.home_container, fragment);
+                this.addFragment(ScreenNav.SETTING, null);
                 return true;
 
             case R.id.action_search:
@@ -541,7 +522,7 @@ public class LoginUserActivity extends    AppCompatActivity
                 return true;
 
             case R.id.action_about_Kawasemi:
-                this.addFragment(R.id.home_container, LicenseFragment.newInstance());
+                this.addFragment(ScreenNav.LICENSE, null);
                 return true;
 
             default:
@@ -619,13 +600,6 @@ public class LoginUserActivity extends    AppCompatActivity
     }
 
 
-    public void displayBiography(long userID) {
-        Intent intent = new Intent(this, UserActivity.class);
-        intent.putExtra(UserActivity.USER_ID, userID);
-        startActivity(intent);
-    }
-
-
     @Override
     public void onCompletePostTweet(TweetEntity tweet) {
         Toast.makeText(this, R.string.tweet_complete, Toast.LENGTH_SHORT).show();
@@ -692,21 +666,10 @@ public class LoginUserActivity extends    AppCompatActivity
                 view.tabPosition(), view.getRequestTabState());
     }
 
-    @Override
-    public void onRemoveFragment(@NonNull Fragment f) {
-        onBackPressed();
-    }
 
     @Override
-    public void requestShowUser(long userId) {
-        Intent intent = new Intent(this, UserActivity.class);
-        intent.putExtra(UserActivity.USER_ID, userId);
-        startActivity(intent);
-    }
-
-    @Override
-    public void requestShowFragment(@NonNull Fragment fragment) {
-        this.addFragment(R.id.home_container, fragment);
+    public void requestChangeScreen(ScreenNav screenNav, Map<String, Object> args) {
+        this.addFragment(screenNav, args);
     }
 
 

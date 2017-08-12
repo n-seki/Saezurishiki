@@ -24,6 +24,13 @@ public class TwitterUserDrawerView extends NavigationView {
 
     private DrawerButtonListAdapter buttonListAdapter;
 
+    public static final int TWEET = 0;
+    public static final int FAVORITE = 1;
+    public static final int FOLLOW = 2;
+    public static final int FOLLOWER = 3;
+    public static final int SHOW_USER = 4;
+    public static final int SETTING = 5;
+
     public TwitterUserDrawerView(Context context) {
         super(context);
     }

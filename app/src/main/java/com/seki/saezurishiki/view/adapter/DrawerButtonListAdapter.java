@@ -2,6 +2,7 @@ package com.seki.saezurishiki.view.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,13 +10,14 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.seki.saezurishiki.R;
+import com.seki.saezurishiki.control.ScreenNav;
 import com.seki.saezurishiki.entity.UserEntity;
+import com.seki.saezurishiki.view.customview.TwitterUserDrawerView;
+import com.seki.saezurishiki.view.fragment.Fragments;
+import com.seki.saezurishiki.view.fragment.other.SettingFragment;
 
-import static com.seki.saezurishiki.control.FragmentController.FRAGMENT_ID_FAVORITE;
-import static com.seki.saezurishiki.control.FragmentController.FRAGMENT_ID_FOLLOWER;
-import static com.seki.saezurishiki.control.FragmentController.FRAGMENT_ID_FRIEND;
-import static com.seki.saezurishiki.control.FragmentController.FRAGMENT_ID_SETTING;
-import static com.seki.saezurishiki.control.FragmentController.FRAGMENT_ID_TWEET;
+import java.util.function.Supplier;
+
 import static com.seki.saezurishiki.view.activity.UserActivity.SHOW_ACTIVITY;
 
 /**
@@ -25,13 +27,17 @@ import static com.seki.saezurishiki.view.activity.UserActivity.SHOW_ACTIVITY;
 public class DrawerButtonListAdapter extends ArrayAdapter<DrawerButtonListAdapter.ButtonInfo> {
 
     public static class ButtonInfo {
-        int text;
+        final int text;
         int count;
-        int icon;
-        int fragmentID;
-        ButtonInfo() {}
-        public int getAction() {
-            return this.fragmentID;
+        final int icon;
+        final int position;
+        public final ScreenNav screenNav;
+        ButtonInfo(int text, int count, int icon, int position, ScreenNav screenNav) {
+            this.text = text;
+            this.count = count;
+            this.icon = icon;
+            this.position = position;
+            this.screenNav = screenNav;
         }
     }
 
@@ -96,13 +102,15 @@ public class DrawerButtonListAdapter extends ArrayAdapter<DrawerButtonListAdapte
 
         add(new ButtonInfoBuilder()
                 .text(R.string.show_biography)
-                .nextScreen(SHOW_ACTIVITY)
+                .nextScreen(ScreenNav.USER_ACTIVITY)
+                .position(TwitterUserDrawerView.SHOW_USER)
                 .icon(mTheme == R.style.AppTheme_Dark ? R.drawable.drawer_show_user_dark : R.drawable.drawer_show_user_light)
                 .build());
 
         add(new ButtonInfoBuilder()
                 .text(R.string.action_settings)
-                .nextScreen(FRAGMENT_ID_SETTING)
+                .nextScreen(ScreenNav.SETTING)
+                .position(TwitterUserDrawerView.SETTING)
                 .icon(mTheme == R.style.AppTheme_Dark ? R.drawable.drawer_settting_dark : R.drawable.drawer_settting_light)
                 .build());
     }
@@ -112,28 +120,32 @@ public class DrawerButtonListAdapter extends ArrayAdapter<DrawerButtonListAdapte
         add(new ButtonInfoBuilder()
                 .text(R.string.tweet)
                 .count(user.getStatusesCount())
-                .nextScreen(FRAGMENT_ID_TWEET)
+                .nextScreen(ScreenNav.USER_TWEET)
+                .position(TwitterUserDrawerView.TWEET)
                 .icon(mTheme == R.style.AppTheme_Dark ? R.drawable.drawer_tweet_dark :R.drawable.drawer_tweet_light)
                 .build());
 
         add(new ButtonInfoBuilder()
                 .text(R.string.favorite)
                 .count(user.getFavouritesCount())
-                .nextScreen(FRAGMENT_ID_FAVORITE)
+                .nextScreen(ScreenNav.FAVORITE)
+                .position(TwitterUserDrawerView.FAVORITE)
                 .icon(mTheme == R.style.AppTheme_Dark ? R.drawable.drawer_favorite_dark : R.drawable.drawer_favorite_light)
                 .build());
 
         add(new ButtonInfoBuilder()
                 .text(R.string.follow)
                 .count(user.getFriendsCount())
-                .nextScreen(FRAGMENT_ID_FRIEND)
+                .nextScreen(ScreenNav.FOLLOW)
+                .position(TwitterUserDrawerView.FOLLOW)
                 .icon(mTheme == R.style.AppTheme_Dark ? R.drawable.drawer_friend_follower_dark :R.drawable.drawer_friend_follower_light)
                 .build());
 
         add(new ButtonInfoBuilder()
                 .text(R.string.follower)
                 .count(user.getFollowersCount())
-                .nextScreen(FRAGMENT_ID_FOLLOWER)
+                .position(TwitterUserDrawerView.FOLLOWER)
+                .nextScreen(ScreenNav.FOLLOWER)
                 .icon(mTheme == R.style.AppTheme_Dark ? R.drawable.drawer_friend_follower_dark :R.drawable.drawer_friend_follower_light)
                 .build());
     }
@@ -170,7 +182,7 @@ public class DrawerButtonListAdapter extends ArrayAdapter<DrawerButtonListAdapte
     private ButtonInfo getButtonItem(int id) {
         for ( int count = 0; count < getCount(); count++ ) {
             ButtonInfo item = getItem(count);
-            if ( item.getAction() == id ) {
+            if ( item.position == id ) {
                 return item;
             }
         }
@@ -193,8 +205,9 @@ public class DrawerButtonListAdapter extends ArrayAdapter<DrawerButtonListAdapte
     private static class ButtonInfoBuilder {
         int text = -1;
         int count = -1;
+        int position = -1;
         int icon;
-        int nextScreen = -1;
+        ScreenNav screenNav = null;
 
         ButtonInfoBuilder() {
         }
@@ -210,22 +223,23 @@ public class DrawerButtonListAdapter extends ArrayAdapter<DrawerButtonListAdapte
             this.icon = icon;
             return this;
         }
-        ButtonInfoBuilder nextScreen(int screen) {
-            this.nextScreen = screen;
+        public ButtonInfoBuilder position(int position) {
+            this.position = position;
+            return this;
+        }
+        ButtonInfoBuilder nextScreen(ScreenNav screenNav) {
+            this.screenNav = screenNav;
             return this;
         }
         public ButtonInfo build() {
-            ButtonInfo info = new ButtonInfo();
             if (this.text == -1) {
                 throw new IllegalArgumentException("Text should be set");
             }
-            info.text = this.text;
-            info.count = this.count;
             if (this.icon == -1) {
                 throw new IllegalArgumentException("Icon should be set");
             }
-            info.icon = this.icon;
-            info.fragmentID = this.nextScreen;
+
+            final ButtonInfo info = new ButtonInfo(this.text, this.count, this.icon, this.position, this.screenNav);
             return info;
         }
     }

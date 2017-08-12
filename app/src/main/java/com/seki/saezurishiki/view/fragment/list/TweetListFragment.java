@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.application.SaezurishikiApp;
 import com.seki.saezurishiki.control.CustomToast;
+import com.seki.saezurishiki.control.ScreenNav;
 import com.seki.saezurishiki.control.UIControlUtil;
 import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.entity.TwitterEntity;
@@ -32,7 +33,9 @@ import com.seki.saezurishiki.view.fragment.dialog.YesNoSelectDialog;
 import com.seki.saezurishiki.view.fragment.dialog.adapter.DialogSelectAction;
 import com.seki.saezurishiki.view.fragment.other.PictureFragment;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import twitter4j.TwitterException;
 
@@ -160,9 +163,10 @@ public abstract class TweetListFragment extends Fragment
 
 
     @Override
-    public void openReplyEditor(TweetEntity status) {
-        Fragment fragment = Fragments.newReplyEditorFromStatus(status);
-        this.fragmentControl.requestShowFragment(fragment);
+    public void openReplyEditor(TweetEntity tweet) {
+        final Map<String, Object> args = new HashMap<>();
+        args.put("tweet", tweet);
+        this.fragmentControl.requestChangeScreen(ScreenNav.TWEET_EDITOR, args);
     }
 
 
@@ -257,13 +261,17 @@ public abstract class TweetListFragment extends Fragment
 
     @Override
     public void displayDetailTweet(long userID, long tweetID) {
-        Fragment conversation = Fragments.createInjectConversationFragment(userID, tweetID);
-        this.fragmentControl.requestShowFragment(conversation);
+        Map<String, Object> args = new HashMap<>();
+        args.put("userId", userID);
+        args.put("tweetId", tweetID);
+        this.fragmentControl.requestChangeScreen(ScreenNav.CONVERSATION, args);
     }
 
     @Override
     public void showUserActivity(long userID) {
-        this.fragmentControl.requestShowUser(userID);
+        final Map<String, Object> args = new HashMap<>();
+        args.put("userId", userID);
+        this.fragmentControl.requestChangeScreen(ScreenNav.USER_ACTIVITY, args);
     }
 
     @Override
@@ -274,8 +282,10 @@ public abstract class TweetListFragment extends Fragment
 
     @Override
     public void showPicture(TweetEntity tweet, int position) {
-        final Fragment f = PictureFragment.getInstance(position, tweet);
-        this.fragmentControl.requestShowFragment(f);
+        final Map<String, Object> args = new HashMap<>();
+        args.put("tweet", tweet);
+        args.put("position", position);
+        this.fragmentControl.requestChangeScreen(ScreenNav.PICTURE, args);
     }
 
     @Override
