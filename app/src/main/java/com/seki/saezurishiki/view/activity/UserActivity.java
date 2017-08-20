@@ -1,7 +1,6 @@
 package com.seki.saezurishiki.view.activity;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -23,13 +22,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.seki.saezurishiki.R;
-import com.seki.saezurishiki.application.SaezurishikiApp;
 import com.seki.saezurishiki.control.CustomToast;
 import com.seki.saezurishiki.control.FragmentController;
+import com.seki.saezurishiki.control.ScreenNav;
 import com.seki.saezurishiki.control.Setting;
 import com.seki.saezurishiki.entity.UserEntity;
 import com.seki.saezurishiki.model.impl.ModelContainer;
-import com.seki.saezurishiki.network.twitter.TwitterAccount;
 import com.seki.saezurishiki.presenter.activity.UserPresenter;
 import com.seki.saezurishiki.view.adapter.BioHeaderPageAdapter;
 import com.seki.saezurishiki.view.adapter.DrawerButtonListAdapter;
@@ -37,7 +35,8 @@ import com.seki.saezurishiki.view.control.FragmentControl;
 import com.seki.saezurishiki.view.fragment.dialog.YesNoSelectDialog;
 import com.seki.saezurishiki.view.fragment.editor.EditTweetFragment;
 
-import twitter4j.StatusUpdate;
+import java.util.HashMap;
+import java.util.Map;
 
 public class UserActivity extends    AppCompatActivity
                           implements EditTweetFragment.Callback,
@@ -113,10 +112,10 @@ public class UserActivity extends    AppCompatActivity
         headerPage.setCurrentItem(1);
 
         Button replyButton = (Button)findViewById(R.id.bio_reply_button);
-        replyButton.setOnClickListener(view -> UserActivity.this.displayFragment(FragmentController.FRAGMENT_ID_TWEET_EDITOR, owner));
+        replyButton.setOnClickListener(view -> UserActivity.this.displayFragment(ScreenNav.TWEET_EDITOR, owner));
 
         Button messageButton = (Button)findViewById(R.id.bio_message_button);
-        messageButton.setOnClickListener(view -> UserActivity.this.displayFragment(FragmentController.FRAGMENT_ID_DIRECT_MESSAGE_EDITOR, owner));
+        messageButton.setOnClickListener(view -> UserActivity.this.displayFragment(ScreenNav.MESSAGE_EDITOR, owner));
 
         Button followButton = (Button)findViewById(R.id.bio_follow_button);
         followButton.setOnClickListener(view -> presenter.onClickFollowButton());
@@ -167,31 +166,17 @@ public class UserActivity extends    AppCompatActivity
     private final AdapterView.OnItemClickListener drawerItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            final int action = mListAdapter.getItem(position).getAction();
-            presenter.onClickButtonList(action);
+            final ScreenNav screenNav = mListAdapter.getItem(position).screenNav;
+            presenter.onClickButtonList(screenNav);
         }
     };
 
     @Override
-    public void displayFragment(int position, UserEntity owner) {
-        Fragment fragment = mFragmentController.createFragment(position, owner);
-        if (position != FragmentController.FRAGMENT_ID_DIRECT_MESSAGE_EDITOR && position != FragmentController.FRAGMENT_ID_TWEET_EDITOR) {
-            this.replaceFragment(fragment);
-        } else {
-            this.addFragment(fragment);
-        }
-    }
+    public void displayFragment(ScreenNav screenNav, UserEntity owner) {
+        final Map<String, Object> args = new HashMap<>();
+        args.put("user", owner);
+        requestChangeScreen(screenNav, args);
 
-    private void replaceFragment(Fragment fragment) {
-        mFragmentController.replace(fragment, R.id.biography_container);
-        changeSubtitle(fragment.toString());
-        changeActionBarIndicatorState();
-    }
-
-    private void addFragment(Fragment fragment) {
-        mFragmentController.add(fragment, R.id.biography_container);
-        changeSubtitle(fragment.toString());
-        changeActionBarIndicatorState();
     }
 
     private void changeActionBarIndicatorState() {
@@ -406,21 +391,14 @@ public class UserActivity extends    AppCompatActivity
         CustomToast.show(UserActivity.this, R.string.release_block_complete, Toast.LENGTH_SHORT);
     }
 
-    @Override
-    public void onRemoveFragment(Fragment f) {
-        onBackPressed();
-    }
 
     @Override
-    public void requestShowUser(long userId) {
-        Intent intent = new Intent(this, UserActivity.class);
-        intent.putExtra(USER_ID, userId);
-        startActivity(intent);
-    }
-
-    @Override
-    public void requestShowFragment(Fragment fragment) {
-        this.addFragment(fragment);
+    public void requestChangeScreen(ScreenNav screenNav, Map<String, Object> args) {
+        screenNav.transition(this, getSupportFragmentManager(), R.id.biography_container, args,
+                fragment -> {
+                    changeSubtitle(fragment.toString());
+                    changeActionBarIndicatorState();
+                });
     }
 
 }

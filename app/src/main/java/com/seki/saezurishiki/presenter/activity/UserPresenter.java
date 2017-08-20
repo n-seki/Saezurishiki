@@ -5,6 +5,7 @@ import android.os.Looper;
 
 import com.seki.saezurishiki.control.FragmentController;
 import com.seki.saezurishiki.control.RelationshipModel;
+import com.seki.saezurishiki.control.ScreenNav;
 import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.entity.UserEntity;
 import com.seki.saezurishiki.model.UserScreenModel;
@@ -32,7 +33,7 @@ public class UserPresenter implements ModelObserver {
         void setFollowButton();
         void setRemoveButton();
         void updateOptionMenu();
-        void displayFragment(int fragment, UserEntity owner);
+        void displayFragment(ScreenNav screenNav, UserEntity owner);
         void displayFollowRequestDialog(UserEntity user);
         void displayFollowDialog(UserEntity user, boolean isFollow);
         void showReleaseBlockDialog(UserEntity user);
@@ -111,13 +112,8 @@ public class UserPresenter implements ModelObserver {
         this.view.displayFollowDialog(this.owner, this.relationship.isFollowByLoginUser());
     }
 
-    public void onClickButtonList(int action) {
-        if (action == FragmentController.FRAGMENT_ID_DIRECT_MESSAGE_EDITOR ) {
-            if (!this.relationship.isMutualFollow()) {
-                return;
-            }
-        }
-        this.view.displayFragment(action, this.owner);
+    public void onClickButtonList(ScreenNav screenNav) {
+        this.view.displayFragment(screenNav, this.owner);
     }
 
     public void onSelectReleaseBlock() {

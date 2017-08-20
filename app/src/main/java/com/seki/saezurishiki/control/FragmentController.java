@@ -22,12 +22,6 @@ public final class FragmentController {
 
     public static final int FRAGMENT_ID_TWEET = 1;
     public static final int FRAGMENT_ID_FAVORITE = 2;
-    public static final int FRAGMENT_ID_FRIEND = 3;
-    public static final int FRAGMENT_ID_FOLLOWER = 4;
-    public static final int FRAGMENT_ID_RECENTLY_DIRECT_MESSAGE = 5;
-    public static final int FRAGMENT_ID_SETTING = 6;
-    public static final int FRAGMENT_ID_TWEET_EDITOR = 7;
-    public static final int FRAGMENT_ID_DIRECT_MESSAGE_EDITOR = 8;
 
     private final FragmentManager mFragmentManager;
 
@@ -44,49 +38,23 @@ public final class FragmentController {
                         .commit();
     }
 
-
-
-    public void replace(Fragment fragment, int containerViewId) {
-        mFragmentManager.beginTransaction()
-                        .setCustomAnimations(R.anim.activity_enter_in_anim, R.anim.activity_exit_out_anim, R.anim.activity_enter_in_anim, R.anim.activity_exit_out_anim)
-                        .replace(containerViewId, fragment)
-                        .addToBackStack(null)
-                        .commit();
-
-        mFragmentManager.executePendingTransactions();
+    public static void add(FragmentManager fragmentManager, Fragment fragment, int containerViewId) {
+        fragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.activity_enter_in_anim, R.anim.activity_exit_out_anim, R.anim.activity_enter_in_anim, R.anim.activity_exit_out_anim)
+                .add(containerViewId, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 
 
-    public Fragment createFragment(int fragmentId, UserEntity user) {
-        if (fragmentId < 0) {
-            throw new IllegalArgumentException("DrawerList item position is illegal! :" + fragmentId);
-        }
+    static void replace(FragmentManager fragmentManager, Fragment fragment, int containerViewId) {
+        fragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.activity_enter_in_anim, R.anim.activity_exit_out_anim, R.anim.activity_enter_in_anim, R.anim.activity_exit_out_anim)
+                .replace(containerViewId, fragment)
+                .addToBackStack(null)
+                .commit();
 
-        switch (fragmentId) {
-            case FRAGMENT_ID_TWEET:
-                return Fragments.createInjectUserTweetFragment(user.getId(), user.getStatusesCount());
-
-            case FRAGMENT_ID_FAVORITE:
-                return Fragments.createInjectFavoritesFragment(user.getId(), user.getFavouritesCount());
-
-            case FRAGMENT_ID_FRIEND:
-                return Fragments.newFriendListFragment(user.getId());
-
-            case FRAGMENT_ID_FOLLOWER:
-                return Fragments.newFollowerListFragment(user.getId());
-
-            case FRAGMENT_ID_SETTING:
-                return SettingFragment.getInstance();
-
-            case FRAGMENT_ID_TWEET_EDITOR:
-                return Fragments.newReplyEditorFromUser(user);
-
-            case FRAGMENT_ID_DIRECT_MESSAGE_EDITOR:
-                return Fragments.newDirectMessageEditor(user.getId());
-
-            default:
-                throw new IllegalArgumentException("DrawerList item position is illegal! :" + fragmentId);
-        }
+        fragmentManager.executePendingTransactions();
     }
 
 
