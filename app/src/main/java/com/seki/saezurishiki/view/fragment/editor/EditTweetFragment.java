@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -28,6 +29,7 @@ import android.widget.Toast;
 import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.application.SaezurishikiApp;
 import com.seki.saezurishiki.control.CustomToast;
+import com.seki.saezurishiki.control.Setting;
 import com.seki.saezurishiki.control.StatusUtil;
 import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.entity.UserEntity;
@@ -297,6 +299,8 @@ public class EditTweetFragment extends Fragment implements TweetEditorPresenter.
             Intent intent = EditTweetFragment.this.createShowGalleryIntent();
             EditTweetFragment.this.showGallery(intent);
         });
+
+        this.setupRegisterButton(rootView);
     }
 
 
@@ -370,6 +374,40 @@ public class EditTweetFragment extends Fragment implements TweetEditorPresenter.
 
         TweetTextEditor editor = (TweetTextEditor)rootView.findViewById(R.id.tweet_editor);
         editor.setHashTag(hashTags);
+    }
+
+    private void setupRegisterButton(View rootView) {
+        final String registeredWord1 = Setting.getRegisterWord(getContext(), 1);
+        if (!registeredWord1.isEmpty()) {
+            final ImageButton registerButton1 = (ImageButton)rootView.findViewById(R.id.register_word_1);
+            registerButton1.setVisibility(View.VISIBLE);
+            registerButton1.setOnClickListener(v -> this.autoCompleteRegisteredWord(rootView, registeredWord1));
+        }
+
+        final String registeredWord2 = Setting.getRegisterWord(getContext(), 2);
+        if (!registeredWord2.isEmpty()) {
+            final ImageButton registerButton2 = (ImageButton)rootView.findViewById(R.id.register_word_2);
+            registerButton2.setVisibility(View.VISIBLE);
+            registerButton2.setOnClickListener(v -> this.autoCompleteRegisteredWord(rootView, registeredWord2));
+        }
+
+        final String registeredWord3 = Setting.getRegisterWord(getContext(), 3);
+        if (!registeredWord3.isEmpty()) {
+            final ImageButton registerButton3 = (ImageButton)rootView.findViewById(R.id.register_word_3);
+            registerButton3.setVisibility(View.VISIBLE);
+            registerButton3.setOnClickListener(v -> this.autoCompleteRegisteredWord(rootView, registeredWord3));
+        }
+    }
+
+    private void autoCompleteRegisteredWord(View rootView, String registeredWord) {
+        TweetTextEditor editor = (TweetTextEditor)rootView.findViewById(R.id.tweet_editor);
+        final String currentText = editor.getText().toString();
+        if (currentText.length() >= 1 && currentText.charAt(currentText.length() - 1) != ' ') {
+            editor.append(" ");
+        }
+
+        editor.append(registeredWord);
+        editor.setSelection(editor.getText().toString().length());
     }
 
 

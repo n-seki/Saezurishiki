@@ -53,4 +53,20 @@
             android:entryValues="@array/pref_entryValues_action_button_operation"
             android:defaultValue="@string/pref_default_action_button_operation"/>
     </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/pref_category_regist_word"
+        android:summary="@string/pref_summary_regist_word">
+        <EditTextPreference
+            android:title="@string/pref_title_register_tweet_1"
+            android:key="@string/pref_key_register_tweet_1"
+            android:dialogTitle="@string/pref_dialog_title_register_tweet_1"/>
+        <EditTextPreference
+            android:title="@string/pref_title_register_tweet_2"
+            android:key="@string/pref_key_register_tweet_2"
+            android:dialogTitle="@string/pref_dialog_title_register_tweet_2"/>
+        <EditTextPreference
+            android:title="@string/pref_title_register_tweet_3"
+            android:key="@string/pref_key_register_tweet_3"
+            android:dialogTitle="@string/pref_dialog_title_register_tweet_3"/>
+    </PreferenceCategory>
 </PreferenceScreen>

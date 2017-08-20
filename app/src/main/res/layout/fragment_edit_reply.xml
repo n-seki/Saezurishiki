@@ -60,6 +60,45 @@
                 android:layout_alignParentLeft="true"
                 android:contentDescription="@string/update_image" />
 
+            <ImageButton
+                android:id="@+id/register_word_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_register_word_1"
+                android:layout_marginTop="12sp"
+                android:layout_marginLeft="8sp"
+                android:layout_marginStart="8sp"
+                android:layout_toRightOf="@id/image_upload_button"
+                android:layout_toEndOf="@id/image_upload_button"
+                android:contentDescription="@string/description_register_word_1"
+                android:visibility="gone"/>
+
+            <ImageButton
+                android:id="@+id/register_word_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_register_word_2"
+                android:layout_marginTop="12sp"
+                android:layout_marginLeft="8sp"
+                android:layout_marginStart="8sp"
+                android:layout_toRightOf="@id/register_word_1"
+                android:layout_toEndOf="@id/register_word_1"
+                android:contentDescription="@string/description_register_word_2"
+                android:visibility="gone"/>
+
+            <ImageButton
+                android:id="@+id/register_word_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_register_word_3"
+                android:layout_marginTop="12sp"
+                android:layout_marginLeft="8sp"
+                android:layout_marginStart="8sp"
+                android:layout_toRightOf="@id/register_word_2"
+                android:layout_toEndOf="@id/register_word_2"
+                android:contentDescription="@string/description_register_word_3"
+                android:visibility="gone"/>
+
             <Button
                 android:id="@+id/tweet_button"
                 android:layout_width="wrap_content"
