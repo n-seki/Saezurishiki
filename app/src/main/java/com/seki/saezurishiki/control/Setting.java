@@ -109,6 +109,12 @@ public final class Setting {
         return ButtonActionPattern.convert(symbol);
     }
 
+    public static String getRegisterWord(Context context, int registerNumber) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        final String key = context.getString(R.string.pref_key_register_tweet) + "_" + String.valueOf(registerNumber);
+        return sharedPref.getString(key, "");
+    }
+
     public int getTheme() {
         return theme;
     }

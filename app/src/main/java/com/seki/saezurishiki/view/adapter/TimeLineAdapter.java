@@ -602,5 +602,4 @@ public class TimeLineAdapter extends ArrayAdapter<ListElement> {
         view.setVisibility(View.INVISIBLE);
     }
 
-
 }
