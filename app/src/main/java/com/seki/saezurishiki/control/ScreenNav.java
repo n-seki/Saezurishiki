@@ -83,7 +83,7 @@ public enum ScreenNav {
         @Override
         public void transition(Context context, FragmentManager fragmentManager, int layoutId, Map<String, Object> args, Consumer<Fragment> callback) {
             final Fragment fragment = ScreenNav.createEditTweetFragment(args);
-            FragmentController.replace(fragmentManager, fragment, layoutId);
+            FragmentController.add(fragmentManager, fragment, layoutId);
             callback.accept(fragment);
         }
     },
@@ -94,7 +94,7 @@ public enum ScreenNav {
             final long userId = (Long)args.get("userId");
             final long tweetId = (Long)args.get("tweetId");
             final Fragment fragment = Fragments.createInjectConversationFragment(userId, tweetId);
-            FragmentController.replace(fragmentManager, fragment, layoutId);
+            FragmentController.add(fragmentManager, fragment, layoutId);
             callback.accept(fragment);
         }
     },
@@ -104,7 +104,7 @@ public enum ScreenNav {
         public void transition(Context context, FragmentManager fragmentManager, int layoutId, Map<String, Object> args, Consumer<Fragment> callback) {
             final long userId = ScreenNav.getUserId(args);
             Fragment fragment = Fragments.newDirectMessageEditor(userId);
-            FragmentController.replace(fragmentManager, fragment, layoutId);
+            FragmentController.add(fragmentManager, fragment, layoutId);
             callback.accept(fragment);
         }
     },

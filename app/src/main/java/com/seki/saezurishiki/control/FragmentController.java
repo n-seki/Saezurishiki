@@ -46,18 +46,6 @@ public final class FragmentController {
                 .commit();
     }
 
-
-    static void replace(FragmentManager fragmentManager, Fragment fragment, int containerViewId) {
-        fragmentManager.beginTransaction()
-                .setCustomAnimations(R.anim.activity_enter_in_anim, R.anim.activity_exit_out_anim, R.anim.activity_enter_in_anim, R.anim.activity_exit_out_anim)
-                .replace(containerViewId, fragment)
-                .addToBackStack(null)
-                .commit();
-
-        fragmentManager.executePendingTransactions();
-    }
-
-
     @Contract(pure = true)
     public boolean hasFragment() {
         return mFragmentManager.getBackStackEntryCount() != 0;
