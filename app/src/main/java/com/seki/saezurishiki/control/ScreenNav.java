@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 
 import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.entity.UserEntity;
+import com.seki.saezurishiki.network.twitter.UserStreamManager;
 import com.seki.saezurishiki.view.activity.UserActivity;
 import com.seki.saezurishiki.view.fragment.Fragments;
 import com.seki.saezurishiki.view.fragment.other.LicenseFragment;
@@ -17,6 +18,7 @@ import com.seki.saezurishiki.view.fragment.other.SettingFragment;
 import java.util.Map;
 
 import twitter4j.HashtagEntity;
+import twitter4j.UserStreamAdapter;
 
 
 public enum ScreenNav {
@@ -26,6 +28,7 @@ public enum ScreenNav {
             final long userId = ScreenNav.getUserId(args);
             Intent intent = new Intent(context, UserActivity.class);
             intent.putExtra(UserActivity.USER_ID, userId);
+            UserStreamManager.getInstance().addRunningActivity(context);
             context.startActivity(intent);
         }
     },

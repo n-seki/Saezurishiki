@@ -44,7 +44,6 @@ import com.seki.saezurishiki.network.twitter.TwitterAccount;
 import com.seki.saezurishiki.network.twitter.TwitterUtil;
 import com.seki.saezurishiki.network.twitter.UserStreamManager;
 import com.seki.saezurishiki.presenter.activity.LoginUserPresenter;
-import com.seki.saezurishiki.repository.RemoteRepositoryImp;
 import com.seki.saezurishiki.view.adapter.DrawerButtonListAdapter;
 import com.seki.saezurishiki.view.adapter.TimeLinePager;
 import com.seki.saezurishiki.view.control.FragmentControl;
@@ -284,12 +283,12 @@ public class LoginUserActivity extends    AppCompatActivity
         ModelContainer.destroy();
 
         if (UserStreamManager.isAlive()) {
-            UserStreamManager.getInstance().destroy();
+            UserStreamManager.getInstance().destroy(this);
         }
 
-        if (RemoteRepositoryImp.isAlive()) {
-            RemoteRepositoryImp.getInstance().clear();
-        }
+//        if (RemoteRepositoryImp.isAlive()) {
+//            RemoteRepositoryImp.getInstance().clear();
+//        }
 
         if (mReceiver != null) {
             unregisterReceiver(mReceiver);

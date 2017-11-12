@@ -1,10 +1,15 @@
 package com.seki.saezurishiki.network.twitter;
 
+import android.content.Context;
+
 import com.seki.saezurishiki.network.twitter.streamListener.CustomUserStreamListener;
 import com.seki.saezurishiki.network.twitter.streamListener.DirectMessageUserStreamListener;
 import com.seki.saezurishiki.network.twitter.streamListener.StatusUserStreamListener;
 import com.seki.saezurishiki.network.twitter.streamListener.UserStreamUserListener;
 import com.seki.saezurishiki.repository.RemoteRepositoryImp;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import twitter4j.TwitterStream;
 import twitter4j.TwitterStreamFactory;
@@ -18,6 +23,7 @@ public final class UserStreamManager {
     private TwitterStream mTwitterStream;
     private final CustomUserStreamAdapter streamAdapter;
     private boolean isStartStream = false;
+    private List<Context> runningActivity = new ArrayList<>();
 
     private static UserStreamManager instance;
 
@@ -69,9 +75,21 @@ public final class UserStreamManager {
         isStartStream = false;
     }
 
+    public void destroy(Context context) {
+        this.runningActivity.remove(context);
+        if (!this.runningActivity.isEmpty()) {
+            return;
+        }
+        this.destroy();
+    }
 
-    public void destroy() {
+
+    private void destroy() {
         if (mTwitterStream == null) {
+            return;
+        }
+
+        if (!this.runningActivity.isEmpty()) {
             return;
         }
 
@@ -79,9 +97,14 @@ public final class UserStreamManager {
         mTwitterStream.shutdown();
         mTwitterStream = null;
         streamAdapter.clearListener();
+        runningActivity.clear();
         //streamAdapter = null;
         isStartStream = false;
         instance = null;
+    }
+
+    public void addRunningActivity(Context context) {
+        this.runningActivity.add(context);
     }
 
 
