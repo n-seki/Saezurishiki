@@ -5,6 +5,9 @@ import com.seki.saezurishiki.entity.DirectMessageEntity;
 import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.entity.UserEntity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import twitter4j.DirectMessage;
 import twitter4j.Status;
 import twitter4j.User;
@@ -25,6 +28,14 @@ public class EntityMapper {
                 this.loginUserId == status.getInReplyToUserId();
 
         return new TweetEntity(status, isLoginUserStatus, isReplyToLoginUser, this);
+    }
+
+    public List<TweetEntity> map(List<Status> statusList) {
+        final List<TweetEntity> tweets = new ArrayList<>(statusList.size());
+        for (final Status status : statusList) {
+            tweets.add(map(status));
+        }
+        return tweets;
     }
 
     public UserEntity map(User user) {
