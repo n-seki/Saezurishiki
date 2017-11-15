@@ -29,6 +29,12 @@ class TweetRepositoryKt(private val twitter: Twitter, private val tweetMapper: E
     }
 
     @Throws(TwitterException::class)
+    fun getUserTweets(userId: Long, paging: Paging): List<TweetEntity> {
+        val result = twitter.getUserTimeline(userId, paging)
+        return mappingAdd(result)
+    }
+
+    @Throws(TwitterException::class)
     fun getFevoritList(userId: Long, paging: Paging): List<TweetEntity> {
         val result = twitter.getFavorites(userId, paging)
         return mappingAdd(result)
@@ -72,6 +78,17 @@ class TweetRepositoryKt(private val twitter: Twitter, private val tweetMapper: E
             val result = twitter.showStatus(tweetId)
             tweetMapper.map(result)
         }
+    }
+
+    @Throws(TwitterException::class)
+    fun findBetween(userId: Long, paging: Paging): List<TweetEntity> {
+        if (tweets.containsKey(paging.sinceId) && tweets.containsKey(paging.maxId)) {
+            return tweets.filter { it.value.user.id == userId }
+                         .filter { it.value.id in paging.sinceId .. paging.maxId }
+                         .values
+                         .sortedBy { it.id }
+        }
+        return getUserTweets(userId, paging)
     }
 
     fun addStatusDeletionNotice(deletionNotice: StatusDeletionNotice) {
