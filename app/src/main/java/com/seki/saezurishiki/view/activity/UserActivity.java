@@ -28,7 +28,6 @@ import com.seki.saezurishiki.control.ScreenNav;
 import com.seki.saezurishiki.control.Setting;
 import com.seki.saezurishiki.entity.UserEntity;
 import com.seki.saezurishiki.model.impl.ModelContainer;
-import com.seki.saezurishiki.network.twitter.UserStreamManager;
 import com.seki.saezurishiki.presenter.activity.UserPresenter;
 import com.seki.saezurishiki.view.adapter.BioHeaderPageAdapter;
 import com.seki.saezurishiki.view.adapter.DrawerButtonListAdapter;
@@ -88,9 +87,6 @@ public class UserActivity extends    AppCompatActivity
 
     @Override
     public void onDestroy() {
-        if (UserStreamManager.isAlive()) {
-            UserStreamManager.getInstance().destroy(this);
-        }
         super.onDestroy();
     }
 

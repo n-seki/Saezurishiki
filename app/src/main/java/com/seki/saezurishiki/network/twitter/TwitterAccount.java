@@ -24,12 +24,11 @@ public class TwitterAccount {
         TwitterAccount account = new TwitterAccount(new TwitterUtil.AccountConfig(context));
         RemoteRepositoryImp.onCreate(account.twitter, new EntityMapper(account.config.loginUserId));
         UserStreamManager.onCreate(account);
-        UserStreamManager.getInstance().addRunningActivity(context);
         return account;
     }
 
     public void logout(Context context) {
-        UserStreamManager.getInstance().destroy(context);
+        UserStreamManager.getInstance().destroy();
         SharedPreferenceUtil.clearLoginUserInfo(context);
     }
 
