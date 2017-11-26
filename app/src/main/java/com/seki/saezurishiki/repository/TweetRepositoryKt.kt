@@ -6,7 +6,14 @@ import com.seki.saezurishiki.entity.mapper.EntityMapper
 import twitter4j.*
 import java.util.concurrent.ConcurrentHashMap
 
-class TweetRepositoryKt(private val twitter: Twitter, private val tweetMapper: EntityMapper) {
+object TweetRepositoryKt {
+    private lateinit var mTwitter: Twitter
+    private lateinit var mMapper: EntityMapper
+
+    fun setup(twitter: Twitter, mapper: EntityMapper) {
+        mTwitter = twitter
+        mMapper = mapper
+    }
 
     private val tweets: MutableMap<Long, TweetEntity>
     private val deletedNotice: MutableMap<Long, StatusDeletionNotice>
@@ -18,55 +25,55 @@ class TweetRepositoryKt(private val twitter: Twitter, private val tweetMapper: E
 
     @Throws(TwitterException::class)
     fun getHomeTweetList(paging: Paging): List<TweetEntity> {
-        val result = twitter.getHomeTimeline(paging)
+        val result = mTwitter.getHomeTimeline(paging)
         return mappingAdd(result)
     }
 
     @Throws(TwitterException::class)
     fun getReplyTweetList(paging: Paging): List<TweetEntity> {
-        val result = twitter.getMentionsTimeline(paging)
+        val result = mTwitter.getMentionsTimeline(paging)
         return mappingAdd(result)
     }
 
     @Throws(TwitterException::class)
     fun getUserTweets(userId: Long, paging: Paging): List<TweetEntity> {
-        val result = twitter.getUserTimeline(userId, paging)
+        val result = mTwitter.getUserTimeline(userId, paging)
         return mappingAdd(result)
     }
 
     @Throws(TwitterException::class)
     fun getFevoritList(userId: Long, paging: Paging): List<TweetEntity> {
-        val result = twitter.getFavorites(userId, paging)
+        val result = mTwitter.getFavorites(userId, paging)
         return mappingAdd(result)
     }
 
     @Throws(TwitterException::class)
     fun search(query: Query): List<TweetEntity> {
-        val result = twitter.search(query)
+        val result = mTwitter.search(query)
         return mappingAdd(result.tweets)
     }
 
     @Throws(TwitterException::class)
     fun favorite(tweetId: Long): TweetEntity {
-        val result = twitter.createFavorite(tweetId)
+        val result = mTwitter.createFavorite(tweetId)
         return mappingAdd(result)
     }
 
     @Throws(TwitterException::class)
     fun unfavorite(tweetId: Long): TweetEntity {
-        val result = twitter.destroyFavorite(tweetId)
+        val result = mTwitter.destroyFavorite(tweetId)
         return mappingAdd(result)
     }
 
     @Throws(TwitterException::class)
     fun retweet(tweetId: Long): TweetEntity {
-        val result = twitter.retweetStatus(tweetId)
+        val result = mTwitter.retweetStatus(tweetId)
         return mappingAdd(result)
     }
 
     @Throws(TwitterException::class)
     fun destroy(tweetId: Long): TweetEntity {
-        val result = twitter.destroyStatus(tweetId)
+        val result = mTwitter.destroyStatus(tweetId)
         return mappingAdd(result)
     }
 
@@ -75,8 +82,8 @@ class TweetRepositoryKt(private val twitter: Twitter, private val tweetMapper: E
     @Throws(TwitterException::class)
     fun find(tweetId: Long): TweetEntity {
         return tweets.getOrPut(tweetId) {
-            val result = twitter.showStatus(tweetId)
-            tweetMapper.map(result)
+            val result = mTwitter.showStatus(tweetId)
+            mMapper.map(result)
         }
     }
 
@@ -119,13 +126,13 @@ class TweetRepositoryKt(private val twitter: Twitter, private val tweetMapper: E
     }
 
     private fun mappingAdd(status: Status): TweetEntity {
-        val tweet = tweetMapper.map(status)
+        val tweet = mMapper.map(status)
         add(tweet)
         return tweet
     }
 
     private fun mappingAdd(statusList: List<Status>): List<TweetEntity> {
-        val tweets = tweetMapper.map(statusList)
+        val tweets = mMapper.map(statusList)
         addAllTweet(tweets)
         return tweets
     }
