@@ -1,7 +1,6 @@
 package com.seki.saezurishiki.repository
 
 import com.seki.saezurishiki.entity.TweetEntity
-import com.seki.saezurishiki.entity.TwitterEntity
 import com.seki.saezurishiki.entity.mapper.EntityMapper
 import twitter4j.*
 import java.util.concurrent.ConcurrentHashMap
@@ -42,7 +41,7 @@ object TweetRepositoryKt {
     }
 
     @Throws(TwitterException::class)
-    fun getFevoritList(userId: Long, paging: Paging): List<TweetEntity> {
+    fun getFavoritList(userId: Long, paging: Paging): List<TweetEntity> {
         val result = mTwitter.getFavorites(userId, paging)
         return mappingAdd(result)
     }
@@ -74,6 +73,12 @@ object TweetRepositoryKt {
     @Throws(TwitterException::class)
     fun destroy(tweetId: Long): TweetEntity {
         val result = mTwitter.destroyStatus(tweetId)
+        return mappingAdd(result)
+    }
+
+    @Throws(TwitterException::class)
+    fun updateTweet(tweet: StatusUpdate): TweetEntity {
+        val result = mTwitter.updateStatus(tweet)
         return mappingAdd(result)
     }
 
@@ -121,11 +126,13 @@ object TweetRepositoryKt {
         }
     }
 
+    fun has(id: Long) = tweets.contains(id)
+
     private fun addAllTweet(tweetList: List<TweetEntity>) {
         tweetList.forEach { add(it) }
     }
 
-    private fun mappingAdd(status: Status): TweetEntity {
+    fun mappingAdd(status: Status): TweetEntity {
         val tweet = mMapper.map(status)
         add(tweet)
         return tweet
@@ -137,7 +144,7 @@ object TweetRepositoryKt {
         return tweets
     }
 
-    public fun clear() {
+    fun clear() {
         tweets.clear()
         deletedNotice.clear()
     }

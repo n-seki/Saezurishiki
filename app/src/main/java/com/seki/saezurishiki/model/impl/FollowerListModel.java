@@ -7,7 +7,6 @@ import com.seki.saezurishiki.model.adapter.ModelMessage;
 import com.seki.saezurishiki.model.adapter.SupportCursorList;
 import com.seki.saezurishiki.model.util.ModelObservable;
 import com.seki.saezurishiki.model.util.ModelObserver;
-import com.seki.saezurishiki.network.twitter.TwitterAccount;
 import com.seki.saezurishiki.repository.RemoteRepositoryImp;
 
 import java.util.List;
@@ -15,7 +14,6 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import twitter4j.PagableResponseList;
-import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.User;
 

@@ -2,8 +2,8 @@ package com.seki.saezurishiki.model.impl;
 
 import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.model.GetTweetById;
-import com.seki.saezurishiki.network.twitter.TwitterAccount;
 import com.seki.saezurishiki.repository.RemoteRepositoryImp;
+import com.seki.saezurishiki.repository.TweetRepositoryKt;
 
 class GetTweetByIdImp implements GetTweetById {
 
@@ -15,6 +15,6 @@ class GetTweetByIdImp implements GetTweetById {
 
     @Override
     public TweetEntity get(long id) {
-        return this.repository.getTweet(id);
+        return TweetRepositoryKt.INSTANCE.get(id);
     }
 }

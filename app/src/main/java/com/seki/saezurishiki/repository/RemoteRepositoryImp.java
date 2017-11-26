@@ -2,7 +2,6 @@ package com.seki.saezurishiki.repository;
 
 import com.seki.saezurishiki.entity.DirectMessageEntity;
 import com.seki.saezurishiki.entity.TweetEntity;
-import com.seki.saezurishiki.entity.TwitterEntity;
 import com.seki.saezurishiki.entity.UserEntity;
 import com.seki.saezurishiki.entity.mapper.EntityMapper;
 
@@ -13,15 +12,12 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import twitter4j.DirectMessage;
-import twitter4j.ResponseList;
 import twitter4j.Status;
-import twitter4j.StatusDeletionNotice;
 import twitter4j.Twitter;
 import twitter4j.User;
 
 public class RemoteRepositoryImp implements Repository {
 
-    private final StatusServer ALL_STATUS;
     private final Map<Long, DirectMessageEntity> DM;
     private final Map<Long, UserEntity> USER;
     
@@ -32,7 +28,6 @@ public class RemoteRepositoryImp implements Repository {
     private static RemoteRepositoryImp instance;
 
     private RemoteRepositoryImp(Twitter twitter, EntityMapper mapper) {
-        ALL_STATUS = new StatusServer(mapper);
         DM = new ConcurrentHashMap<>();
         USER = new ConcurrentHashMap<>();
         this.mapper = mapper;
@@ -55,37 +50,7 @@ public class RemoteRepositoryImp implements Repository {
         return this.twitter;
     }
 
-
-    public void addStatus(Status status) {
-        ALL_STATUS.add(status);
-    }
-
-    public void addStatus(TwitterEntity status) {
-        ALL_STATUS.add(status);
-    }
-
-    public TweetEntity getTweet(long statusId) {
-        return (TweetEntity)ALL_STATUS.get(statusId);
-    }
-
-    public boolean hasStatus(long statusId) {
-        return ALL_STATUS.has(statusId);
-    }
-
-    public void addDeletionNotice(StatusDeletionNotice deletionNotice) {
-        ALL_STATUS.addStatusDeletionNotice(deletionNotice);
-    }
-
-    public boolean hasDeletionNotice(long statusID) {
-        return ALL_STATUS.hasDeletionNotice(statusID);
-    }
-
-    public StatusDeletionNotice getDeletionNotice(long statusID) {
-        return ALL_STATUS.getDeletionNotice(statusID);
-    }
-
     public void clear() {
-        ALL_STATUS.clear();
         DM.clear();
         USER.clear();
         instance = null;
@@ -169,18 +134,6 @@ public class RemoteRepositoryImp implements Repository {
 
     public UserEntity getUser(long userId) {
         return USER.get(userId);
-    }
-
-    public void add(ResponseList<Status> result) {
-        for (Status status : result) {
-            this.ALL_STATUS.add(status);
-        }
-    }
-
-    public void add(List<Status> tweets) {
-        for (Status status : tweets) {
-            this.ALL_STATUS.add(status);
-        }
     }
 
     public TweetEntity map(Status status) {

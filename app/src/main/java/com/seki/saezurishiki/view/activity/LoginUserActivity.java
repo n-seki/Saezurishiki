@@ -44,7 +44,6 @@ import com.seki.saezurishiki.network.twitter.TwitterAccount;
 import com.seki.saezurishiki.network.twitter.TwitterUtil;
 import com.seki.saezurishiki.network.twitter.UserStreamManager;
 import com.seki.saezurishiki.presenter.activity.LoginUserPresenter;
-import com.seki.saezurishiki.repository.RemoteRepositoryImp;
 import com.seki.saezurishiki.view.adapter.DrawerButtonListAdapter;
 import com.seki.saezurishiki.view.adapter.TimeLinePager;
 import com.seki.saezurishiki.view.control.FragmentControl;
@@ -59,6 +58,7 @@ import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.Contract;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -102,8 +102,6 @@ public class LoginUserActivity extends    AppCompatActivity
 
     private TwitterUserDrawerView userDrawerView;
 
-    private TwitterAccount twitterAccount;
-
     private LoginUserPresenter presenter;
 
     @Override
@@ -125,7 +123,6 @@ public class LoginUserActivity extends    AppCompatActivity
             return;
         }
 
-        this.twitterAccount = TwitterAccount.onCreate(this);
         new LoginUserPresenter(ModelContainer.getLoginUserScreen(), this);
         Setting.init(this);
         final Setting setting = new Setting();
@@ -217,7 +214,7 @@ public class LoginUserActivity extends    AppCompatActivity
 
 
     private void setupTimeLine(int theme) {
-        TimeLinePager pagerAdapter = new TimeLinePager(getSupportFragmentManager(), this.twitterAccount.getLoginUserId());
+        TimeLinePager pagerAdapter = new TimeLinePager(getSupportFragmentManager(), TwitterAccount.getLoginUserId());
 
         mViewPager = (ViewPager) LoginUserActivity.this.findViewById(R.id.pager);
         mViewPager.addOnPageChangeListener(LoginUserActivity.this);
@@ -285,10 +282,6 @@ public class LoginUserActivity extends    AppCompatActivity
 
         if (UserStreamManager.isAlive()) {
             UserStreamManager.getInstance().destroy();
-        }
-
-        if (RemoteRepositoryImp.isAlive()) {
-            RemoteRepositoryImp.getInstance().clear();
         }
 
         if (mReceiver != null) {
@@ -442,7 +435,7 @@ public class LoginUserActivity extends    AppCompatActivity
         SearchManager searchManager =
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         mSearchView =
-                (SearchView) MenuItemCompat.getActionView(searchItem);
+                (SearchView)searchItem.getActionView();
         mSearchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getComponentName())
         );
@@ -450,13 +443,13 @@ public class LoginUserActivity extends    AppCompatActivity
         mSearchView.setIconifiedByDefault(true);
         mSearchView.setOnQueryTextListener(QUERY_LISTENER);
 
-        MenuItemCompat.setOnActionExpandListener(searchItem, SEARCH_VIEW_EX_LISTENER);
+        searchItem.setOnActionExpandListener(SEARCH_VIEW_EX_LISTENER);
 
         return true;
     }
 
 
-    private final MenuItemCompat.OnActionExpandListener SEARCH_VIEW_EX_LISTENER = new MenuItemCompat.OnActionExpandListener() {
+    private final MenuItem.OnActionExpandListener SEARCH_VIEW_EX_LISTENER = new MenuItem.OnActionExpandListener() {
         @Override
         public boolean onMenuItemActionExpand(MenuItem item) {
             ((FloatingActionButton)LoginUserActivity.this.findViewById(R.id.edit_tweet_button)).hide();
@@ -648,7 +641,7 @@ public class LoginUserActivity extends    AppCompatActivity
     public void logout() {
         Intent intent = new Intent(this, TwitterOauthActivity.class);
         startActivity(intent);
-        twitterAccount.logout(this);
+        TwitterAccount.logout(this);
         finish();
     }
 

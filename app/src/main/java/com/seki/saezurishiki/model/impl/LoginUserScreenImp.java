@@ -8,11 +8,11 @@ import com.seki.saezurishiki.model.adapter.ModelActionType;
 import com.seki.saezurishiki.model.adapter.ModelMessage;
 import com.seki.saezurishiki.model.util.ModelObserver;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
+import com.seki.saezurishiki.repository.TweetRepositoryKt;
 
 import twitter4j.DirectMessage;
 import twitter4j.Status;
 import twitter4j.StatusDeletionNotice;
-import twitter4j.StatusUpdate;
 import twitter4j.TwitterException;
 import twitter4j.User;
 
@@ -35,7 +35,6 @@ public class LoginUserScreenImp extends ModelBaseImp implements LoginUserScreen 
             }
         });
     }
-
 
     @Override
     public void addObserver(ModelObserver observer){
@@ -78,20 +77,19 @@ public class LoginUserScreenImp extends ModelBaseImp implements LoginUserScreen 
 
     @Override
     public void onStatus(Status status) {
-        TweetEntity tweet = this.repository.map(status);
-        this.repository.addStatus(tweet);
+        final TweetEntity tweet = TweetRepositoryKt.INSTANCE.mappingAdd(status);
         final ModelMessage message = ModelMessage.of(ModelActionType.RECEIVE_TWEET, tweet);
         this.userStreamObservable.notifyObserver(message);
     }
 
     @Override
     public void onDeletionNotice(StatusDeletionNotice deletionNotice) {
-        if (!this.repository.hasStatus(deletionNotice.getStatusId())) {
+        if (!TweetRepositoryKt.INSTANCE.has(deletionNotice.getStatusId())) {
             //削除されたtweetがローカルに存在しない場合には何もすることがない
             return;
         }
 
-        final TweetEntity deletedTweet = this.repository.getTweet(deletionNotice.getStatusId());
+        final TweetEntity deletedTweet = TweetRepositoryKt.INSTANCE.get(deletionNotice.getStatusId());
         final ModelMessage message = ModelMessage.of(ModelActionType.RECEIVE_DELETION, deletedTweet);
         this.userStreamObservable.notifyObserver(message);
     }
