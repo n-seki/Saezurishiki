@@ -6,6 +6,7 @@ import com.seki.saezurishiki.entity.mapper.EntityMapper;
 import com.seki.saezurishiki.file.SharedPreferenceUtil;
 import com.seki.saezurishiki.repository.RemoteRepositoryImp;
 import com.seki.saezurishiki.repository.TweetRepositoryKt;
+import com.seki.saezurishiki.repository.UserRepository;
 
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
@@ -23,8 +24,10 @@ public class TwitterAccount {
 
     public static TwitterAccount onCreate(Context context) {
         TwitterAccount account = new TwitterAccount(new TwitterUtil.AccountConfig(context));
-        RemoteRepositoryImp.onCreate(account.twitter, new EntityMapper(account.config.loginUserId));
-        TweetRepositoryKt.INSTANCE.setup(account.twitter, new EntityMapper(account.config.loginUserId));
+        final EntityMapper mapper = new EntityMapper(account.config.loginUserId);
+        RemoteRepositoryImp.onCreate(account.twitter, mapper);
+        TweetRepositoryKt.INSTANCE.setup(account.twitter, mapper);
+        UserRepository.INSTANCE.setup(account.twitter, mapper);
         UserStreamManager.onCreate(account);
         return account;
     }

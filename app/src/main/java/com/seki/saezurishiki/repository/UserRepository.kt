@@ -8,7 +8,14 @@ import twitter4j.TwitterException
 import twitter4j.User
 import java.util.concurrent.ConcurrentHashMap
 
-class UserRepository(private val twitter: Twitter, private val mapper: EntityMapper) {
+object UserRepository {
+    private lateinit var mTwitter: Twitter
+    private lateinit var mMapper: EntityMapper
+
+    fun setup(twitter: Twitter, mapper: EntityMapper) {
+        mTwitter = twitter
+        mMapper = mapper
+    }
 
     private val userCache: MutableMap<Long, UserEntity>
 
@@ -18,27 +25,27 @@ class UserRepository(private val twitter: Twitter, private val mapper: EntityMap
 
     @Throws(TwitterException::class)
     fun getFriendList(userId: Long, nextCursor: Long): SupportCursorList<UserEntity> {
-        val result = twitter.getFriendsList(userId, nextCursor)
+        val result = mTwitter.getFriendsList(userId, nextCursor)
         val users = addUsers(result)
         return SupportCursorList(users, userId, result.nextCursor)
     }
 
     @Throws(TwitterException::class)
     fun getFollowerList(userId: Long, nextCursor: Long): SupportCursorList<UserEntity> {
-        val result = twitter.getFollowersList(userId, nextCursor)
+        val result = mTwitter.getFollowersList(userId, nextCursor)
         val users = addUsers(result)
         return SupportCursorList(users, userId, result.nextCursor)
     }
 
     fun find(userId: Long): UserEntity {
         return userCache.getOrPut(userId) {
-            val result = twitter.showUser(userId)
-            mapper.map(result)
+            val result = mTwitter.showUser(userId)
+            mMapper.map(result)
         }
     }
 
     fun add(user: User): UserEntity {
-        val userEntity = mapper.map(user)
+        val userEntity = mMapper.map(user)
         userCache.put(user.id, userEntity)
         return userEntity
     }

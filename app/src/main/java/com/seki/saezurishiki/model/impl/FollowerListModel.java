@@ -8,6 +8,7 @@ import com.seki.saezurishiki.model.adapter.SupportCursorList;
 import com.seki.saezurishiki.model.util.ModelObservable;
 import com.seki.saezurishiki.model.util.ModelObserver;
 import com.seki.saezurishiki.repository.RemoteRepositoryImp;
+import com.seki.saezurishiki.repository.UserRepository;
 
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -19,12 +20,10 @@ import twitter4j.User;
 
 public class FollowerListModel implements UserListModel {
 
-    private final RemoteRepositoryImp repository;
     private final Executor executor;
     private final ModelObservable observable;
 
     FollowerListModel() {
-        this.repository = RemoteRepositoryImp.getInstance();
         this.executor = Executors.newCachedThreadPool();
         this.observable = new ModelObservable();
     }
@@ -36,6 +35,8 @@ public class FollowerListModel implements UserListModel {
             try {
                 PagableResponseList<User> result = this.repository.getTwitter().getFollowersList(userId, nextCursor);
                 final List<UserEntity> users = this.repository.addUsers(result);
+
+                final List<UserEntity> users = UserRepository.
                 final SupportCursorList<UserEntity> list = new SupportCursorList<>(users, userId, result.getNextCursor());
                 final ModelMessage message = ModelMessage.of(ModelActionType.LOAD_FOLLOWERS, list);
                 observable.notifyObserver(message);
