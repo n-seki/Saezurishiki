@@ -9,6 +9,7 @@ import com.seki.saezurishiki.model.adapter.ModelMessage;
 import com.seki.saezurishiki.model.util.ModelObserver;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
 import com.seki.saezurishiki.repository.TweetRepositoryKt;
+import com.seki.saezurishiki.repository.UserRepository;
 
 import twitter4j.DirectMessage;
 import twitter4j.Status;
@@ -96,18 +97,18 @@ public class LoginUserScreenImp extends ModelBaseImp implements LoginUserScreen 
 
     @Override
     public void onFavorite(User sourceUser, User targetUser, Status targetTweet) {
-        final TweetEntity tweet = this.repository.map(targetTweet);
-        final UserEntity source = this.repository.map(sourceUser);
-        final UserEntity target = this.repository.map(targetUser);
+        final TweetEntity tweet = TweetRepositoryKt.INSTANCE.mappingAdd(targetTweet);
+        final UserEntity source = UserRepository.INSTANCE.add(sourceUser);
+        final UserEntity target = UserRepository.INSTANCE.add(targetUser);
         final ModelMessage message = ModelMessage.of(ModelActionType.RECEIVE_FAVORITE, tweet, source, target);
         this.userStreamObservable.notifyObserver(message);
     }
 
     @Override
     public void onUnFavorite(User sourceUser, User targetUser, Status targetTweet) {
-        final TweetEntity tweet = this.repository.map(targetTweet);
-        final UserEntity source = this.repository.map(sourceUser);
-        final UserEntity target = this.repository.map(targetUser);
+        final TweetEntity tweet = TweetRepositoryKt.INSTANCE.mappingAdd(targetTweet);
+        final UserEntity source = UserRepository.INSTANCE.add(sourceUser);
+        final UserEntity target = UserRepository.INSTANCE.add(targetUser);
         final ModelMessage message = ModelMessage.of(ModelActionType.RECEIVE_UN_FAVORITE, tweet, source, target);
         this.userStreamObservable.notifyObserver(message);
     }
