@@ -9,57 +9,57 @@ import java.util.concurrent.ConcurrentHashMap
 
 class DirectMessageRepository(private val twitter: Twitter, private val mapper: EntityMapper) {
 
-    private val directMessages: MutableMap<Long, DirectMessageEntity>
+    private val messageCache: MutableMap<Long, DirectMessageEntity>
 
     init {
-        directMessages = ConcurrentHashMap()
+        messageCache = ConcurrentHashMap()
     }
 
     fun addSentDM(message: DirectMessage): DirectMessageEntity {
         val dm = mapper.map(message)
-        directMessages.put(dm.id, dm)
+        messageCache.put(dm.id, dm)
         return dm
     }
 
 
     fun getSentDMId(recipientUserId: Long): List<Long> {
-         return directMessages.values
+         return messageCache.values
                 .filter { it.recipientId == recipientUserId }
                 .map { it.id }
     }
 
     fun addDM(list: List<DirectMessage>): List<DirectMessageEntity> {
         val result = list.map { this.mapper.map((it)) }
-        directMessages.putAll(result.associateBy({it.id}))
+        messageCache.putAll(result.associateBy({it.id}))
         return result
     }
 
     fun addDM(message: DirectMessage): DirectMessageEntity {
         val dm = this.mapper.map(message)
-        directMessages.put(dm.id, dm)
+        messageCache.put(dm.id, dm)
         return dm
     }
 
 
     fun getDMIdByUser(senderId: Long): List<Long> {
-        return directMessages.values
+        return messageCache.values
                 .filter { it.id == senderId }
                 .map { it.id }
     }
 
     fun getDM(messageId: Long): DirectMessageEntity {
-        return directMessages.getValue(messageId)
+        return messageCache.getValue(messageId)
     }
 
     @Throws(TwitterException::class)
     fun findDM(messageId: Long): DirectMessageEntity {
-        return directMessages.getOrElse(messageId) {
+        return messageCache.getOrElse(messageId) {
             val result = twitter.showDirectMessage(messageId)
             this.mapper.map(result)
         }
     }
 
     public fun clear() {
-        directMessages.clear()
+        messageCache.clear()
     }
 }

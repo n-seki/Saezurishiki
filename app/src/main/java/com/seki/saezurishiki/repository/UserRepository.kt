@@ -10,10 +10,10 @@ import java.util.concurrent.ConcurrentHashMap
 
 class UserRepository(private val twitter: Twitter, private val mapper: EntityMapper) {
 
-    private val users: MutableMap<Long, UserEntity>
+    private val userCache: MutableMap<Long, UserEntity>
 
     init {
-        users = ConcurrentHashMap()
+        userCache = ConcurrentHashMap()
     }
 
     @Throws(TwitterException::class)
@@ -31,7 +31,7 @@ class UserRepository(private val twitter: Twitter, private val mapper: EntityMap
     }
 
     fun find(userId: Long): UserEntity {
-        return users.getOrPut(userId) {
+        return userCache.getOrPut(userId) {
             val result = twitter.showUser(userId)
             mapper.map(result)
         }
@@ -39,7 +39,7 @@ class UserRepository(private val twitter: Twitter, private val mapper: EntityMap
 
     fun add(user: User): UserEntity {
         val userEntity = mapper.map(user)
-        users.put(user.id, userEntity)
+        userCache.put(user.id, userEntity)
         return userEntity
     }
 
@@ -48,7 +48,7 @@ class UserRepository(private val twitter: Twitter, private val mapper: EntityMap
     }
 
     public fun clear() {
-        users.clear()
+        userCache.clear()
     }
 
 

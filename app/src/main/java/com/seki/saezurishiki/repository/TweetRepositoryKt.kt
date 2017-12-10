@@ -14,11 +14,11 @@ object TweetRepositoryKt {
         mMapper = mapper
     }
 
-    private val tweets: MutableMap<Long, TweetEntity>
+    private val tweetCache: MutableMap<Long, TweetEntity>
     private val deletedNotice: MutableMap<Long, StatusDeletionNotice>
 
     init {
-        tweets = ConcurrentHashMap()
+        tweetCache = ConcurrentHashMap()
         deletedNotice = ConcurrentHashMap()
     }
 
@@ -82,11 +82,11 @@ object TweetRepositoryKt {
         return mappingAdd(result)
     }
 
-    fun get(tweetId: Long) = tweets.getValue(tweetId)
+    fun get(tweetId: Long) = tweetCache.getValue(tweetId)
 
     @Throws(TwitterException::class)
     fun find(tweetId: Long): TweetEntity {
-        return tweets.getOrPut(tweetId) {
+        return tweetCache.getOrPut(tweetId) {
             val result = mTwitter.showStatus(tweetId)
             mMapper.map(result)
         }
@@ -94,8 +94,8 @@ object TweetRepositoryKt {
 
     @Throws(TwitterException::class)
     fun findBetween(userId: Long, paging: Paging): List<TweetEntity> {
-        if (tweets.containsKey(paging.sinceId) && tweets.containsKey(paging.maxId)) {
-            return tweets.filter { it.value.user.id == userId }
+        if (tweetCache.containsKey(paging.sinceId) && tweetCache.containsKey(paging.maxId)) {
+            return tweetCache.filter { it.value.user.id == userId }
                          .filter { it.value.id in paging.sinceId .. paging.maxId }
                          .values
                          .sortedBy { it.id }
@@ -105,7 +105,7 @@ object TweetRepositoryKt {
 
     fun addStatusDeletionNotice(deletionNotice: StatusDeletionNotice) {
         deletedNotice.put(deletionNotice.statusId, deletionNotice)
-        tweets[deletionNotice.statusId]?.onDelete()
+        tweetCache[deletionNotice.statusId]?.onDelete()
     }
 
     fun hasDeletionNotice(statusID: Long): Boolean {
@@ -117,7 +117,7 @@ object TweetRepositoryKt {
     }
 
     @Synchronized private fun add(tweet: TweetEntity) {
-        tweets.put(tweet.id, tweet)
+        tweetCache.put(tweet.id, tweet)
         if (tweet.isRetweet) {
             add(tweet.retweet)
         }
@@ -126,7 +126,7 @@ object TweetRepositoryKt {
         }
     }
 
-    fun has(id: Long) = tweets.contains(id)
+    fun has(id: Long) = tweetCache.contains(id)
 
     private fun addAllTweet(tweetList: List<TweetEntity>) {
         tweetList.forEach { add(it) }
@@ -145,7 +145,7 @@ object TweetRepositoryKt {
     }
 
     fun clear() {
-        tweets.clear()
+        tweetCache.clear()
         deletedNotice.clear()
     }
 }
