@@ -87,7 +87,7 @@ object UserRepository {
         return users.map { add(it) }
     }
 
-    public fun clear() {
+    fun clear() {
         userCache.clear()
     }
 
