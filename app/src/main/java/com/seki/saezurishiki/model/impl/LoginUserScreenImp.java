@@ -9,7 +9,7 @@ import com.seki.saezurishiki.model.adapter.ModelMessage;
 import com.seki.saezurishiki.model.util.ModelObserver;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
 import com.seki.saezurishiki.repository.DirectMessageRepository;
-import com.seki.saezurishiki.repository.TweetRepositoryKt;
+import com.seki.saezurishiki.repository.TweetRepository;
 import com.seki.saezurishiki.repository.UserRepository;
 
 import twitter4j.DirectMessage;
@@ -79,26 +79,26 @@ public class LoginUserScreenImp extends ModelBaseImp implements LoginUserScreen 
 
     @Override
     public void onStatus(Status status) {
-        final TweetEntity tweet = TweetRepositoryKt.INSTANCE.mappingAdd(status);
+        final TweetEntity tweet = TweetRepository.INSTANCE.mappingAdd(status);
         final ModelMessage message = ModelMessage.of(ModelActionType.RECEIVE_TWEET, tweet);
         this.userStreamObservable.notifyObserver(message);
     }
 
     @Override
     public void onDeletionNotice(StatusDeletionNotice deletionNotice) {
-        if (!TweetRepositoryKt.INSTANCE.has(deletionNotice.getStatusId())) {
+        if (!TweetRepository.INSTANCE.has(deletionNotice.getStatusId())) {
             //削除されたtweetがローカルに存在しない場合には何もすることがない
             return;
         }
 
-        final TweetEntity deletedTweet = TweetRepositoryKt.INSTANCE.get(deletionNotice.getStatusId());
+        final TweetEntity deletedTweet = TweetRepository.INSTANCE.get(deletionNotice.getStatusId());
         final ModelMessage message = ModelMessage.of(ModelActionType.RECEIVE_DELETION, deletedTweet);
         this.userStreamObservable.notifyObserver(message);
     }
 
     @Override
     public void onFavorite(User sourceUser, User targetUser, Status targetTweet) {
-        final TweetEntity tweet = TweetRepositoryKt.INSTANCE.mappingAdd(targetTweet);
+        final TweetEntity tweet = TweetRepository.INSTANCE.mappingAdd(targetTweet);
         final UserEntity source = UserRepository.INSTANCE.add(sourceUser);
         final UserEntity target = UserRepository.INSTANCE.add(targetUser);
         final ModelMessage message = ModelMessage.of(ModelActionType.RECEIVE_FAVORITE, tweet, source, target);
@@ -107,7 +107,7 @@ public class LoginUserScreenImp extends ModelBaseImp implements LoginUserScreen 
 
     @Override
     public void onUnFavorite(User sourceUser, User targetUser, Status targetTweet) {
-        final TweetEntity tweet = TweetRepositoryKt.INSTANCE.mappingAdd(targetTweet);
+        final TweetEntity tweet = TweetRepository.INSTANCE.mappingAdd(targetTweet);
         final UserEntity source = UserRepository.INSTANCE.add(sourceUser);
         final UserEntity target = UserRepository.INSTANCE.add(targetUser);
         final ModelMessage message = ModelMessage.of(ModelActionType.RECEIVE_UN_FAVORITE, tweet, source, target);

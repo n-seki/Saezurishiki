@@ -9,7 +9,7 @@ import com.seki.saezurishiki.network.twitter.streamListener.CustomUserStreamList
 import com.seki.saezurishiki.network.twitter.streamListener.DirectMessageUserStreamListener;
 import com.seki.saezurishiki.network.twitter.streamListener.StatusUserStreamListener;
 import com.seki.saezurishiki.network.twitter.streamListener.UserStreamUserListener;
-import com.seki.saezurishiki.repository.TweetRepositoryKt;
+import com.seki.saezurishiki.repository.TweetRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -145,7 +145,7 @@ class CustomUserStreamAdapter extends UserStreamAdapter {
     public void onStatus(Status status) {
         super.onStatus(status);
         super.onStatus(status);
-        TweetRepositoryKt.INSTANCE.mappingAdd(status);
+        TweetRepository.INSTANCE.mappingAdd(status);
         Message message = Message.obtain();
         message.obj = status;
         mOnStatusHandler.sendMessage(message);
@@ -155,7 +155,7 @@ class CustomUserStreamAdapter extends UserStreamAdapter {
     @Override
     public void onDeletionNotice(StatusDeletionNotice statusDeletionNotice) {
         super.onDeletionNotice(statusDeletionNotice);
-        TweetRepositoryKt.INSTANCE.addStatusDeletionNotice(statusDeletionNotice);
+        TweetRepository.INSTANCE.addStatusDeletionNotice(statusDeletionNotice);
         Message message = Message.obtain();
         message.obj = statusDeletionNotice;
         mOnDeletionHandler.sendMessage(message);
@@ -166,7 +166,7 @@ class CustomUserStreamAdapter extends UserStreamAdapter {
     public void onFavorite(User source, User target, Status favoriteStatus) {
         super.onFavorite(source, target, favoriteStatus);
         if (source.getId() != this.loginUserId) {
-            TweetRepositoryKt.INSTANCE.mappingAdd(favoriteStatus);
+            TweetRepository.INSTANCE.mappingAdd(favoriteStatus);
         }
         Message message = Message.obtain();
         message.obj = new Tuple3<>(source, target, favoriteStatus);
@@ -178,7 +178,7 @@ class CustomUserStreamAdapter extends UserStreamAdapter {
     public void onUnfavorite(User source, User target, Status unFavoriteStatus) {
         super.onUnfavorite(source, target, unFavoriteStatus);
         if (source.getId() != this.loginUserId) {
-            TweetRepositoryKt.INSTANCE.mappingAdd(unFavoriteStatus);
+            TweetRepository.INSTANCE.mappingAdd(unFavoriteStatus);
         }
         Message message = Message.obtain();
         message.obj = new Tuple3<>(source, target, unFavoriteStatus);

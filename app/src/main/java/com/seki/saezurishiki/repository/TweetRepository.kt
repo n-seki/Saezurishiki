@@ -6,7 +6,7 @@ import com.seki.saezurishiki.entity.mapper.EntityMapper
 import twitter4j.*
 import java.util.concurrent.ConcurrentHashMap
 
-object TweetRepositoryKt {
+object TweetRepository {
     private lateinit var mTwitter: Twitter
     private lateinit var mMapper: EntityMapper
     private lateinit var mCache: TweetCache
