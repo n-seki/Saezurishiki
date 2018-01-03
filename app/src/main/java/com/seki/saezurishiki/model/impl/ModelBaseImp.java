@@ -13,7 +13,6 @@ import java.util.concurrent.Executors;
 
 abstract class ModelBaseImp implements ModelBase {
 
-    final RemoteRepositoryImp repository;
     final UserStreamManager streamManager;
     final static ModelObservable observable;
     final ModelObservable userStreamObservable;
@@ -24,7 +23,6 @@ abstract class ModelBaseImp implements ModelBase {
     }
 
     ModelBaseImp() {
-        this.repository = RemoteRepositoryImp.getInstance();
         this.streamManager = UserStreamManager.getInstance();
         this.userStreamObservable = new ModelObservable();
     }

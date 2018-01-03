@@ -9,8 +9,6 @@ import com.seki.saezurishiki.model.TweetEditorModel;
 import com.seki.saezurishiki.model.TweetListModel;
 import com.seki.saezurishiki.model.UserListModel;
 import com.seki.saezurishiki.model.UserScreenModel;
-import com.seki.saezurishiki.network.twitter.TwitterAccount;
-import com.seki.saezurishiki.presenter.list.UserListPresenter;
 
 public final class ModelContainer {
 

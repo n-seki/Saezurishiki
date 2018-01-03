@@ -11,7 +11,7 @@ import twitter4j.TwitterException;
 
 public class TweetEditorModelImp extends ModelBaseImp implements TweetEditorModel {
 
-    public TweetEditorModelImp() {
+    TweetEditorModelImp() {
         super();
     }
 

@@ -28,7 +28,7 @@ abstract class TweetListModelImp extends ModelBaseImp implements TweetListModel 
 
     @Override
     public void onStatus(Status status) {
-        final TweetEntity tweet = this.repository.map(status);
+        final TweetEntity tweet = TweetRepositoryKt.INSTANCE.mappingAdd(status);
         final ModelMessage message = ModelMessage.of(ModelActionType.RECEIVE_TWEET, tweet);
         this.userStreamObservable.notifyObserver(message);
     }

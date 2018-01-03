@@ -8,6 +8,7 @@ import com.seki.saezurishiki.model.adapter.ModelActionType;
 import com.seki.saezurishiki.model.adapter.ModelMessage;
 import com.seki.saezurishiki.model.util.ModelObserver;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
+import com.seki.saezurishiki.repository.DirectMessageRepository;
 import com.seki.saezurishiki.repository.TweetRepositoryKt;
 import com.seki.saezurishiki.repository.UserRepository;
 
@@ -28,8 +29,8 @@ public class LoginUserScreenImp extends ModelBaseImp implements LoginUserScreen 
     public void getLoginUser() {
         this.executor.execute(() -> {
             try {
-                User loginUser = this.repository.getTwitter().showUser(TwitterAccount.getLoginUserId());
-                final ModelMessage message = ModelMessage.of(ModelActionType.LOAD_USER, this.repository.map(loginUser));
+                final UserEntity loginUser = UserRepository.INSTANCE.find(TwitterAccount.getLoginUserId());
+                final ModelMessage message = ModelMessage.of(ModelActionType.LOAD_USER, loginUser);
                 observable.notifyObserver(message);
             } catch (TwitterException e) {
                 observable.notifyObserver(ModelMessage.error(e));
@@ -71,7 +72,7 @@ public class LoginUserScreenImp extends ModelBaseImp implements LoginUserScreen 
 
     @Override
     public void onDirectMessage(DirectMessage directMessage) {
-        final DirectMessageEntity entity = this.repository.addDM(directMessage);
+        final DirectMessageEntity entity = DirectMessageRepository.INSTANCE.add(directMessage);
         final ModelMessage message = ModelMessage.of(ModelActionType.RECEIVE_DIRECT_MESSAGE, entity);
         this.userStreamObservable.notifyObserver(message);
     }
