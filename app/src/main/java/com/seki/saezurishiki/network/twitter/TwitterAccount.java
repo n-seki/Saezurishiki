@@ -2,10 +2,12 @@ package com.seki.saezurishiki.network.twitter;
 
 import android.content.Context;
 
+import com.seki.saezurishiki.cache.DirectMessageCache;
 import com.seki.saezurishiki.cache.TweetCache;
 import com.seki.saezurishiki.cache.UserCache;
 import com.seki.saezurishiki.entity.mapper.EntityMapper;
 import com.seki.saezurishiki.file.SharedPreferenceUtil;
+import com.seki.saezurishiki.repository.DirectMessageRepository;
 import com.seki.saezurishiki.repository.RemoteRepositoryImp;
 import com.seki.saezurishiki.repository.TweetRepositoryKt;
 import com.seki.saezurishiki.repository.UserRepository;
@@ -30,6 +32,7 @@ public class TwitterAccount {
         RemoteRepositoryImp.onCreate(account.twitter, mapper);
         TweetRepositoryKt.INSTANCE.setup(account.twitter, mapper, new TweetCache());
         UserRepository.INSTANCE.setup(account.twitter, mapper, new UserCache());
+        DirectMessageRepository.INSTANCE.setup(account.twitter, mapper, new DirectMessageCache());
         UserStreamManager.onCreate(account);
         return account;
     }

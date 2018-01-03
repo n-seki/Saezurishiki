@@ -7,6 +7,7 @@ import com.seki.saezurishiki.model.adapter.ModelMessage;
 import com.seki.saezurishiki.model.adapter.RequestInfo;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
 import com.seki.saezurishiki.network.twitter.streamListener.DirectMessageUserStreamListener;
+import com.seki.saezurishiki.repository.DirectMessageRepository;
 
 import java.util.List;
 
@@ -25,12 +26,9 @@ class DirectMessageListModelImp extends ModelBaseImp implements DirectMessageLis
     public void request(RequestInfo info) {
         this.executor.execute(() -> {
             try {
-                final List<DirectMessage> sendDM = this.repository.getTwitter().getSentDirectMessages(info.toPaging());
-                this.repository.addSentDM(sendDM);
-
-                final List<DirectMessage> result = this.repository.getTwitter().getDirectMessages(info.toPaging());
-                final List<DirectMessageEntity> directMessageList = this.repository.addDM(result);
-                final ModelMessage message = ModelMessage.of(ModelActionType.LOAD_DIRECT_MESSAGE, directMessageList);
+                final List<DirectMessageEntity> sendMessage = DirectMessageRepository.INSTANCE.getSendMessages(info.toPaging());
+                final List<DirectMessageEntity> receivedMessages = DirectMessageRepository.INSTANCE.getReceivedMessages(info.toPaging());
+                final ModelMessage message = ModelMessage.of(ModelActionType.LOAD_DIRECT_MESSAGE, receivedMessages);
                 observable.notifyObserver(message);
             } catch (TwitterException e) {
                 e.printStackTrace();
@@ -41,13 +39,13 @@ class DirectMessageListModelImp extends ModelBaseImp implements DirectMessageLis
 
     @Override
     public void onDirectMessage(DirectMessage directMessage) {
-        final DirectMessageEntity entity = this.repository.addDM(directMessage);
+        final DirectMessageEntity entity = DirectMessageRepository.INSTANCE.add(directMessage);
         final ModelMessage message = ModelMessage.of(ModelActionType.RECEIVE_DIRECT_MESSAGE, entity);
         this.userStreamObservable.notifyObserver(message);
     }
 
     @Override
     public DirectMessageEntity getEntityFromCache(long id) {
-        return this.repository.getDM(id);
+        return DirectMessageRepository.INSTANCE.get(id);
     }
 }

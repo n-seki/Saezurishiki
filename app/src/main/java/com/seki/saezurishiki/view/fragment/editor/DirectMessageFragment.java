@@ -129,7 +129,7 @@ public class DirectMessageFragment extends Fragment implements DirectMessageEdit
     }
 
     @Override
-    public void loadMessages(List<Long> messageIds) {
+    public void loadMessages(List<DirectMessageEntity> messageIds) {
         this.mAdapter.addAll(messageIds);
         mListView.setSelection(mListView.getCount() - 1);
     }

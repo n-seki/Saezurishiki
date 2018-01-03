@@ -92,9 +92,9 @@ public class DirectMessageAdapter extends ArrayAdapter<ListElement> {
         return item;
     }
 
-    public void addAll(List<Long> allMessage) {
-        for(long id : allMessage) {
-            final ListElement item = new ListElement(id, false);
+    public void addAll(List<? extends DirectMessageEntity> allMessage) {
+        for(DirectMessageEntity message : allMessage) {
+            final ListElement item = new ListElement(message.getId(), false);
             add(item);
         }
     }

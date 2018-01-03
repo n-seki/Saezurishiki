@@ -23,7 +23,7 @@ public class DirectMessageEditorPresenter implements ModelObserver {
     public interface View {
         void setPresenter(DirectMessageEditorPresenter presenter);
         void catchNewMessage(DirectMessageEntity message);
-        void loadMessages(List<Long> messageIds);
+        void loadMessages(List<DirectMessageEntity> messageIds);
         void showNoMessage();
         void showInputMessageEmpty();
         void onSendMessageFinish();
@@ -78,7 +78,7 @@ public class DirectMessageEditorPresenter implements ModelObserver {
                 break;
 
             case LOAD_DIRECT_MESSAGE_CONVERSATION:
-                final SupportCursorList<Long> messageIdList = (SupportCursorList<Long>)message.data;
+                final SupportCursorList<DirectMessageEntity> messageIdList = (SupportCursorList<DirectMessageEntity>)message.data;
                 if (messageIdList.getUserId() == this.opponentUserId) {
                     if (messageIdList.getList().isEmpty()) {
                         this.view.showNoMessage();

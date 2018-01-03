@@ -1,65 +1,70 @@
 package com.seki.saezurishiki.repository
 
+import com.seki.saezurishiki.cache.DirectMessageCache
 import com.seki.saezurishiki.entity.DirectMessageEntity
 import com.seki.saezurishiki.entity.mapper.EntityMapper
 import twitter4j.DirectMessage
+import twitter4j.Paging
 import twitter4j.Twitter
 import twitter4j.TwitterException
-import java.util.concurrent.ConcurrentHashMap
 
-class DirectMessageRepository(private val twitter: Twitter, private val mapper: EntityMapper) {
+object DirectMessageRepository {
 
-    private val messageCache: MutableMap<Long, DirectMessageEntity>
-
-    init {
-        messageCache = ConcurrentHashMap()
-    }
-
-    fun addSentDM(message: DirectMessage): DirectMessageEntity {
-        val dm = mapper.map(message)
-        messageCache.put(dm.id, dm)
-        return dm
-    }
+    private lateinit var twitter: Twitter
+    private lateinit var mapper: EntityMapper
+    private lateinit var messageCache: DirectMessageCache
 
 
-    fun getSentDMId(recipientUserId: Long): List<Long> {
-         return messageCache.values
-                .filter { it.recipientId == recipientUserId }
-                .map { it.id }
-    }
-
-    fun addDM(list: List<DirectMessage>): List<DirectMessageEntity> {
-        val result = list.map { this.mapper.map((it)) }
-        messageCache.putAll(result.associateBy({it.id}))
-        return result
-    }
-
-    fun addDM(message: DirectMessage): DirectMessageEntity {
-        val dm = this.mapper.map(message)
-        messageCache.put(dm.id, dm)
-        return dm
-    }
-
-
-    fun getDMIdByUser(senderId: Long): List<Long> {
-        return messageCache.values
-                .filter { it.id == senderId }
-                .map { it.id }
-    }
-
-    fun getDM(messageId: Long): DirectMessageEntity {
-        return messageCache.getValue(messageId)
+    fun setup(twitter: Twitter, mapper: EntityMapper, cache: DirectMessageCache) {
+        this.twitter = twitter
+        this.mapper = mapper
+        this.messageCache = cache
     }
 
     @Throws(TwitterException::class)
-    fun findDM(messageId: Long): DirectMessageEntity {
-        return messageCache.getOrElse(messageId) {
-            val result = twitter.showDirectMessage(messageId)
-            this.mapper.map(result)
-        }
+    fun getSendMessages(paging: Paging): List<DirectMessageEntity> {
+        val result = this.twitter.getSentDirectMessages(paging)
+        return result.map { this.mapper.map(it) }.also { this.messageCache.put(it) }
     }
 
-    public fun clear() {
-        messageCache.clear()
+    @Throws(TwitterException::class)
+    fun getReceivedMessages(paging: Paging): List<DirectMessageEntity> {
+        val result = this.twitter.getDirectMessages(paging)
+        return result.map { this.mapper.map(it) }.also { this.messageCache.put(it) }
+    }
+
+    @Throws(TwitterException::class)
+    fun findMessage(messageId: Long): DirectMessageEntity {
+        if (this.messageCache.has(messageId)) {
+            return messageCache[messageId]
+        }
+        val result = this.twitter.showDirectMessage(messageId)
+        return this.mapper.map(result).also { this.messageCache.put(it) }
+    }
+
+    fun getSendMessages(senderId: Long): List<DirectMessageEntity> {
+        return this.messageCache.getMassageSentBy(senderId)
+    }
+
+    fun getReceivedMessages(receiptUserId: Long): List<DirectMessageEntity> {
+        return this.messageCache.getMessageReceivedBy(receiptUserId)
+    }
+
+    @Throws(TwitterException::class)
+    fun sendMessage(userId: Long, message: String): DirectMessageEntity {
+        val result = this.twitter.sendDirectMessage(userId, message)
+        return this.mapper.map(result).also { this.messageCache.put(it) }
+    }
+
+    fun add(message: DirectMessage): DirectMessageEntity {
+        return this.mapper.map(message).also { this.messageCache.put(it) }
+    }
+
+    operator fun get(messageId: Long): DirectMessageEntity {
+        return messageCache[messageId]
+    }
+
+    fun clear() {
+        messageCache.clearAll()
     }
 }
