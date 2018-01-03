@@ -21,7 +21,7 @@ class FavoriteListModel extends TweetListModelImp {
     public void request(final RequestInfo info) {
         this.executor.execute(() -> {
             try {
-                final List<TweetEntity> tweets = TweetRepositoryKt.INSTANCE.getFavoritList(info.getUserID(), info.toPaging());
+                final List<TweetEntity> tweets = TweetRepositoryKt.INSTANCE.getFavoriteList(info.getUserID(), info.toPaging());
                 final ModelMessage message = ModelMessage.of(ModelActionType.LOAD_FAVORITE_LIST, tweets);
                 observable.notifyObserver(message);
             } catch (TwitterException e) {

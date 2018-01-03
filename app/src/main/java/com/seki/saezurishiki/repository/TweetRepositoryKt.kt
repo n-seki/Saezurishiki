@@ -42,7 +42,7 @@ object TweetRepositoryKt {
     }
 
     @Throws(TwitterException::class)
-    fun getFavoritList(userId: Long, paging: Paging): List<TweetEntity> {
+    fun getFavoriteList(userId: Long, paging: Paging): List<TweetEntity> {
         val result = mTwitter.getFavorites(userId, paging)
         return mappingAdd(result)
     }
