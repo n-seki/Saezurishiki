@@ -142,8 +142,7 @@
     <string name="action_destroy_block">ブロック解除</string>
     <string name="remove">リムーブ</string>
     <string name="onFollowed">フォローされました</string>
-    <string name="connect">接続しました</string>
-    <string name="disconnect">接続が切れました</string>
+    <string name="user_stream_disconnect">ユーザーストリームを停止しました</string>
     <string name="reply_from">Reply from</string>
     <string name="delete">Delete</string>
     <string name="unfavorite_complete">お気に入りを解除しました</string>
@@ -190,4 +189,5 @@
     <string name="library_link3">https://facebook.github.io/conceal/</string>
     <string name="license_description2">囀り式は、BSD License の下で提供される以下のライブラリを使用しています</string>
     <string name="no_recently_message">直近のメッセージはありません</string>
+    <string name="user_stream_connect">ユーザーストリームを開始します</string>
 </resources>

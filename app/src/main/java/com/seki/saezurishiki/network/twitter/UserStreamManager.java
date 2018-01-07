@@ -28,7 +28,7 @@ public final class UserStreamManager {
 
     static void onCreate(TwitterAccount twitterAccount) {
         if (instance != null) {
-            instance.destroy();
+            return;
         }
 
         instance = new UserStreamManager(twitterAccount);
@@ -42,48 +42,41 @@ public final class UserStreamManager {
         return instance;
     }
 
-    public static boolean isAlive() {
-        return instance != null;
-    }
-
-    public void start() {
-        if ( isStartStream ) {
-            return;
+    public boolean start() {
+        if (isStartStream) {
+            return false;
         }
-
-        mTwitterStream.shutdown();
 
         mTwitterStream.addListener(streamAdapter);
         mTwitterStream.user();
         isStartStream = true;
+        return true;
     }
 
 
-    public void stop() {
+    public boolean stop() {
         if ( !isStartStream ) {
-            return;
+            return false;
         }
 
         mTwitterStream.removeListener(streamAdapter);
         mTwitterStream.shutdown();
         isStartStream = false;
+        return true;
     }
 
 
-    public void destroy() {
+    public boolean destroy() {
         if (mTwitterStream == null) {
-            return;
+            return false;
         }
 
         mTwitterStream.removeListener(streamAdapter);
         mTwitterStream.shutdown();
-        mTwitterStream = null;
         streamAdapter.clearListener();
-        //streamAdapter = null;
         isStartStream = false;
-        instance = null;
+        return true;
     }
-
 
     public synchronized void addListener(CustomUserStreamListener listener) {
         this.streamAdapter.addListener(listener);

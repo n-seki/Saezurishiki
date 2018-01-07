@@ -143,8 +143,8 @@
     <string name="action_destroy_block">ブロック解除</string>
     <string name="remove">リムーブ</string>
     <string name="onFollowed">フォローされました</string>
-    <string name="connect">接続しました</string>
-    <string name="disconnect">接続が切れました</string>
+    <string name="user_stream_connect">ユーザーストリームを開始します</string>
+    <string name="user_stream_disconnect">ユーザーストリームを停止しました</string>
     <string name="reply_from">Reply from</string>
     <string name="delete">Delete</string>
     <string name="favorite_by">ふぁぼられました</string>

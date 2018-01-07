@@ -1,7 +1,5 @@
 package com.seki.saezurishiki.model;
 
-import twitter4j.StatusUpdate;
-
 public interface UserScreenModel extends ModelBase {
     void getUser(long userId);
     void getRelationship(long userId);

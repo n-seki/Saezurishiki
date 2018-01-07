@@ -10,7 +10,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -18,6 +17,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,11 +38,11 @@ import com.seki.saezurishiki.entity.UserEntity;
 import com.seki.saezurishiki.file.CachManager;
 import com.seki.saezurishiki.file.EncryptUtil;
 import com.seki.saezurishiki.file.Serializer;
+import com.seki.saezurishiki.file.SharedPreferenceUtil;
 import com.seki.saezurishiki.model.impl.ModelContainer;
 import com.seki.saezurishiki.network.ConnectionReceiver;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
 import com.seki.saezurishiki.network.twitter.TwitterUtil;
-import com.seki.saezurishiki.network.twitter.UserStreamManager;
 import com.seki.saezurishiki.presenter.activity.LoginUserPresenter;
 import com.seki.saezurishiki.view.adapter.DrawerButtonListAdapter;
 import com.seki.saezurishiki.view.adapter.TimeLinePager;
@@ -58,7 +58,6 @@ import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.Contract;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -123,22 +122,20 @@ public class LoginUserActivity extends    AppCompatActivity
             return;
         }
 
-        new LoginUserPresenter(ModelContainer.getLoginUserScreen(), this);
         Setting.init(this);
         final Setting setting = new Setting();
         final int theme = setting.getTheme();
         setTheme(theme);
         setContentView(R.layout.activity_home);
 
-        IntentFilter filter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
-        mReceiver = new ConnectionReceiver(this);
-        registerReceiver(mReceiver, filter);
-
+        new LoginUserPresenter(ModelContainer.getLoginUserScreen(), this);
         this.presenter.loadUser();
         this.setupActionBar();
         this.setupNavigationDrawer(theme);
         this.setupTweetButton(theme);
         this.setupTimeLine(theme);
+
+        Log.d("LoginUserActivity", "onCreate");
 
         mFragmentController = new FragmentController(getSupportFragmentManager());
     }
@@ -151,6 +148,17 @@ public class LoginUserActivity extends    AppCompatActivity
         Intent intent = new Intent(this, TwitterOauthActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        if (mReceiver == null) {
+            IntentFilter filter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+            mReceiver = new ConnectionReceiver(this);
+            registerReceiver(mReceiver, filter);
+        }
     }
 
     private void setExceptionHandle() {
@@ -280,9 +288,7 @@ public class LoginUserActivity extends    AppCompatActivity
     void applicationFinalizer() {
         ModelContainer.destroy();
 
-        if (UserStreamManager.isAlive()) {
-            UserStreamManager.getInstance().destroy();
-        }
+        this.presenter.onDestroy();
 
         if (mReceiver != null) {
             unregisterReceiver(mReceiver);
@@ -346,16 +352,13 @@ public class LoginUserActivity extends    AppCompatActivity
 
     @Override
     public void onConnect() {
-        CustomToast.show(this, R.string.connect, Toast.LENGTH_SHORT);
-        this.presenter.loadUser();
-        UserStreamManager.getInstance().start();
+        this.presenter.connectNetwork();
     }
 
 
     @Override
     public void onDisconnect() {
-        UserStreamManager.getInstance().stop();
-        CustomToast.show(this, R.string.disconnect, Toast.LENGTH_SHORT);
+        this.presenter.disconnectNetwork();
     }
 
     private void replaceTitle(String title) {
@@ -415,6 +418,16 @@ public class LoginUserActivity extends    AppCompatActivity
     @Override
     public void showReceivedDirectMessage(DirectMessageEntity directMessage) {
         CustomToast.show(this, R.string.message_by + directMessage.sender.getName() + "\n" + directMessage.text, Toast.LENGTH_LONG);
+    }
+
+    @Override
+    public void showStartUserStreamMessage() {
+        CustomToast.show(this, R.string.user_stream_connect, Toast.LENGTH_SHORT);
+    }
+
+    @Override
+    public void showStopUserStreamMessage() {
+        CustomToast.show(this, R.string.user_stream_disconnect, Toast.LENGTH_SHORT);
     }
 
 
@@ -621,6 +634,7 @@ public class LoginUserActivity extends    AppCompatActivity
             return;
         }
 
+
         this.changeTitle(mViewPager.getCurrentItem());
     }
 
@@ -641,7 +655,8 @@ public class LoginUserActivity extends    AppCompatActivity
     public void logout() {
         Intent intent = new Intent(this, TwitterOauthActivity.class);
         startActivity(intent);
-        TwitterAccount.logout(this);
+        this.presenter.logout();
+        SharedPreferenceUtil.clearLoginUserInfo(this);
         finish();
     }
 

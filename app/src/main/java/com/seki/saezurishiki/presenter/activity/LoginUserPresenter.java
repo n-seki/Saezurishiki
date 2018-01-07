@@ -11,8 +11,6 @@ import com.seki.saezurishiki.model.adapter.ModelMessage;
 import com.seki.saezurishiki.model.util.ModelObservable;
 import com.seki.saezurishiki.model.util.ModelObserver;
 
-import twitter4j.StatusUpdate;
-
 public class LoginUserPresenter implements ModelObserver {
 
     private final LoginUserScreen model;
@@ -31,6 +29,8 @@ public class LoginUserPresenter implements ModelObserver {
         void onCompleteUnFavorite();
         void showReceivedDirectMessage(DirectMessageEntity directMessage);
         void onCompletePostTweet(TweetEntity tweet);
+        void showStartUserStreamMessage();
+        void showStopUserStreamMessage();
     }
 
     public LoginUserPresenter(LoginUserScreen model, LoginUserPresenter.View view) {
@@ -45,6 +45,23 @@ public class LoginUserPresenter implements ModelObserver {
 
     public void onPause() {
         this.model.removeObserver(this);
+    }
+
+    public void onDestroy() {
+        this.model.finishUserStream();
+    }
+
+    public void logout() {
+        this.model.finishUserStream();
+    }
+
+    public void connectNetwork() {
+        loadUser();
+        this.model.startUserStream();
+    }
+
+    public void disconnectNetwork() {
+        this.model.stopUserStream();
     }
 
     public void loadUser() {
@@ -86,6 +103,13 @@ public class LoginUserPresenter implements ModelObserver {
                 this.receiveDirectMessage((DirectMessageEntity)message.data);
                 break;
 
+            case START_USER_STREAM:
+                this.view.showStartUserStreamMessage();
+                break;
+
+            case STOP_USER_STREAM:
+                this.view.showStopUserStreamMessage();
+                break;
         }
     }
 

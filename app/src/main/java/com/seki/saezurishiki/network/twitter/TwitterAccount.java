@@ -6,7 +6,6 @@ import com.seki.saezurishiki.cache.DirectMessageCache;
 import com.seki.saezurishiki.cache.TweetCache;
 import com.seki.saezurishiki.cache.UserCache;
 import com.seki.saezurishiki.entity.mapper.EntityMapper;
-import com.seki.saezurishiki.file.SharedPreferenceUtil;
 import com.seki.saezurishiki.repository.DirectMessageRepository;
 import com.seki.saezurishiki.repository.RemoteRepositoryImp;
 import com.seki.saezurishiki.repository.TweetRepository;
@@ -35,11 +34,6 @@ public class TwitterAccount {
         DirectMessageRepository.INSTANCE.setup(account.twitter, mapper, new DirectMessageCache());
         UserStreamManager.onCreate(account);
         return account;
-    }
-
-    public static void logout(Context context) {
-        UserStreamManager.getInstance().destroy();
-        SharedPreferenceUtil.clearLoginUserInfo(context);
     }
 
     //TODO

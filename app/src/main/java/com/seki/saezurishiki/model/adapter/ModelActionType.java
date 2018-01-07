@@ -35,6 +35,10 @@ public enum ModelActionType {
     LOAD_DIRECT_MESSAGE(false, DisplayType.ADD),
     LOAD_DIRECT_MESSAGE_CONVERSATION(false, DisplayType.ADD),
 
+    START_USER_STREAM(true, DisplayType.NO_DISPLAY),
+    STOP_USER_STREAM(true, DisplayType.NO_DISPLAY),
+    DESTROY_USER_STREAM(true, DisplayType.NO_DISPLAY),
+
     SEND(false, DisplayType.NO_DISPLAY),
 
     ERROR(false, DisplayType.NO_DISPLAY);

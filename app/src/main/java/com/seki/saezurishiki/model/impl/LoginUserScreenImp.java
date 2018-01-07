@@ -8,6 +8,7 @@ import com.seki.saezurishiki.model.adapter.ModelActionType;
 import com.seki.saezurishiki.model.adapter.ModelMessage;
 import com.seki.saezurishiki.model.util.ModelObserver;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
+import com.seki.saezurishiki.network.twitter.UserStreamManager;
 import com.seki.saezurishiki.repository.DirectMessageRepository;
 import com.seki.saezurishiki.repository.TweetRepository;
 import com.seki.saezurishiki.repository.UserRepository;
@@ -34,6 +35,36 @@ public class LoginUserScreenImp extends ModelBaseImp implements LoginUserScreen 
                 observable.notifyObserver(message);
             } catch (TwitterException e) {
                 observable.notifyObserver(ModelMessage.error(e));
+            }
+        });
+    }
+
+    @Override
+    public void startUserStream() {
+        this.executor.execute(() ->  {
+            if (UserStreamManager.getInstance().start()) {
+                final ModelMessage message = ModelMessage.of(ModelActionType.START_USER_STREAM, null);
+                observable.notifyObserver(message);
+            }
+        });
+    }
+
+    @Override
+    public void stopUserStream() {
+        this.executor.execute(() -> {
+            if (UserStreamManager.getInstance().stop()) {
+                final ModelMessage message = ModelMessage.of(ModelActionType.STOP_USER_STREAM, null);
+                observable.notifyObserver(message);
+            }
+        });
+    }
+
+    @Override
+    public void finishUserStream() {
+        this.executor.execute(() -> {
+            if (UserStreamManager.getInstance().destroy()) {
+                final ModelMessage message = ModelMessage.of(ModelActionType.DESTROY_USER_STREAM, null);
+                observable.notifyObserver(message);
             }
         });
     }
