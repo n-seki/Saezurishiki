@@ -10,7 +10,7 @@ android {
         applicationId "com.seki.saezurishiki"
         minSdkVersion 14
         targetSdkVersion 26
-        versionCode 27
+        versionCode 28
         versionName "1.76"
     }
 
