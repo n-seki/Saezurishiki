@@ -69,7 +69,7 @@ public class PictureFragment extends Fragment implements ViewPager.OnPageChangeL
         List<String> URLs = mStatus.mediaUrlList;
         mPicCount = URLs.size();
         PicturePager pageAdapter = new PicturePager(getChildFragmentManager(), URLs);
-        ViewPager viewPager = (ViewPager)view.findViewById(R.id.pic_pager);
+        ViewPager viewPager = view.findViewById(R.id.pic_pager);
         viewPager.setAdapter(pageAdapter);
         viewPager.addOnPageChangeListener(this);
         viewPager.setOffscreenPageLimit(mPicCount - 1);
@@ -131,7 +131,7 @@ public class PictureFragment extends Fragment implements ViewPager.OnPageChangeL
 
         @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View view = inflater.inflate(R.layout.picture_screen, container, false);
-            mPictureView = (ImageView)view.findViewById(R.id.picture);
+            mPictureView = view.findViewById(R.id.picture);
             Picasso.with(getActivity()).load(mUrl).skipMemoryCache().into(mPictureView);
             ScaleGestureDetector.SimpleOnScaleGestureListener scaleGestureListener = new ScaleGestureDetector.SimpleOnScaleGestureListener() {
                 @Override
