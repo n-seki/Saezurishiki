@@ -23,8 +23,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import static com.seki.saezurishiki.control.UIControlUtil.createMediaURLList;
-
 /**
  * 画像表示Fragment<br>
  * 選択された画像を全画面で表示します.
