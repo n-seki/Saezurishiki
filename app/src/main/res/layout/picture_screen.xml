@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="#000000">
 
-    <ImageView
+    <com.seki.saezurishiki.view.customview.ZoomPicture
         android:id="@+id/picture"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

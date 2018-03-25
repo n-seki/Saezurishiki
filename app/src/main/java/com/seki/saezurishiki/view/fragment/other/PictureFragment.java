@@ -14,10 +14,10 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.entity.TweetEntity;
+import com.seki.saezurishiki.view.customview.ZoomPicture;
 import com.seki.saezurishiki.view.fragment.util.DataType;
 import com.squareup.picasso.Picasso;
 
@@ -112,7 +112,7 @@ public class PictureFragment extends Fragment implements ViewPager.OnPageChangeL
     public static class PictureScreen extends Fragment {
 
         private String mUrl;
-        private ImageView mPictureView;
+        private ZoomPicture mPictureView;
 
         public static Fragment getInstance(String url) {
             Fragment fragment = new PictureScreen();
@@ -132,6 +132,9 @@ public class PictureFragment extends Fragment implements ViewPager.OnPageChangeL
             mPictureView = view.findViewById(R.id.picture);
             Picasso.with(getActivity()).load(mUrl).skipMemoryCache().into(mPictureView);
             ScaleGestureDetector.SimpleOnScaleGestureListener scaleGestureListener = new ScaleGestureDetector.SimpleOnScaleGestureListener() {
+
+                float previousFactor = 1f;
+
                 @Override
                 public boolean onScaleBegin(ScaleGestureDetector detector) {
                     return super.onScaleBegin(detector);
@@ -143,27 +146,16 @@ public class PictureFragment extends Fragment implements ViewPager.OnPageChangeL
                 @Override
                 public boolean onScale(ScaleGestureDetector detector) {
                     super.onScale(detector);
-                    final float currentSpan = detector.getCurrentSpan();
-                    final float previousSpan = detector.getPreviousSpan();
-                    final float distance = currentSpan - previousSpan;
-                    final float scaleX = distance/100;
-                    final float scaleY = distance/100;
-                    if (distance >= 0) {
-                        if (scaleX + mPictureView.getScaleX() >= 5) {
-                            mPictureView.setScaleX(5f);
-                            mPictureView.setScaleY(5f);
-                            return false;
-                        }
-                    } else {
-                        if (mPictureView.getScaleX() + scaleX <= 1) {
-                            mPictureView.setScaleX(1f);
-                            mPictureView.setScaleY(1f);
-                            return false;
-                        }
+
+                    final float factor = detector.getScaleFactor();
+
+                    if (Math.abs(previousFactor - factor) > 0.01) {
+                        mPictureView.setScaleX(mPictureView.getScaleX() * factor);
+                        mPictureView.setScaleY(mPictureView.getScaleY() * factor);
+                        previousFactor = factor;
                     }
-                    mPictureView.setScaleX(mPictureView.getScaleX() + scaleX);
-                    mPictureView.setScaleY(mPictureView.getScaleY() + scaleY);
-                    return true;
+
+                    return false;
                 }
             };
 
@@ -173,11 +165,11 @@ public class PictureFragment extends Fragment implements ViewPager.OnPageChangeL
                 @Override
                 public boolean onDoubleTap(MotionEvent e) {
                     final float currentScale = mPictureView.getScaleX();
-                    if (currentScale > 1f) {
+                    if (currentScale != 1f) {
                         mPictureView.setScaleX(1f);
                         mPictureView.setScaleY(1f);
                         mPictureView.layout(0, 0, mPictureView.getWidth(), mPictureView.getHeight());
-                    } else if (currentScale == 1) {
+                    } else {
                         mPictureView.setScaleX(2f);
                         mPictureView.setScaleY(2f);
                     }
@@ -185,7 +177,6 @@ public class PictureFragment extends Fragment implements ViewPager.OnPageChangeL
                     return false;
                 }
             };
-
             final GestureDetector doubleTapDetector = new GestureDetector(getActivity(), doubleTapListener);
 
             mPictureView.setOnTouchListener(new View.OnTouchListener() {
@@ -198,8 +189,7 @@ public class PictureFragment extends Fragment implements ViewPager.OnPageChangeL
                 @Override
                 public boolean onTouch(View view, MotionEvent motionEvent) {
 
-                    //TODO 仕様方針上ピンチによる拡大縮小は必要要件ではないためいったん削除
-                    //scaleGestureDetector.onTouchEvent(motionEvent);
+                    scaleGestureDetector.onTouchEvent(motionEvent);
 
                     doubleTapDetector.onTouchEvent(motionEvent);
 
@@ -244,10 +234,13 @@ public class PictureFragment extends Fragment implements ViewPager.OnPageChangeL
                             }
 
                             // FIXME: 2016/10/16
-                            if (currentY < -200 || 200 < currentY) {
+                            if (currentY < -300 || 300 < currentY) {
                                 getActivity().onBackPressed();
                             }
                             break;
+
+                        default:
+                            view.performClick();
                     }
 
                     return true;
