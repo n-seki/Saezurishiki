@@ -38,8 +38,7 @@
                 <category android:name="android.intent.category.BROWSABLE"/>
 
                 <data
-                    android:host="twitter"
-                    android:scheme="kawasemi"/>
+                    android:scheme="saezurishiki"/>
             </intent-filter>
         </activity>
     </application>
