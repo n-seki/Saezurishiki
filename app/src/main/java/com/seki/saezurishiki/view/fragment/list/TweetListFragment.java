@@ -145,13 +145,11 @@ public abstract class TweetListFragment extends Fragment
         return true;
     }
 
-
-
     @Override
     public void showLongClickDialog(TweetEntity status) {
         DialogFragment dialog = TweetLongClickDialog.newInstance(status);
         dialog.setTargetFragment(this, 0);
-        dialog.show(getChildFragmentManager(), "TweetLongClickDialog");
+        dialog.show(getFragmentManager(), "TweetLongClickDialog");
     }
 
 

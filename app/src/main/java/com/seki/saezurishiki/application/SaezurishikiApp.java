@@ -9,6 +9,5 @@ public class SaezurishikiApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        TwitterAccount.onCreate(this);
     }
 }
