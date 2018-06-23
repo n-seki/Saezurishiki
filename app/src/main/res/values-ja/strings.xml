@@ -62,7 +62,7 @@
     <string name="action_logout">ログアウト</string>
 
     <!--承認用Twitter URL-->
-    <string name="callback_url">kawasemi://twitter</string>
+    <string name="callback_url">saezurishiki://</string>
 
     <string name="please_write_text">メッセージを入力してください</string>
     <string name="over_max_text_count">140字を超えています</string>
