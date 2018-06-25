@@ -75,6 +75,7 @@ public final class UserStreamManager {
         mTwitterStream.shutdown();
         streamAdapter.clearListener();
         isStartStream = false;
+        instance = null;
         return true;
     }
 

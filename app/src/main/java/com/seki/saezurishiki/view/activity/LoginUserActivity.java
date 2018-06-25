@@ -663,7 +663,6 @@ public class LoginUserActivity extends    AppCompatActivity
     public void logout() {
         Intent intent = new Intent(this, TwitterOauthActivity.class);
         startActivity(intent);
-        this.presenter.logout();
         SharedPreferenceUtil.clearLoginUserInfo(this);
         finish();
     }
