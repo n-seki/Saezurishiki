@@ -20,7 +20,7 @@ android {
             buildConfigField "String", "TWITTER_CONSUMER_SECRET", "\"${project.property("twitter_consumer_secret")}\""
             buildConfigField "String", "ENCRYTP_NAME", "\"${project.property("encrypt_name")}\""
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            debuggable true
         }
 
         release {
@@ -29,6 +29,7 @@ android {
             buildConfigField "String", "ENCRYTP_NAME", "\"${project.property("encrypt_name")}\""
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            debuggable false
         }
     }
 
