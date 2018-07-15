@@ -14,7 +14,7 @@ Saezurishiki is a lightweight Twitter Clinent Application for Android![WIP]
 #### Architecture
 + MVP
 + V ↔ P Constructor Injection
-+ M ↔ P Obverser Pattern
++ M ↔ P Observer Pattern
 
 #### Library
 + Twitter4J
