@@ -1,6 +1,6 @@
 # Saezurishiki
 
-Saezurishiki is a lightweight Twitter Clinent Application for Android![WIP]
+Saezurishiki is a lightweight Twitter Client Application for Android![WIP]
 
 ### Function
 + show TimeLine, conversation, user's tweet list, fav list, follow list, follower list
