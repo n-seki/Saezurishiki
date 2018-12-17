@@ -122,6 +122,8 @@ public class LoginUserActivity extends    AppCompatActivity
             return;
         }
 
+        TwitterAccount.onCreate(getApplicationContext());
+
         Setting.init(this);
         final Setting setting = new Setting();
         final int theme = setting.getTheme();
@@ -266,14 +268,18 @@ public class LoginUserActivity extends    AppCompatActivity
     @Override
     public void onResume() {
         super.onResume();
-        this.presenter.onResume();
+        if (presenter != null) {
+            this.presenter.onResume();
+        }
     }
 
 
     @Override
     public void onPause() {
         super.onPause();
-        this.presenter.onPause();
+        if (presenter != null) {
+            this.presenter.onPause();
+        }
         CustomToast.cancelToast();
     }
 
@@ -288,7 +294,9 @@ public class LoginUserActivity extends    AppCompatActivity
     void applicationFinalizer() {
         ModelContainer.destroy();
 
-        this.presenter.onDestroy();
+        if (presenter != null) {
+            this.presenter.onDestroy();
+        }
 
         if (mReceiver != null) {
             unregisterReceiver(mReceiver);
@@ -655,7 +663,6 @@ public class LoginUserActivity extends    AppCompatActivity
     public void logout() {
         Intent intent = new Intent(this, TwitterOauthActivity.class);
         startActivity(intent);
-        this.presenter.logout();
         SharedPreferenceUtil.clearLoginUserInfo(this);
         finish();
     }
