@@ -137,7 +137,7 @@ public class PictureFragment extends Fragment implements ViewPager.OnPageChangeL
             ScaleGestureDetector.SimpleOnScaleGestureListener scaleGestureListener =
                     new ScaleGestureDetector.SimpleOnScaleGestureListener() {
 
-                float previousFactor = 1f;
+                float mScaleFactor = 1f;
 
                 @Override
                 public boolean onScale(ScaleGestureDetector detector) {
@@ -145,10 +145,10 @@ public class PictureFragment extends Fragment implements ViewPager.OnPageChangeL
 
                     final float factor = detector.getScaleFactor();
 
-                    if (Math.abs(previousFactor - factor) > 0.01) {
+                    if (Math.abs(mScaleFactor - factor) > 0.01) {
                         mPictureView.setScaleX(mPictureView.getScaleX() * factor);
                         mPictureView.setScaleY(mPictureView.getScaleY() * factor);
-                        previousFactor = factor;
+                        mScaleFactor = factor;
                         return true;
                     }
 
