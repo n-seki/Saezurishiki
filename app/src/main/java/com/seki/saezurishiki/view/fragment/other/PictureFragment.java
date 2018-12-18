@@ -61,7 +61,7 @@ public class PictureFragment extends Fragment implements ViewPager.OnPageChangeL
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, final Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_picture, container, false);
 
         List<String> URLs = mStatus.mediaUrlList;
@@ -118,12 +118,14 @@ public class PictureFragment extends Fragment implements ViewPager.OnPageChangeL
             return fragment;
         }
 
-        @Override public void onCreate(Bundle savedInstanceState) {
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             mUrl = getArguments().getString(DataType.URL);
         }
 
-        @Override public View onCreateView(
+        @Override
+        public View onCreateView(
                 LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View view = inflater.inflate(R.layout.picture_screen, container, false);
             mPictureView = view.findViewById(R.id.picture);
@@ -138,14 +140,6 @@ public class PictureFragment extends Fragment implements ViewPager.OnPageChangeL
                 float previousFactor = 1f;
 
                 @Override
-                public boolean onScaleBegin(ScaleGestureDetector detector) {
-                    return super.onScaleBegin(detector);
-                }
-                @Override
-                public void onScaleEnd(ScaleGestureDetector detector) {
-                    super.onScaleEnd(detector);
-                }
-                @Override
                 public boolean onScale(ScaleGestureDetector detector) {
                     super.onScale(detector);
 
@@ -155,6 +149,7 @@ public class PictureFragment extends Fragment implements ViewPager.OnPageChangeL
                         mPictureView.setScaleX(mPictureView.getScaleX() * factor);
                         mPictureView.setScaleY(mPictureView.getScaleY() * factor);
                         previousFactor = factor;
+                        return true;
                     }
 
                     return false;
@@ -237,11 +232,11 @@ public class PictureFragment extends Fragment implements ViewPager.OnPageChangeL
                             break;
 
                         case MotionEvent.ACTION_UP :
-                            if (view.getScaleX() != 1) {
-                                break;
-                            }
+//                            if (view.getScaleX() != 1) {
+//                                break;
+//                            }
 
-                            if (Math.abs(currentY) > RANGE_OF_PICTURE) {
+                            if (Math.abs(currentY) > RANGE_OF_PICTURE * view.getScaleY()) {
                                 getActivity().onBackPressed();
                             }
                             break;
@@ -253,7 +248,6 @@ public class PictureFragment extends Fragment implements ViewPager.OnPageChangeL
                     return true;
                 }
             });
-
 
             return view;
         }
@@ -272,11 +266,13 @@ public class PictureFragment extends Fragment implements ViewPager.OnPageChangeL
             mUrls = urls;
         }
 
-        @Override public Fragment getItem(int position) {
+        @Override
+        public Fragment getItem(int position) {
             return PictureScreen.getInstance(mUrls.get(position));
         }
 
-        @Override public int getCount() {
+        @Override
+        public int getCount() {
             return mUrls.size();
         }
     }
