@@ -3,13 +3,12 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion '26.0.2'
+    compileSdkVersion 28
 
     defaultConfig {
         applicationId "com.seki.saezurishiki"
         minSdkVersion 14
-        targetSdkVersion 26
+        targetSdkVersion 28
         versionCode 30
         versionName "1.78"
     }
@@ -64,17 +63,16 @@ android {
 }
 
 dependencies {
-    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'org.twitter4j:twitter4j-core:4.0.4'
     implementation 'org.twitter4j:twitter4j-stream:4.0.4'
     implementation 'org.twitter4j:twitter4j-media-support:4.0.4'
     implementation 'org.twitter4j:twitter4j-async:4.0.4'
-    implementation 'com.android.support:design:26.1.0'
-    implementation 'com.android.support:preference-v7:26.1.0'
+    implementation 'com.android.support:design:28.0.0'
+    implementation 'com.android.support:preference-v7:28.0.0'
     implementation 'com.squareup.picasso:picasso:2.3.3'
     implementation 'com.facebook.conceal:conceal:1.1.3@aar'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-    kapt 'com.android.databinding:compiler:3.0.1'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 repositories {
     mavenCentral()
