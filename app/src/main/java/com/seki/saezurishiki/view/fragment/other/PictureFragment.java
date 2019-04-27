@@ -1,5 +1,6 @@
 package com.seki.saezurishiki.view.fragment.other;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -19,6 +20,8 @@ import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.view.customview.ZoomPicture;
 import com.seki.saezurishiki.view.fragment.util.DataType;
 import com.squareup.picasso.Picasso;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -61,9 +64,9 @@ public class PictureFragment extends Fragment implements ViewPager.OnPageChangeL
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NotNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_picture, container, false);
-
         List<String> URLs = mStatus.mediaUrlList;
         mPicCount = URLs.size();
         PicturePager pageAdapter = new PicturePager(getChildFragmentManager(), URLs);
@@ -95,7 +98,7 @@ public class PictureFragment extends Fragment implements ViewPager.OnPageChangeL
     }
 
     private void setActionBarTitle(int picPosition) {
-        mActionBar.setTitle("Picture" + " " + String.valueOf(picPosition) + "/" + mPicCount);
+        mActionBar.setTitle("Picture" + " " + picPosition + "/" + mPicCount);
     }
 
     @Override
@@ -121,12 +124,14 @@ public class PictureFragment extends Fragment implements ViewPager.OnPageChangeL
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            mUrl = getArguments().getString(DataType.URL);
+            if (getArguments() != null) {
+                mUrl = getArguments().getString(DataType.URL);
+            }
         }
 
         @Override
-        public View onCreateView(
-                LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        public View onCreateView(@NotNull LayoutInflater inflater,
+                                 ViewGroup container, Bundle savedInstanceState) {
             View view = inflater.inflate(R.layout.picture_screen, container, false);
             mPictureView = view.findViewById(R.id.picture);
             Picasso.with(getActivity())
@@ -156,10 +161,10 @@ public class PictureFragment extends Fragment implements ViewPager.OnPageChangeL
                 }
             };
 
-            final ScaleGestureDetector scaleGestureDetector =
+            ScaleGestureDetector scaleGestureDetector =
                     new ScaleGestureDetector(getActivity(), scaleGestureListener);
 
-            final GestureDetector.SimpleOnGestureListener doubleTapListener =
+            GestureDetector.SimpleOnGestureListener doubleTapListener =
                     new GestureDetector.SimpleOnGestureListener() {
                 @Override
                 public boolean onDoubleTap(MotionEvent e) {
@@ -177,7 +182,7 @@ public class PictureFragment extends Fragment implements ViewPager.OnPageChangeL
                 }
             };
 
-            final GestureDetector doubleTapDetector =
+            GestureDetector doubleTapDetector =
                     new GestureDetector(getActivity(), doubleTapListener);
 
             mPictureView.setOnTouchListener(new View.OnTouchListener() {
@@ -208,7 +213,7 @@ public class PictureFragment extends Fragment implements ViewPager.OnPageChangeL
                             offsetY = rawY;
                             break;
 
-                        case MotionEvent.ACTION_MOVE :
+                        case MotionEvent.ACTION_MOVE:
                             //移動距離を算出
                             float distanceX = offsetX - rawX;
                             float distanceY = offsetY - rawY;
@@ -231,13 +236,12 @@ public class PictureFragment extends Fragment implements ViewPager.OnPageChangeL
                             offsetY = rawY;
                             break;
 
-                        case MotionEvent.ACTION_UP :
-//                            if (view.getScaleX() != 1) {
-//                                break;
-//                            }
-
+                        case MotionEvent.ACTION_UP:
                             if (Math.abs(currentY) > RANGE_OF_PICTURE * view.getScaleY()) {
-                                getActivity().onBackPressed();
+                                Activity activity = getActivity();
+                                if (activity != null) {
+                                    activity.onBackPressed();
+                                }
                             }
                             break;
 
