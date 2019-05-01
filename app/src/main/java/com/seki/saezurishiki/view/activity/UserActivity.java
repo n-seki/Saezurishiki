@@ -114,9 +114,6 @@ public class UserActivity extends    AppCompatActivity
         Button replyButton = (Button)findViewById(R.id.bio_reply_button);
         replyButton.setOnClickListener(view -> UserActivity.this.displayFragment(ScreenNav.TWEET_EDITOR, owner));
 
-        Button messageButton = (Button)findViewById(R.id.bio_message_button);
-        messageButton.setOnClickListener(view -> UserActivity.this.displayFragment(ScreenNav.MESSAGE_EDITOR, owner));
-
         Button followButton = (Button)findViewById(R.id.bio_follow_button);
         followButton.setOnClickListener(view -> presenter.onClickFollowButton());
 
@@ -129,14 +126,6 @@ public class UserActivity extends    AppCompatActivity
     @Override
     public void setRelationshipText(int text) {
         ((TextView)findViewById(R.id.bio_relation)).setText(text);
-    }
-
-    @Override
-    public void changeDirectMessageButtonState(boolean isMutual) {
-        Button sendButton = (Button) findViewById(R.id.bio_message_button);
-        final int color = isMutual ? R.color.white_FFFFFF : R.color.gray_808080;
-        sendButton.setClickable(isMutual);
-        sendButton.setTextColor(ContextCompat.getColor(this, color));
     }
 
     @Override

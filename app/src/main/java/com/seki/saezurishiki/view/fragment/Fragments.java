@@ -7,24 +7,20 @@ import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.entity.UserEntity;
 import com.seki.saezurishiki.model.TweetEditorModel;
 import com.seki.saezurishiki.model.impl.ModelContainer;
-import com.seki.saezurishiki.presenter.editor.DirectMessageEditorPresenter;
 import com.seki.saezurishiki.presenter.editor.TweetEditorPresenter;
 import com.seki.saezurishiki.presenter.list.ConversationPresenter;
 import com.seki.saezurishiki.presenter.list.FavoriteListPresenter;
 import com.seki.saezurishiki.presenter.list.FollowerListPresenter;
 import com.seki.saezurishiki.presenter.list.FriendListPresenter;
 import com.seki.saezurishiki.presenter.list.HomeTimeLinePresenter;
-import com.seki.saezurishiki.presenter.list.RecentlyDirectMessageListPresenter;
 import com.seki.saezurishiki.presenter.list.ReplyTimeLinePresenter;
 import com.seki.saezurishiki.presenter.list.SearchPresenter;
 import com.seki.saezurishiki.presenter.list.UserTweetListPresenter;
-import com.seki.saezurishiki.view.fragment.editor.DirectMessageFragment;
 import com.seki.saezurishiki.view.fragment.editor.EditTweetFragment;
 import com.seki.saezurishiki.view.fragment.list.ConversationFragment;
 import com.seki.saezurishiki.view.fragment.list.FavoritesFragment;
 import com.seki.saezurishiki.view.fragment.list.FollowerListFragment;
 import com.seki.saezurishiki.view.fragment.list.FriendListFragment;
-import com.seki.saezurishiki.view.fragment.list.RecentlyDirectMessageListFragment;
 import com.seki.saezurishiki.view.fragment.list.SearchFragment;
 import com.seki.saezurishiki.view.fragment.list.TweetListFragment;
 import com.seki.saezurishiki.view.fragment.list.UserStreamTimeLineFragment;
@@ -32,7 +28,6 @@ import com.seki.saezurishiki.view.fragment.list.UserTweetFragment;
 import com.seki.saezurishiki.view.fragment.list.UsersListFragment;
 
 import twitter4j.HashtagEntity;
-import twitter4j.User;
 
 import static com.seki.saezurishiki.file.SharedPreferenceUtil.HOME;
 import static com.seki.saezurishiki.file.SharedPreferenceUtil.REPLY;
@@ -52,12 +47,6 @@ public final class Fragments {
     public static Fragment createInjectReplyTimeLineFragment(final int tabPosition, final long userId) {
         final TweetListFragment fragment = UserStreamTimeLineFragment.getReplyTimeLine(tabPosition, REPLY);
         new ReplyTimeLinePresenter(fragment, userId, ModelContainer.getReplyTweetListModel());
-        return fragment;
-    }
-
-    public static Fragment createInjectRecentlyDMListFragment(final int tabPosition) {
-        final RecentlyDirectMessageListFragment fragment = RecentlyDirectMessageListFragment.getInstance(tabPosition);
-        new RecentlyDirectMessageListPresenter(fragment, ModelContainer.getDirectMessageListModel());
         return fragment;
     }
 
@@ -122,12 +111,6 @@ public final class Fragments {
     public static Fragment newFollowerListFragment(long userId) {
         final UsersListFragment fragment = FollowerListFragment.newInstance();
         new FollowerListPresenter(fragment, ModelContainer.getFollowerListMode(), userId);
-        return fragment;
-    }
-
-    public static Fragment newDirectMessageEditor(long userId) {
-        final DirectMessageFragment fragment = DirectMessageFragment.getInstance();
-        new DirectMessageEditorPresenter(fragment, ModelContainer.getDirectMessageEditorModel(), userId);
         return fragment;
     }
 }
