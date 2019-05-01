@@ -2,17 +2,17 @@ package com.seki.saezurishiki.view.customview
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.support.v7.widget.AppCompatImageView
 import android.util.AttributeSet
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
-import android.widget.ImageView
 
 class ZoomPicture @JvmOverloads constructor(
         context: Context,
         attrs: AttributeSet? = null,
         defStyleAttr: Int = 0
-) : ImageView(context, attrs, defStyleAttr) {
+) : AppCompatImageView(context, attrs, defStyleAttr) {
 
     private var mScaleFactor = 1f
 
