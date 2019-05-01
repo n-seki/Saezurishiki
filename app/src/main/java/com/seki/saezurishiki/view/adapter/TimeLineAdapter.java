@@ -5,6 +5,7 @@ import android.databinding.BindingAdapter;
 import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -600,6 +601,11 @@ public class TimeLineAdapter extends ArrayAdapter<ListElement> {
         }
 
         view.setVisibility(View.INVISIBLE);
+    }
+
+    @BindingAdapter("bind:textSize")
+    public static void setTextSize(TextView textView, int rawSize) {
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, rawSize);
     }
 
 }
