@@ -29,8 +29,6 @@ public class LoginUserPresenter implements ModelObserver {
         void onCompleteUnFavorite();
         void showReceivedDirectMessage(DirectMessageEntity directMessage);
         void onCompletePostTweet(TweetEntity tweet);
-        void showStartUserStreamMessage();
-        void showStopUserStreamMessage();
     }
 
     public LoginUserPresenter(LoginUserScreen model, LoginUserPresenter.View view) {
@@ -101,14 +99,6 @@ public class LoginUserPresenter implements ModelObserver {
 
             case RECEIVE_DIRECT_MESSAGE:
                 this.receiveDirectMessage((DirectMessageEntity)message.data);
-                break;
-
-            case START_USER_STREAM:
-                this.view.showStartUserStreamMessage();
-                break;
-
-            case STOP_USER_STREAM:
-                this.view.showStopUserStreamMessage();
                 break;
         }
     }

@@ -429,17 +429,6 @@ public class LoginUserActivity extends    AppCompatActivity
     }
 
     @Override
-    public void showStartUserStreamMessage() {
-        CustomToast.show(this, R.string.user_stream_connect, Toast.LENGTH_SHORT);
-    }
-
-    @Override
-    public void showStopUserStreamMessage() {
-        CustomToast.show(this, R.string.user_stream_disconnect, Toast.LENGTH_SHORT);
-    }
-
-
-    @Override
     public void displayDirectMessageEditor(long userId) {
         final Map<String, Object> args = new HashMap<>();
         args.put("userId", userId);
