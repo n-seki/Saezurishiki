@@ -43,16 +43,6 @@
                 app:backgroundTint="@color/blue_button_color_state"/>
 
             <Button
-                android:id="@+id/bio_message_button"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:text="@string/send_DM"
-                android:textStyle="bold"
-                android:textColor="@color/white_FFFFFF"
-                app:backgroundTint="@color/blue_button_color_state"/>
-
-            <Button
                 android:id="@+id/bio_follow_button"
                 android:layout_width="0dp"
                 android:layout_weight="1"

@@ -99,16 +99,6 @@ public enum ScreenNav {
         }
     },
 
-    MESSAGE_EDITOR {
-        @Override
-        public void transition(Context context, FragmentManager fragmentManager, int layoutId, Map<String, Object> args, Consumer<Fragment> callback) {
-            final long userId = ScreenNav.getUserId(args);
-            Fragment fragment = Fragments.newDirectMessageEditor(userId);
-            FragmentController.add(fragmentManager, fragment, layoutId);
-            callback.accept(fragment);
-        }
-    },
-
     LICENSE {
         @Override
         public void transition(Context context, FragmentManager fragmentManager, int layoutId, Map<String, Object> args, Consumer<Fragment> callback) {

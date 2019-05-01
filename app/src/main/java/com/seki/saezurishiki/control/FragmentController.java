@@ -4,14 +4,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
 import com.seki.saezurishiki.R;
-import com.seki.saezurishiki.entity.UserEntity;
-import com.seki.saezurishiki.view.fragment.Fragments;
-import com.seki.saezurishiki.view.fragment.editor.DirectMessageFragment;
-import com.seki.saezurishiki.view.fragment.other.SettingFragment;
 
 import org.jetbrains.annotations.Contract;
-
-import twitter4j.User;
 
 /**
  * Fragment管理クラス<br>

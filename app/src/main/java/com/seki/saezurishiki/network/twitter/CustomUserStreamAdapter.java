@@ -81,15 +81,7 @@ class CustomUserStreamAdapter extends UserStreamAdapter {
 
     @Override
     public void onDirectMessage(DirectMessage directMessage) {
-        super.onDirectMessage(directMessage);
-        if (directMessage.getSenderId() == this.loginUserId) {
-            this.repository.addSentDM(directMessage);
-        } else {
-            this.repository.addDM(directMessage);
-        }
-        for (DirectMessageUserStreamListener listener : directMessageListeners) {
-            listener.onDirectMessage(directMessage);
-        }
+        //nop
     }
 
     @Override

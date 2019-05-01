@@ -1,24 +1,20 @@
 package com.seki.saezurishiki.repository;
 
-import com.seki.saezurishiki.entity.DirectMessageEntity;
 import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.entity.UserEntity;
 import com.seki.saezurishiki.entity.mapper.EntityMapper;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import twitter4j.DirectMessage;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.User;
 
 public class RemoteRepositoryImp implements Repository {
 
-    private final Map<Long, DirectMessageEntity> DM;
     private final Map<Long, UserEntity> USER;
     
     private final EntityMapper mapper;
@@ -28,7 +24,6 @@ public class RemoteRepositoryImp implements Repository {
     private static RemoteRepositoryImp instance;
 
     private RemoteRepositoryImp(Twitter twitter, EntityMapper mapper) {
-        DM = new ConcurrentHashMap<>();
         USER = new ConcurrentHashMap<>();
         this.mapper = mapper;
         this.twitter = twitter;
@@ -51,79 +46,9 @@ public class RemoteRepositoryImp implements Repository {
     }
 
     public void clear() {
-        DM.clear();
         USER.clear();
         instance = null;
     }
-
-
-    public void addSentDM(List<DirectMessage> list) {
-        for (DirectMessage message : list) {
-            addSentDM(message);
-        }
-    }
-
-    public DirectMessageEntity addSentDM(DirectMessage message) {
-        final DirectMessageEntity dm = this.mapper.map(message);
-        DM.put(dm.getId(), dm);
-        return dm;
-    }
-
-
-
-    public List<Long> getSentDMId(long recipientUserId) {
-        List<Long> list = new ArrayList<>();
-        Collection<DirectMessageEntity> messages = DM.values();
-        for (DirectMessageEntity message : messages) {
-            if (message.recipientId == recipientUserId) {
-                list.add(message.getId());
-            }
-        }
-
-        return list;
-    }
-
-
-    public List<DirectMessageEntity> addDM(List<DirectMessage> list) {
-        final List<DirectMessageEntity> mappedList = new ArrayList<>();
-        for (DirectMessage message : list) {
-            final DirectMessageEntity entity = this.mapper.map(message);
-            DM.put(entity.getId(), entity);
-            mappedList.add(entity);
-        }
-
-        return mappedList;
-    }
-
-    public DirectMessageEntity addDM(DirectMessage message) {
-        final DirectMessageEntity dm = this.mapper.map(message);
-        DM.put(dm.getId(), dm);
-        return dm;
-    }
-
-
-    public List<Long> getDMIdByUser(long senderId) {
-        List<Long> list = new ArrayList<>();
-        Collection<DirectMessageEntity> messages = DM.values();
-        for (DirectMessageEntity message : messages) {
-            if (message.sender.getId() == senderId) {
-                list.add(message.getId());
-            }
-        }
-
-        return list;
-    }
-
-
-    public DirectMessageEntity getDM(long messageId) {
-        return DM.get(messageId);
-    }
-
-    public DirectMessageEntity findDM(long messageId) {
-        if (DM.containsKey(messageId)) return DM.get(messageId);
-        return DM.get(messageId);
-    }
-
 
     public UserEntity add(User user) {
         final UserEntity userEntity = map(user);
