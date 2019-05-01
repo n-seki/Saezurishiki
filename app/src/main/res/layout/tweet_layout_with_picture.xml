@@ -46,7 +46,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="4dp"
-                android:textSize="@{setting.textSize - 2}"
+                bind:textSize="@{setting.textSize - 2}"
                 android:text="@string/re_tweeted_by"/>
 
             <ImageView
@@ -65,7 +65,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="2dp"
                 android:layout_marginLeft="2dp"
-                android:textSize="@{setting.textSize - 2}"
+                bind:textSize="@{setting.textSize - 2}"
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:layout_marginTop="4dp"
@@ -109,7 +109,7 @@
                 android:id="@+id/user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@{setting.textSize}"
+                bind:textSize="@{setting.textSize}"
                 android:textColor="@color/user_name_text_color"
                 android:maxLines="1"
                 android:ellipsize="end"
@@ -126,7 +126,7 @@
                 android:id="@+id/tweet_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@{setting.textSize}"
+                bind:textSize="@{setting.textSize}"
                 android:layout_below="@+id/user_name"
                 android:layout_toRightOf="@id/user_icon_area"
                 android:layout_toEndOf="@id/user_icon_area"
@@ -170,7 +170,7 @@
                     android:layout_toRightOf="@id/quoted_user_icon"
                     android:layout_marginStart="2dp"
                     android:layout_marginLeft="2dp"
-                    android:textSize="@{setting.textSize - 2}"
+                    bind:textSize="@{setting.textSize - 2}"
                     android:layout_marginTop="12dp"
                     android:text="@{tweet.quotedTweet.user.name}"/>
 
@@ -185,7 +185,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginRight="8dp"
                     android:layout_marginEnd="8dp"
-                    android:textSize="@{setting.textSize}"
+                    bind:textSize="@{setting.textSize}"
                     android:text="@{tweet.quotedTweet.text}"/>
             </RelativeLayout>
 
@@ -305,7 +305,7 @@
                         android:id="@+id/reTweet_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="@{setting.textSize - 2}"
+                        bind:textSize="@{setting.textSize - 2}"
                         android:layout_below="@id/reTweet_button"
                         android:layout_centerHorizontal="true"
                         android:visibility="@{tweet.reTweetCount != 0 ? View.VISIBLE : View.GONE}"
@@ -333,7 +333,7 @@
                         android:id="@+id/favorite_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="@{setting.textSize - 2}"
+                        bind:textSize="@{setting.textSize - 2}"
                         android:layout_below="@id/favorite_button"
                         android:layout_centerHorizontal="true"
                         android:visibility="@{tweet.favoriteCount != 0 ? View.VISIBLE : View.GONE}"
@@ -343,7 +343,7 @@
 
             <TextView
                 android:id="@+id/post_time"
-                android:textSize="@{setting.textSize - 2}"
+                bind:textSize="@{setting.textSize - 2}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/picture1"
