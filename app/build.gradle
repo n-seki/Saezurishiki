@@ -12,7 +12,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 28
         versionCode 30
-        versionName "1.78"
+        versionName "1.2.0"
 
         buildConfigField "String", "TWITTER_CONSUMER_KEY", "\"${System.getenv("twitter_consumer_key")}\""
         buildConfigField "String", "TWITTER_CONSUMER_SECRET", "\"${System.getenv("twitter_consumer_secret")}\""
