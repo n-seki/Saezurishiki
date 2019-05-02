@@ -1,6 +1,5 @@
 package com.seki.saezurishiki.model.impl;
 
-import com.seki.saezurishiki.entity.DirectMessageEntity;
 import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.entity.UserEntity;
 import com.seki.saezurishiki.model.LoginUserScreen;
@@ -9,7 +8,6 @@ import com.seki.saezurishiki.model.adapter.ModelMessage;
 import com.seki.saezurishiki.model.util.ModelObserver;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
 import com.seki.saezurishiki.network.twitter.UserStreamManager;
-import com.seki.saezurishiki.repository.DirectMessageRepository;
 import com.seki.saezurishiki.repository.TweetRepository;
 import com.seki.saezurishiki.repository.UserRepository;
 
@@ -103,9 +101,7 @@ public class LoginUserScreenImp extends ModelBaseImp implements LoginUserScreen 
 
     @Override
     public void onDirectMessage(DirectMessage directMessage) {
-        final DirectMessageEntity entity = DirectMessageRepository.INSTANCE.add(directMessage);
-        final ModelMessage message = ModelMessage.of(ModelActionType.RECEIVE_DIRECT_MESSAGE, entity);
-        this.userStreamObservable.notifyObserver(message);
+        //nop
     }
 
     @Override

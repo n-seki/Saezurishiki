@@ -20,7 +20,6 @@ import java.util.List;
 import twitter4j.ExtendedMediaEntity;
 
 import static com.seki.saezurishiki.view.adapter.TimeLinePager.POSITION_HOME;
-import static com.seki.saezurishiki.view.adapter.TimeLinePager.POSITION_MESSAGE;
 import static com.seki.saezurishiki.view.adapter.TimeLinePager.POSITION_REPLY;
 
 public final class UIControlUtil {
@@ -142,25 +141,18 @@ public final class UIControlUtil {
             case POSITION_REPLY :
                 return isDark ? R.drawable.tab_reply_selector_dark : R.drawable.tab_reply_selector_light;
 
-            case POSITION_MESSAGE :
-                return isDark ? R.drawable.tab_message_selector_dark : R.drawable.tab_message_selector_light;
-
             default:
                 throw new IllegalStateException("position is illegal : " + position);
         }
     }
 
     public static int getTabUnreadBackground(int position, @StyleRes int theme) {
-        final boolean isDark = theme == R.style.AppTheme_Dark;
         switch (position) {
             case POSITION_HOME :
                 return R.drawable.tab_home_unread_sample;
 
             case POSITION_REPLY:
                 return R.drawable.tab_reply_unread_sample;
-
-            case POSITION_MESSAGE:
-                return R.drawable.tab_message_unread_sample;
 
             default:
                 throw new IllegalStateException("position is illegal : " + position);

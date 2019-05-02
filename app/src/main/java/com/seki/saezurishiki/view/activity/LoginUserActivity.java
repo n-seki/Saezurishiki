@@ -32,7 +32,6 @@ import com.seki.saezurishiki.control.FragmentController;
 import com.seki.saezurishiki.control.ScreenNav;
 import com.seki.saezurishiki.control.Setting;
 import com.seki.saezurishiki.control.UIControlUtil;
-import com.seki.saezurishiki.entity.DirectMessageEntity;
 import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.entity.UserEntity;
 import com.seki.saezurishiki.file.CachManager;
@@ -53,7 +52,6 @@ import com.seki.saezurishiki.view.customview.NotificationTabLayout;
 import com.seki.saezurishiki.view.customview.TwitterUserDrawerView;
 import com.seki.saezurishiki.view.fragment.dialog.YesNoSelectDialog;
 import com.seki.saezurishiki.view.fragment.editor.EditTweetFragment;
-import com.seki.saezurishiki.view.fragment.list.RecentlyDirectMessageListFragment;
 import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.Contract;
@@ -72,7 +70,6 @@ public class LoginUserActivity extends    AppCompatActivity
                                implements ViewPager.OnPageChangeListener,
                                           EditTweetFragment.Callback,
                                           ConnectionReceiver.Observer,
-                                          RecentlyDirectMessageListFragment.CallBack,
                                           TabViewControl,
                                           FragmentControl,
                                           LoginUserPresenter.View {
@@ -315,12 +312,8 @@ public class LoginUserActivity extends    AppCompatActivity
     public void onPageSelected(int position) {
         this.changeTitle(position);
 
-        if (position == TimeLinePager.POSITION_MESSAGE) {
-            ((FloatingActionButton)LoginUserActivity.this.findViewById(R.id.edit_tweet_button)).hide();
-        } else {
-            if ((LoginUserActivity.this.findViewById(R.id.edit_tweet_button)).getVisibility() != View.VISIBLE) {
-                ((FloatingActionButton)LoginUserActivity.this.findViewById(R.id.edit_tweet_button)).show();
-            }
+        if ((LoginUserActivity.this.findViewById(R.id.edit_tweet_button)).getVisibility() != View.VISIBLE) {
+            ((FloatingActionButton)LoginUserActivity.this.findViewById(R.id.edit_tweet_button)).show();
         }
 
         mTabPosition = position;
@@ -422,30 +415,6 @@ public class LoginUserActivity extends    AppCompatActivity
         CustomToast.show(this, R.string.unfavorite_complete, Toast.LENGTH_LONG);
         this.userDrawerView.decrementCount(FragmentController.FRAGMENT_ID_FAVORITE);
     }
-
-    @Override
-    public void showReceivedDirectMessage(DirectMessageEntity directMessage) {
-        CustomToast.show(this, R.string.message_by + directMessage.sender.getName() + "\n" + directMessage.text, Toast.LENGTH_LONG);
-    }
-
-    @Override
-    public void showStartUserStreamMessage() {
-        CustomToast.show(this, R.string.user_stream_connect, Toast.LENGTH_SHORT);
-    }
-
-    @Override
-    public void showStopUserStreamMessage() {
-        CustomToast.show(this, R.string.user_stream_disconnect, Toast.LENGTH_SHORT);
-    }
-
-
-    @Override
-    public void displayDirectMessageEditor(long userId) {
-        final Map<String, Object> args = new HashMap<>();
-        args.put("userId", userId);
-        this.addFragment(ScreenNav.MESSAGE_EDITOR, args);
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -579,9 +548,7 @@ public class LoginUserActivity extends    AppCompatActivity
                 mDrawerToggle.setDrawerIndicatorEnabled(true);
                 mDisplayPosition = -1;
 
-                if (this.mViewPager.getCurrentItem() != TimeLinePager.POSITION_MESSAGE) {
-                    ((FloatingActionButton)LoginUserActivity.this.findViewById(R.id.edit_tweet_button)).show();
-                }
+                ((FloatingActionButton)LoginUserActivity.this.findViewById(R.id.edit_tweet_button)).show();
             }
 
             return;
@@ -607,10 +574,7 @@ public class LoginUserActivity extends    AppCompatActivity
             mgr.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
         changeTitle();
-
-        if (this.mViewPager.getCurrentItem() != TimeLinePager.POSITION_MESSAGE) {
-            ((FloatingActionButton)LoginUserActivity.this.findViewById(R.id.edit_tweet_button)).show();
-        }
+        ((FloatingActionButton)LoginUserActivity.this.findViewById(R.id.edit_tweet_button)).show();
     }
 
 
@@ -652,8 +616,6 @@ public class LoginUserActivity extends    AppCompatActivity
             this.replaceTitle(R.string.actionbar_home);
         } else if (tabPosition == TimeLinePager.POSITION_REPLY) {
             this.replaceTitle(R.string.actionbar_reply);
-        } else if (tabPosition == TimeLinePager.POSITION_MESSAGE) {
-            this.replaceTitle(R.string.actionbar_message);
         } else {
             throw new IllegalStateException("onPageSelected position is " + tabPosition);
         }

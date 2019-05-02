@@ -3,7 +3,6 @@ package com.seki.saezurishiki.presenter.activity;
 import android.os.Handler;
 import android.os.Looper;
 
-import com.seki.saezurishiki.control.FragmentController;
 import com.seki.saezurishiki.control.RelationshipModel;
 import com.seki.saezurishiki.control.ScreenNav;
 import com.seki.saezurishiki.entity.TweetEntity;
@@ -14,7 +13,6 @@ import com.seki.saezurishiki.model.util.ModelObservable;
 import com.seki.saezurishiki.model.util.ModelObserver;
 
 import twitter4j.Relationship;
-import twitter4j.StatusUpdate;
 
 public class UserPresenter implements ModelObserver {
 
@@ -28,7 +26,6 @@ public class UserPresenter implements ModelObserver {
         void setupActionBar(UserEntity owner);
         void setupBioInformation(UserEntity owner);
         void setRelationshipText(int text);
-        void changeDirectMessageButtonState(boolean isMutual);
         void disableFollowButton();
         void setFollowButton();
         void setRemoveButton();
@@ -90,7 +87,6 @@ public class UserPresenter implements ModelObserver {
 
     private void updateRelationshipView() {
         this.view.setRelationshipText(this.relationship.toStringResource());
-        this.view.changeDirectMessageButtonState(this.relationship.isMutualFollow());
 
         if (relationship.isYourself()) {
             this.view.disableFollowButton();

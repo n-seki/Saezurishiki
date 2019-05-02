@@ -1,7 +1,5 @@
 package com.seki.saezurishiki.model.impl;
 
-import com.seki.saezurishiki.model.DirectMessageListModel;
-import com.seki.saezurishiki.model.GetDirectMessageById;
 import com.seki.saezurishiki.model.GetTweetById;
 import com.seki.saezurishiki.model.GetUserById;
 import com.seki.saezurishiki.model.LoginUserScreen;
@@ -21,11 +19,8 @@ public final class ModelContainer {
     private static TweetListModel searchTweetModel;
     private static GetTweetById   getTweetById;
     private static GetUserById    getUserById;
-    private static GetDirectMessageById getDirectMessageById;
     private static UserListModel  friendListModel;
     private static UserListModel  followerListMode;
-    private static DirectMessageListModel directMessageListModel;
-    private static DirectMessageEditorModel directMessageEditorModel;
     private static LoginUserScreen loginUserScreen;
     private static TweetEditorModel tweetEditorModel;
 
@@ -43,11 +38,8 @@ public final class ModelContainer {
         searchTweetModel = null;
         getTweetById = null;
         getUserById = null;
-        getDirectMessageById = null;
         friendListModel = null;
         followerListMode = null;
-        directMessageListModel = null;
-        directMessageEditorModel = null;
         loginUserScreen = null;
         tweetEditorModel = null;
     }
@@ -115,13 +107,6 @@ public final class ModelContainer {
         return getUserById;
     }
 
-    public static GetDirectMessageById getDirectMessageById() {
-        if (getDirectMessageById == null) {
-            getDirectMessageById = new GetDirectMessageByIdImp();
-        }
-        return getDirectMessageById;
-    }
-
     public static UserListModel getFriendListModel() {
         if (friendListModel == null) {
             friendListModel = new FriendListModel();
@@ -134,20 +119,6 @@ public final class ModelContainer {
             followerListMode = new FollowerListModel();
         }
         return followerListMode;
-    }
-
-    public static DirectMessageListModel getDirectMessageListModel() {
-        if (directMessageListModel == null) {
-            directMessageListModel = new DirectMessageListModelImp();
-        }
-        return directMessageListModel;
-    }
-
-    public static DirectMessageEditorModel getDirectMessageEditorModel() {
-        if (directMessageEditorModel == null) {
-            directMessageEditorModel = new DirectMessageEditorModel();
-        }
-        return directMessageEditorModel;
     }
 
     public static LoginUserScreen getLoginUserScreen() {

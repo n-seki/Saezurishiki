@@ -3,7 +3,6 @@ package com.seki.saezurishiki.presenter.activity;
 import android.os.Handler;
 import android.os.Looper;
 
-import com.seki.saezurishiki.entity.DirectMessageEntity;
 import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.entity.UserEntity;
 import com.seki.saezurishiki.model.LoginUserScreen;
@@ -27,10 +26,7 @@ public class LoginUserPresenter implements ModelObserver {
         void onCompleteFavorite();
         void showUnFavoritedMessage(TweetEntity tweet, UserEntity user);
         void onCompleteUnFavorite();
-        void showReceivedDirectMessage(DirectMessageEntity directMessage);
         void onCompletePostTweet(TweetEntity tweet);
-        void showStartUserStreamMessage();
-        void showStopUserStreamMessage();
     }
 
     public LoginUserPresenter(LoginUserScreen model, LoginUserPresenter.View view) {
@@ -98,18 +94,6 @@ public class LoginUserPresenter implements ModelObserver {
             case RECEIVE_UN_FAVORITE:
                 this.receiveUnFavorite((TweetEntity)message.data, message.source, message.target);
                 break;
-
-            case RECEIVE_DIRECT_MESSAGE:
-                this.receiveDirectMessage((DirectMessageEntity)message.data);
-                break;
-
-            case START_USER_STREAM:
-                this.view.showStartUserStreamMessage();
-                break;
-
-            case STOP_USER_STREAM:
-                this.view.showStopUserStreamMessage();
-                break;
         }
     }
 
@@ -154,13 +138,6 @@ public class LoginUserPresenter implements ModelObserver {
 
         if (targetUser.isLoginUser) {
             this.view.showUnFavoritedMessage(tweet, sourceUser);
-        }
-    }
-
-
-    private void receiveDirectMessage(DirectMessageEntity directMessage) {
-        if (directMessage.isRecipientByLoginUser) {
-            this.view.showReceivedDirectMessage(directMessage);
         }
     }
 }

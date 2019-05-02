@@ -5,7 +5,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.seki.saezurishiki.view.fragment.Fragments;
-import com.seki.saezurishiki.view.fragment.list.RecentlyDirectMessageListFragment;
 
 
 /**
@@ -16,7 +15,6 @@ public class TimeLinePager extends FragmentPagerAdapter {
 
     public static final int POSITION_HOME = 0;
     public static final int POSITION_REPLY = 1;
-    public static final int POSITION_MESSAGE = 2;
 
     private final long loginUserId;
 
@@ -28,7 +26,7 @@ public class TimeLinePager extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 3;
+        return 2;
     }
 
 
@@ -43,10 +41,6 @@ public class TimeLinePager extends FragmentPagerAdapter {
 
             case POSITION_REPLY:
                 fragment = Fragments.createInjectReplyTimeLineFragment(POSITION_REPLY, this.loginUserId);
-                break;
-
-            case POSITION_MESSAGE:
-                fragment = Fragments.createInjectRecentlyDMListFragment(POSITION_MESSAGE);
                 break;
 
             default :

@@ -6,11 +6,10 @@ import android.util.AttributeSet;
 
 import com.seki.saezurishiki.view.control.RequestTabState;
 
-import static com.seki.saezurishiki.view.adapter.TimeLinePager.POSITION_HOME;
-import static com.seki.saezurishiki.view.adapter.TimeLinePager.POSITION_MESSAGE;
-import static com.seki.saezurishiki.view.adapter.TimeLinePager.POSITION_REPLY;
 import static com.seki.saezurishiki.control.UIControlUtil.getTabBackground;
 import static com.seki.saezurishiki.control.UIControlUtil.getTabUnreadBackground;
+import static com.seki.saezurishiki.view.adapter.TimeLinePager.POSITION_HOME;
+import static com.seki.saezurishiki.view.adapter.TimeLinePager.POSITION_REPLY;
 
 /**
  *
@@ -35,7 +34,6 @@ public class NotificationTabLayout extends TabLayout {
     public void setup(int theme) {
         getTabAt(POSITION_HOME).setIcon(getTabBackground(POSITION_HOME, theme));
         getTabAt(POSITION_REPLY).setIcon(getTabBackground(POSITION_REPLY, theme));
-        getTabAt(POSITION_MESSAGE).setIcon(getTabBackground(POSITION_MESSAGE, theme));
 
         this.theme = theme;
     }

@@ -143,8 +143,6 @@
     <string name="action_destroy_block">ブロック解除</string>
     <string name="remove">リムーブ</string>
     <string name="onFollowed">フォローされました</string>
-    <string name="user_stream_connect">ユーザーストリームを開始します</string>
-    <string name="user_stream_disconnect">ユーザーストリームを停止しました</string>
     <string name="reply_from">Reply from</string>
     <string name="delete">Delete</string>
     <string name="favorite_by">ふぁぼられました</string>
@@ -168,7 +166,7 @@
     <string name="pref_title_reTweet_operation">リツイートボタンの動作</string>
     <string name="pref_summary_reTweet_operation">リツイートボタンをタップした際の動作を設定します</string>
     <string name="pref_dialog_title_reTweet_operation">動作を選択してください</string>
-    <string name="pref_summary_regist_word">よくツイートする言葉を登録してください¥nツイート編集画面でボタンを押すだけで文字入力が行われます</string>
+    <string name="pref_summary_regist_word">よくツイートする言葉を登録してください</string>
     <string name="pref_category_regist_word">登録ツイート機能</string>
     <string name="pref_key_register_tweet">pref_key_register_tweet</string>
     <string name="pref_key_register_tweet_1">pref_key_register_tweet_1</string>
