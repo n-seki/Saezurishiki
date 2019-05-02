@@ -14,9 +14,9 @@ android {
         versionCode 30
         versionName "1.78"
 
-        buildConfigField "String", "TWITTER_CONSUMER_KEY", "\"${project.property("twitter_consumer_key")}\""
-        buildConfigField "String", "TWITTER_CONSUMER_SECRET", "\"${project.property("twitter_consumer_secret")}\""
-        buildConfigField "String", "ENCRYTP_NAME", "\"${project.property("encrypt_name")}\""
+        buildConfigField "String", "TWITTER_CONSUMER_KEY", "\"${System.getenv("twitter_consumer_key")}\""
+        buildConfigField "String", "TWITTER_CONSUMER_SECRET", "\"${System.getenv("twitter_consumer_secret")}\""
+        buildConfigField "String", "ENCRYTP_NAME", "\"${System.getenv("encrypt_name")}\""
     }
 
     buildTypes {
