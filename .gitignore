@@ -12,3 +12,9 @@
 /buildSrc/build
 
 gradle.properties
+app/gradle.properties
+app/manifest-merger-release-report.txt
+
+projectFilesBackup/*
+
+debug.keystore
