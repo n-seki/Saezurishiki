@@ -20,7 +20,7 @@ android {
         applicationId "com.seki.saezurishiki"
         minSdkVersion 14
         targetSdkVersion 28
-        versionCode 30
+        versionCode 1
         versionName "1.2.0"
 
         buildConfigField "String", "TWITTER_CONSUMER_KEY", "\"$twitter_consumer_key\""
