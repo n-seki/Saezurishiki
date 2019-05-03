@@ -1,8 +1,19 @@
+import java.text.SimpleDateFormat
+
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
 }
+
+def isCI = (System.getenv("CI") ?: "false").toBoolean()
+
+def twitter_consumer_key =
+        isCI ? System.getenv("twitter_consumer_key") : project.property("twitter_consumer_key")
+def twitter_consumer_secret =
+        isCI ? System.getenv("twitter_consumer_secret") : project.property("twitter_consumer_secret")
+def encrypt_name =
+        isCI ? System.getenv("encrypt_name") : project.property("encrypt_name")
 
 android {
     compileSdkVersion 28
@@ -11,12 +22,13 @@ android {
         applicationId "com.seki.saezurishiki"
         minSdkVersion 14
         targetSdkVersion 28
-        versionCode 30
+        versionCode 1
         versionName "1.2.0"
 
-        buildConfigField "String", "TWITTER_CONSUMER_KEY", "\"${System.getenv("twitter_consumer_key")}\""
-        buildConfigField "String", "TWITTER_CONSUMER_SECRET", "\"${System.getenv("twitter_consumer_secret")}\""
-        buildConfigField "String", "ENCRYTP_NAME", "\"${System.getenv("encrypt_name")}\""
+        buildConfigField "String", "TWITTER_CONSUMER_KEY", "\"$twitter_consumer_key\""
+        buildConfigField "String", "TWITTER_CONSUMER_SECRET", "\"$twitter_consumer_secret\""
+        buildConfigField "String", "ENCRYTP_NAME", "\"$encrypt_name\""
+        buildConfigField "String", "BUILD_DATE", "\"${buildDate()}\""
     }
 
     buildTypes {
@@ -80,4 +92,10 @@ dependencies {
     implementation "com.facebook.conceal:conceal:$conceal_version@aar"
     
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+
+def static buildDate() {
+    def format = new SimpleDateFormat("yyyy/MM/dd")
+    def today = new Date()
+    return format.format(today)
 }
