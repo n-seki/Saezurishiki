@@ -4,6 +4,15 @@ plugins {
     id 'kotlin-kapt'
 }
 
+def isCI = (System.getenv("CI") ?: "false").toBoolean()
+
+def twitter_consumer_key =
+        isCI ? System.getenv("twitter_consumer_key") : project.property("twitter_consumer_key")
+def twitter_consumer_secret =
+        isCI ? System.getenv("twitter_consumer_secret") : project.property("twitter_consumer_secret")
+def encrypt_name =
+        isCI ? System.getenv("encrypt_name") : project.property("encrypt_name")
+
 android {
     compileSdkVersion 28
 
@@ -14,9 +23,9 @@ android {
         versionCode 30
         versionName "1.2.0"
 
-        buildConfigField "String", "TWITTER_CONSUMER_KEY", "\"${System.getenv("twitter_consumer_key")}\""
-        buildConfigField "String", "TWITTER_CONSUMER_SECRET", "\"${System.getenv("twitter_consumer_secret")}\""
-        buildConfigField "String", "ENCRYTP_NAME", "\"${System.getenv("encrypt_name")}\""
+        buildConfigField "String", "TWITTER_CONSUMER_KEY", "\"$twitter_consumer_key\""
+        buildConfigField "String", "TWITTER_CONSUMER_SECRET", "\"$twitter_consumer_secret\""
+        buildConfigField "String", "ENCRYTP_NAME", "\"$encrypt_name\""
     }
 
     buildTypes {
