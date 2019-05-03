@@ -7,8 +7,7 @@ public interface TwitterEntity {
 
     enum Type {
         Tweet,
-        DirectMessage,
         User,
-        LoadButton;
-    };
+        LoadButton
+    }
 }

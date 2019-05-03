@@ -2,7 +2,6 @@ package com.seki.saezurishiki.control;
 
 import android.content.Context;
 import android.content.Intent;
-import android.opengl.EGLObjectHandle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 

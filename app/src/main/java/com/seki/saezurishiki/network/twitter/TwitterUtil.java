@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.seki.saezurishiki.BuildConfig;
-import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.file.EncryptUtil;
 
 import java.util.HashSet;
@@ -50,7 +49,7 @@ public final class TwitterUtil {
      * @param context context
      * @return AccessToken
      */
-    static synchronized AccessToken createLoginUserAccessToken(Context context) {
+    private static synchronized AccessToken createLoginUserAccessToken(Context context) {
         String loginUserID = String.valueOf(createLoginUserId(context));
         SharedPreferences preferences = context.getSharedPreferences(USERS_ACCESS_TOKEN, Context.MODE_PRIVATE);
         String accessToken = preferences.getString(ACCESS_TOKEN + loginUserID, "");
@@ -71,7 +70,7 @@ public final class TwitterUtil {
      * @param context context
      * @return Configuration
      */
-    static Configuration createConfiguration(Context context) {
+    private static Configuration createConfiguration(Context context) {
         return new ConfigurationBuilder().setDispatcherImpl("twitter4j.DispatcherImpl")
                 .setOAuthConsumerKey(BuildConfig.TWITTER_CONSUMER_KEY)
                 .setOAuthConsumerSecret(BuildConfig.TWITTER_CONSUMER_SECRET)
@@ -117,8 +116,8 @@ public final class TwitterUtil {
         SharedPreferences.Editor editor = preferences.edit();
         final String encryptToken = EncryptUtil.encrypt(accessToken.getToken(), context);
         final String encryptTokenSecret = EncryptUtil.encrypt(accessToken.getTokenSecret(), context);
-        editor.putString(ACCESS_TOKEN + String.valueOf(accessToken.getUserId()), encryptToken);
-        editor.putString(ACCESS_TOKEN_SECRET + String.valueOf(accessToken.getUserId()), encryptTokenSecret);
+        editor.putString(ACCESS_TOKEN + accessToken.getUserId(), encryptToken);
+        editor.putString(ACCESS_TOKEN_SECRET + accessToken.getUserId(), encryptTokenSecret);
         editor.putBoolean(ENCRYPT_DATA, true);
         editor.apply(); //async
     }
@@ -166,7 +165,7 @@ public final class TwitterUtil {
      */
     private static void storeUserName(Context context, String userName) {
         SharedPreferences preferences = context.getSharedPreferences(ALL_USER_NAME, Context.MODE_PRIVATE);
-        Set<String> names = preferences.getStringSet(NAMES, new HashSet<String>());
+        Set<String> names = preferences.getStringSet(NAMES, new HashSet<>());
         names.add(userName);
         preferences.edit().putStringSet(NAMES, new HashSet<>(names)).apply(); //async
     }
@@ -179,7 +178,7 @@ public final class TwitterUtil {
      * @param context Context
      * @return loginUserID
      */
-    static long createLoginUserId(Context context) {
+    private static long createLoginUserId(Context context) {
         SharedPreferences usersInfo = context.getSharedPreferences(PREFERENCE_USER_ID, Context.MODE_PRIVATE);
 
         final long loginUserId = usersInfo.getLong(LOGIN_USER_ID, -1);
@@ -201,10 +200,10 @@ public final class TwitterUtil {
     }
 
 
-    public static final class AccountConfig {
-        public final AccessToken token;
-        public final long loginUserId;
-        public final Configuration configuration;
+    static final class AccountConfig {
+        final AccessToken token;
+        final long loginUserId;
+        final Configuration configuration;
 
         public AccountConfig(Context context) {
             this.token = TwitterUtil.createLoginUserAccessToken(context);
