@@ -1,3 +1,5 @@
+import java.text.SimpleDateFormat
+
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
@@ -26,6 +28,7 @@ android {
         buildConfigField "String", "TWITTER_CONSUMER_KEY", "\"$twitter_consumer_key\""
         buildConfigField "String", "TWITTER_CONSUMER_SECRET", "\"$twitter_consumer_secret\""
         buildConfigField "String", "ENCRYTP_NAME", "\"$encrypt_name\""
+        buildConfigField "String", "BUILD_DATE", "\"${buildDate()}\""
     }
 
     buildTypes {
@@ -89,4 +92,10 @@ dependencies {
     implementation "com.facebook.conceal:conceal:$conceal_version@aar"
     
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+
+def static buildDate() {
+    def format = new SimpleDateFormat("yyyy/MM/dd")
+    def today = new Date()
+    return format.format(today)
 }
