@@ -36,8 +36,7 @@ import com.seki.saezurishiki.view.control.FragmentControl;
 import com.seki.saezurishiki.view.fragment.dialog.YesNoSelectDialog;
 import com.seki.saezurishiki.view.fragment.editor.EditTweetFragment;
 
-import java.util.HashMap;
-import java.util.Map;
+import static com.seki.saezurishiki.control.ScreenNav.KEY_USER;
 
 public class UserActivity extends    AppCompatActivity
                           implements EditTweetFragment.Callback,
@@ -68,7 +67,7 @@ public class UserActivity extends    AppCompatActivity
         mFragmentController = new FragmentController(getSupportFragmentManager());
         mListAdapter = new DrawerButtonListAdapter(this, R.layout.drawer_list_button, theme);
 
-        final long userId = getIntent().getExtras().getLong(USER_ID);
+        final long userId = getIntent().getLongExtra(USER_ID, -1);
         this.presenter = new UserPresenter(this, ModelContainer.getUserScreenModel(), userId);
     }
 
@@ -83,11 +82,6 @@ public class UserActivity extends    AppCompatActivity
     public void onPause() {
         super.onPause();
         this.presenter.onPause();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
     }
 
     @Override
@@ -162,8 +156,8 @@ public class UserActivity extends    AppCompatActivity
 
     @Override
     public void displayFragment(ScreenNav screenNav, UserEntity owner) {
-        final Map<String, Object> args = new HashMap<>();
-        args.put("user", owner);
+        Bundle args = new Bundle();
+        args.putSerializable(KEY_USER, owner);
         requestChangeScreen(screenNav, args);
 
     }
@@ -172,7 +166,6 @@ public class UserActivity extends    AppCompatActivity
         if (getSupportActionBar() == null) {
             throw new IllegalStateException("ActionBar is null!");
         }
-
         getSupportActionBar().setHomeButtonEnabled(true);
     }
 
@@ -184,13 +177,9 @@ public class UserActivity extends    AppCompatActivity
         MenuItem block = menu.findItem(R.id.action_block);
         MenuItem destroyBlock = menu.findItem(R.id.action_release_block);
 
-        if (this.presenter.isBlocking()) {
-            block.setVisible(false);
-            destroyBlock.setVisible(true);
-        } else {
-            block.setVisible(true);
-            destroyBlock.setVisible(false);
-        }
+        boolean isBlocking = presenter.isBlocking();
+        block.setVisible(!isBlocking);
+        destroyBlock.setVisible(isBlocking);
 
         MenuItem mute = menu.findItem(R.id.action_mute);
         MenuItem destroyMute = menu.findItem(R.id.action_destroy_mute);
@@ -380,7 +369,7 @@ public class UserActivity extends    AppCompatActivity
     }
 
     @Override
-    public void requestChangeScreen(ScreenNav screenNav, Map<String, Object> args) {
+    public void requestChangeScreen(ScreenNav screenNav, Bundle args) {
         screenNav.transition(this, getSupportFragmentManager(), R.id.biography_container, args,
                 fragment -> {
                     changeSubtitle(screenNav.getTitleId());
