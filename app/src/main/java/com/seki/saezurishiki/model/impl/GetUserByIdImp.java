@@ -4,8 +4,10 @@ import com.seki.saezurishiki.entity.UserEntity;
 import com.seki.saezurishiki.model.GetUserById;
 import com.seki.saezurishiki.repository.UserRepository;
 
-public class GetUserByIdImp implements GetUserById {
+import javax.inject.Singleton;
 
+@Singleton
+public class GetUserByIdImp implements GetUserById {
 
     GetUserByIdImp() {}
 

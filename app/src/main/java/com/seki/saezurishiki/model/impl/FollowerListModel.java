@@ -12,8 +12,11 @@ import com.seki.saezurishiki.repository.UserRepository;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import javax.inject.Singleton;
+
 import twitter4j.TwitterException;
 
+@Singleton
 public class FollowerListModel implements UserListModel {
 
     private final Executor executor;

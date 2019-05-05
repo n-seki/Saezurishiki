@@ -4,6 +4,9 @@ import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.model.GetTweetById;
 import com.seki.saezurishiki.repository.TweetRepository;
 
+import javax.inject.Singleton;
+
+@Singleton
 class GetTweetByIdImp implements GetTweetById {
 
     GetTweetByIdImp() {}

@@ -11,12 +11,15 @@ import com.seki.saezurishiki.network.twitter.UserStreamManager;
 import com.seki.saezurishiki.repository.TweetRepository;
 import com.seki.saezurishiki.repository.UserRepository;
 
+import javax.inject.Singleton;
+
 import twitter4j.DirectMessage;
 import twitter4j.Status;
 import twitter4j.StatusDeletionNotice;
 import twitter4j.TwitterException;
 import twitter4j.User;
 
+@Singleton
 public class LoginUserScreenImp extends ModelBaseImp implements LoginUserScreen {
 
     LoginUserScreenImp() {
