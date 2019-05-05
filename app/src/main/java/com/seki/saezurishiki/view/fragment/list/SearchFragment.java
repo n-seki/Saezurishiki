@@ -54,10 +54,4 @@ public class SearchFragment extends TweetListFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
         menu.clear();
     }
-
-
-    @Override
-    public String toString() {
-        return "\"" + mQuery + "\"";
-    }
 }

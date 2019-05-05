@@ -61,9 +61,4 @@ public class ConversationFragment extends TweetListFragment {
     public void catchNewTweet(TweetEntity tweetEntity) {
         this.mAdapter.add(tweetEntity);
     }
-
-    @Override
-    public String toString() {
-        return "Conversation";
-}
 }

@@ -6,10 +6,4 @@ public class FollowerListFragment extends UsersListFragment {
     public static UsersListFragment newInstance() {
         return new FollowerListFragment();
     }
-
-
-    @Override
-    public String toString() {
-        return "Follower";
-    }
 }

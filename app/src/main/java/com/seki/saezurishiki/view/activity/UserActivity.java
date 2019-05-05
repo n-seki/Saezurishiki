@@ -2,6 +2,7 @@ package com.seki.saezurishiki.view.activity;
 
 
 import android.os.Bundle;
+import android.support.annotation.StringRes;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -52,7 +53,6 @@ public class UserActivity extends    AppCompatActivity
     private Setting setting;
 
     private UserPresenter presenter;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -298,11 +298,10 @@ public class UserActivity extends    AppCompatActivity
         replaceTitle(user.getName(), currentFragment.toString());
     }
 
-    private void changeSubtitle(String subtitle) {
+    private void changeSubtitle(@StringRes int id) {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar == null) throw new NullPointerException("ActionBar is null!");
-
-        actionBar.setSubtitle(subtitle);
+        actionBar.setSubtitle(id);
     }
 
     void onHomePressed() {
@@ -380,12 +379,11 @@ public class UserActivity extends    AppCompatActivity
         CustomToast.show(UserActivity.this, R.string.release_block_complete, Toast.LENGTH_SHORT);
     }
 
-
     @Override
     public void requestChangeScreen(ScreenNav screenNav, Map<String, Object> args) {
         screenNav.transition(this, getSupportFragmentManager(), R.id.biography_container, args,
                 fragment -> {
-                    changeSubtitle(fragment.toString());
+                    changeSubtitle(screenNav.getTitleId());
                     changeActionBarIndicatorState();
                 });
     }

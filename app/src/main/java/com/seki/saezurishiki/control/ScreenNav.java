@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
+import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.entity.UserEntity;
 import com.seki.saezurishiki.view.activity.UserActivity;
@@ -19,6 +20,7 @@ import twitter4j.HashtagEntity;
 
 
 public enum ScreenNav {
+
     USER_ACTIVITY {
         @Override
         public void transition(Context context, FragmentManager fragmentManager, int layoutId, Map<String, Object> args, Consumer<Fragment> callback) {
@@ -26,6 +28,11 @@ public enum ScreenNav {
             Intent intent = new Intent(context, UserActivity.class);
             intent.putExtra(UserActivity.USER_ID, userId);
             context.startActivity(intent);
+        }
+
+        @Override
+        public int getTitleId() {
+            return -1;
         }
     },
 
@@ -35,6 +42,11 @@ public enum ScreenNav {
             Fragment fragment = SettingFragment.getInstance();
             FragmentController.add(fragmentManager, fragment, layoutId);
             callback.accept(fragment);
+        }
+
+        @Override
+        public int getTitleId() {
+            return R.string.title_setting;
         }
     },
 
@@ -46,6 +58,11 @@ public enum ScreenNav {
             FragmentController.add(fragmentManager, fragment, layoutId);
             callback.accept(fragment);
         }
+
+        @Override
+        public int getTitleId() {
+            return R.string.title_user_tweet;
+        }
     },
 
     FAVORITE {
@@ -55,6 +72,11 @@ public enum ScreenNav {
             Fragment fragment = Fragments.createInjectFavoritesFragment(user.getId(), user.getFavouritesCount());
             FragmentController.add(fragmentManager, fragment, layoutId);
             callback.accept(fragment);
+        }
+
+        @Override
+        public int getTitleId() {
+            return R.string.title_favorite;
         }
     },
 
@@ -66,6 +88,11 @@ public enum ScreenNav {
             FragmentController.add(fragmentManager, fragment, layoutId);
             callback.accept(fragment);
         }
+
+        @Override
+        public int getTitleId() {
+            return R.string.title_friend;
+        }
     },
 
     FOLLOWER {
@@ -76,6 +103,11 @@ public enum ScreenNav {
             FragmentController.add(fragmentManager, fragment, layoutId);
             callback.accept(fragment);
         }
+
+        @Override
+        public int getTitleId() {
+            return R.string.title_follower;
+        }
     },
 
     TWEET_EDITOR {
@@ -84,6 +116,11 @@ public enum ScreenNav {
             final Fragment fragment = ScreenNav.createEditTweetFragment(args);
             FragmentController.add(fragmentManager, fragment, layoutId);
             callback.accept(fragment);
+        }
+
+        @Override
+        public int getTitleId() {
+            return R.string.title_edit_tweet;
         }
     },
 
@@ -96,6 +133,11 @@ public enum ScreenNav {
             FragmentController.add(fragmentManager, fragment, layoutId);
             callback.accept(fragment);
         }
+
+        @Override
+        public int getTitleId() {
+            return R.string.title_conversation;
+        }
     },
 
     LICENSE {
@@ -104,6 +146,11 @@ public enum ScreenNav {
             Fragment fragment = LicenseFragment.newInstance();
             FragmentController.add(fragmentManager, fragment, layoutId);
             callback.accept(fragment);
+        }
+
+        @Override
+        public int getTitleId() {
+            return R.string.title_license;
         }
     },
 
@@ -116,6 +163,11 @@ public enum ScreenNav {
             FragmentController.add(fragmentManager, fragment, layoutId);
             callback.accept(fragment);
         }
+
+        @Override
+        public int getTitleId() {
+            return R.string.title_search;
+        }
     },
 
     PICTURE {
@@ -126,6 +178,11 @@ public enum ScreenNav {
             Fragment fragment = PictureFragment.getInstance(position, tweet);
             FragmentController.add(fragmentManager, fragment, layoutId);
             callback.accept(fragment);
+        }
+
+        @Override
+        public int getTitleId() {
+            return -1;
         }
     };
 
@@ -156,6 +213,5 @@ public enum ScreenNav {
 
 
     public abstract void transition(Context context, FragmentManager fragmentManager, int layoutId, Map<String, Object> args, Consumer<Fragment> callback);
-
-
+    public abstract int getTitleId();
 }

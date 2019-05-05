@@ -511,10 +511,4 @@ public class EditTweetFragment extends Fragment implements TweetEditorPresenter.
     private boolean hasMediaItem() {
         return this.media != null;
     }
-
-
-    @Override
-    public String toString() {
-        return "Edit Tweet";
-    }
 }

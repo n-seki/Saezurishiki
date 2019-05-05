@@ -213,7 +213,7 @@ public class LoginUserActivity extends    AppCompatActivity
         args.put("user", mLoginUser);
         screenNav.transition(this, getSupportFragmentManager(), R.id.home_container, args,
                 fragment -> {
-                    replaceTitle(fragment.toString());
+                    replaceTitle(screenNav.getTitleId());
                     changeActionBarIndicatorState();
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                 });
@@ -337,7 +337,7 @@ public class LoginUserActivity extends    AppCompatActivity
     private void addFragment(ScreenNav screenNav, Map<String, Object> args) {
         screenNav.transition(this, getSupportFragmentManager(), R.id.home_container, args,
                 fragment -> {
-                    replaceTitle(fragment.toString());
+                    replaceTitle(screenNav.getTitleId());
                     changeActionBarIndicatorState();
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                 });
