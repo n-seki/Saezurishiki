@@ -121,8 +121,6 @@ public abstract class UsersListFragment extends Fragment implements UserListPres
         load();
     }
 
-
-
     private void load() {
        this.presenter.request();
     }
@@ -131,7 +129,4 @@ public abstract class UsersListFragment extends Fragment implements UserListPres
     public void setPresenter(UserListPresenter presenter) {
         this.presenter = presenter;
     }
-
-
-    public abstract String toString();
 }

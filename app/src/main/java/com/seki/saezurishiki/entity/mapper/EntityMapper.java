@@ -38,7 +38,6 @@ public class EntityMapper {
 
     public UserEntity map(User user) {
         final boolean isLoginUser = this.loginUserId == user.getId();
-
         return new UserEntity(user, isLoginUser);
     }
 }

@@ -50,9 +50,4 @@ public class LicenseFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
     }
-
-    @Override
-    public String toString() {
-        return "囀り式について";
-    }
 }

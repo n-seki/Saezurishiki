@@ -75,9 +75,4 @@ public class SettingFragment extends PreferenceFragmentCompat implements SharedP
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
     }
-
-    @Override
-    public String toString() {
-        return "Setting";
-    }
 }

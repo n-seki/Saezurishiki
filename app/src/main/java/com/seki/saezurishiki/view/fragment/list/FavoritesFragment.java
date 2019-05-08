@@ -33,10 +33,4 @@ public class FavoritesFragment extends TweetListFragment {
 
         mCount = data.getInt(DataType.COUNT);
     }
-
-    @Override
-    public String toString() {
-        return "Favorite";
-    }
-
 }

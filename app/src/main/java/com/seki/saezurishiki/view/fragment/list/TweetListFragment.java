@@ -14,30 +14,29 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.seki.saezurishiki.R;
-import com.seki.saezurishiki.application.SaezurishikiApp;
 import com.seki.saezurishiki.control.CustomToast;
 import com.seki.saezurishiki.control.ScreenNav;
 import com.seki.saezurishiki.control.UIControlUtil;
 import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.entity.TwitterEntity;
 import com.seki.saezurishiki.model.adapter.RequestInfo;
-import com.seki.saezurishiki.network.twitter.TwitterAccount;
 import com.seki.saezurishiki.network.twitter.TwitterError;
 import com.seki.saezurishiki.presenter.list.TweetListPresenter;
 import com.seki.saezurishiki.view.adapter.TimeLineAdapter;
 import com.seki.saezurishiki.view.control.FragmentControl;
-import com.seki.saezurishiki.view.fragment.Fragments;
 import com.seki.saezurishiki.view.fragment.dialog.TweetLongClickDialog;
 import com.seki.saezurishiki.view.fragment.dialog.TweetSelectDialog;
 import com.seki.saezurishiki.view.fragment.dialog.YesNoSelectDialog;
 import com.seki.saezurishiki.view.fragment.dialog.adapter.DialogSelectAction;
-import com.seki.saezurishiki.view.fragment.other.PictureFragment;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import twitter4j.TwitterException;
+
+import static com.seki.saezurishiki.control.ScreenNav.KEY_POSITION;
+import static com.seki.saezurishiki.control.ScreenNav.KEY_TWEET;
+import static com.seki.saezurishiki.control.ScreenNav.KEY_TWEET_ID;
+import static com.seki.saezurishiki.control.ScreenNav.KEY_USER_ID;
 
 public abstract class TweetListFragment extends Fragment
         implements
@@ -162,8 +161,8 @@ public abstract class TweetListFragment extends Fragment
 
     @Override
     public void openReplyEditor(TweetEntity tweet) {
-        final Map<String, Object> args = new HashMap<>();
-        args.put("tweet", tweet);
+        Bundle args = new Bundle();
+        args.putSerializable(KEY_TWEET, tweet);
         this.fragmentControl.requestChangeScreen(ScreenNav.TWEET_EDITOR, args);
     }
 
@@ -259,16 +258,16 @@ public abstract class TweetListFragment extends Fragment
 
     @Override
     public void displayDetailTweet(long userID, long tweetID) {
-        Map<String, Object> args = new HashMap<>();
-        args.put("userId", userID);
-        args.put("tweetId", tweetID);
+        Bundle args = new Bundle();
+        args.putLong(KEY_USER_ID, userID);
+        args.putLong(KEY_TWEET_ID, tweetID);
         this.fragmentControl.requestChangeScreen(ScreenNav.CONVERSATION, args);
     }
 
     @Override
     public void showUserActivity(long userID) {
-        final Map<String, Object> args = new HashMap<>();
-        args.put("userId", userID);
+        Bundle args = new Bundle();
+        args.putLong(KEY_USER_ID, userID);
         this.fragmentControl.requestChangeScreen(ScreenNav.USER_ACTIVITY, args);
     }
 
@@ -280,9 +279,9 @@ public abstract class TweetListFragment extends Fragment
 
     @Override
     public void showPicture(TweetEntity tweet, int position) {
-        final Map<String, Object> args = new HashMap<>();
-        args.put("tweet", tweet);
-        args.put("position", position);
+        Bundle args = new Bundle();
+        args.putSerializable(KEY_TWEET, tweet);
+        args.putInt(KEY_POSITION, position);
         this.fragmentControl.requestChangeScreen(ScreenNav.PICTURE, args);
     }
 

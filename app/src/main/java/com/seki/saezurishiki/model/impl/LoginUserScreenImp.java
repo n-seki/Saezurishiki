@@ -100,11 +100,6 @@ public class LoginUserScreenImp extends ModelBaseImp implements LoginUserScreen 
     }
 
     @Override
-    public void onDirectMessage(DirectMessage directMessage) {
-        //nop
-    }
-
-    @Override
     public void onStatus(Status status) {
         final TweetEntity tweet = TweetRepository.INSTANCE.mappingAdd(status);
         final ModelMessage message = ModelMessage.of(ModelActionType.RECEIVE_TWEET, tweet);

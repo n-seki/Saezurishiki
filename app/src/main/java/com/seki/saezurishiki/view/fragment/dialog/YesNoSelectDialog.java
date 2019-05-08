@@ -1,7 +1,6 @@
 package com.seki.saezurishiki.view.fragment.dialog;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
@@ -11,13 +10,8 @@ import android.support.v7.app.AlertDialog;
 import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.entity.UserEntity;
-import com.seki.saezurishiki.view.activity.UserActivity;
-import com.seki.saezurishiki.view.fragment.list.TweetListFragment;
 
 import java.io.Serializable;
-import java.util.List;
-
-import twitter4j.User;
 
 public class YesNoSelectDialog<T extends Serializable> extends DialogFragment {
 
@@ -49,7 +43,7 @@ public class YesNoSelectDialog<T extends Serializable> extends DialogFragment {
             return this;
         }
 
-        public Builder setTitle(@StringRes int title) {
+        Builder setTitle(@StringRes int title) {
             this.title = title;
             return this;
         }
