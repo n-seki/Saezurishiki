@@ -94,12 +94,15 @@ dependencies {
     def dagger_version = "2.22.1"
     implementation "com.google.dagger:dagger:$dagger_version"
     annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
+    implementation "com.google.dagger:dagger-android:$dagger_version"
+    implementation "com.google.dagger:dagger-android-support:$dagger_version"
+    annotationProcessor "com.google.dagger:dagger-android-processor:$dagger_version"
+    kapt "com.google.dagger:dagger-compiler:$dagger_version"
     
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
 def static buildDate() {
     def format = new SimpleDateFormat("yyyy/MM/dd")
-    def today = new Date()
-    return format.format(today)
+    return format.format(new Date())
 }

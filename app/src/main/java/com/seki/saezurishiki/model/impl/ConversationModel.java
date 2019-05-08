@@ -6,6 +6,7 @@ import com.seki.saezurishiki.model.adapter.ModelMessage;
 import com.seki.saezurishiki.model.adapter.RequestInfo;
 import com.seki.saezurishiki.repository.TweetRepository;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import twitter4j.TwitterException;
@@ -13,6 +14,7 @@ import twitter4j.TwitterException;
 @Singleton
 class ConversationModel extends TweetListModelImp {
 
+    @Inject
     ConversationModel() {
         super();
     }

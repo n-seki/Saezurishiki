@@ -2,7 +2,6 @@ package com.seki.saezurishiki.control;
 
 import android.content.Context;
 import android.content.Intent;
-import android.opengl.EGLObjectHandle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
@@ -10,6 +9,10 @@ import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.entity.UserEntity;
 import com.seki.saezurishiki.view.activity.UserActivity;
 import com.seki.saezurishiki.view.fragment.Fragments;
+import com.seki.saezurishiki.view.fragment.list.ConversationFragment;
+import com.seki.saezurishiki.view.fragment.list.FavoritesFragment;
+import com.seki.saezurishiki.view.fragment.list.SearchFragment;
+import com.seki.saezurishiki.view.fragment.list.UserTweetFragment;
 import com.seki.saezurishiki.view.fragment.other.LicenseFragment;
 import com.seki.saezurishiki.view.fragment.other.PictureFragment;
 import com.seki.saezurishiki.view.fragment.other.SettingFragment;
@@ -43,7 +46,7 @@ public enum ScreenNav {
         @Override
         public void transition(Context context, FragmentManager fragmentManager, int layoutId, Map<String, Object> args, Consumer<Fragment> callback) {
             final UserEntity user = (UserEntity)args.get("user");
-            Fragment fragment = Fragments.createInjectUserTweetFragment(user.getId(), user.getStatusesCount());
+            Fragment fragment = UserTweetFragment.getInstance(user.getId(), user.getStatusesCount());
             FragmentController.add(fragmentManager, fragment, layoutId);
             callback.accept(fragment);
         }
@@ -53,7 +56,7 @@ public enum ScreenNav {
         @Override
         public void transition(Context context, FragmentManager fragmentManager, int layoutId, Map<String, Object> args, Consumer<Fragment> callback) {
             final UserEntity user = (UserEntity)args.get("user");
-            Fragment fragment = Fragments.createInjectFavoritesFragment(user.getId(), user.getFavouritesCount());
+            Fragment fragment = FavoritesFragment.getInstance(user.getId(), user.getFavouritesCount());
             FragmentController.add(fragmentManager, fragment, layoutId);
             callback.accept(fragment);
         }
@@ -93,7 +96,7 @@ public enum ScreenNav {
         public void transition(Context context, FragmentManager fragmentManager, int layoutId, Map<String, Object> args, Consumer<Fragment> callback) {
             final long userId = (Long)args.get("userId");
             final long tweetId = (Long)args.get("tweetId");
-            final Fragment fragment = Fragments.createInjectConversationFragment(userId, tweetId);
+            final Fragment fragment = ConversationFragment.getInstance(userId, tweetId);
             FragmentController.add(fragmentManager, fragment, layoutId);
             callback.accept(fragment);
         }
@@ -113,7 +116,7 @@ public enum ScreenNav {
         public void transition(Context context, FragmentManager fragmentManager, int layoutId, Map<String, Object> args, Consumer<Fragment> callback) {
             final UserEntity user = (UserEntity)args.get("user");
             final String query = (String)args.get("query");
-            Fragment fragment = Fragments.createInjectSearchFragment(user.getId(), query);
+            Fragment fragment = SearchFragment.getInstance(user.getId(), query);
             FragmentController.add(fragmentManager, fragment, layoutId);
             callback.accept(fragment);
         }

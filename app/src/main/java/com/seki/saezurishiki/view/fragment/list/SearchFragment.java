@@ -6,8 +6,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 
+import com.seki.saezurishiki.application.SaezurishikiApp;
 import com.seki.saezurishiki.model.adapter.RequestInfo;
+import com.seki.saezurishiki.presenter.list.TweetListPresenter;
+import com.seki.saezurishiki.view.fragment.SearchModule;
 import com.seki.saezurishiki.view.fragment.util.DataType;
+
+import javax.inject.Inject;
 
 /**
  * 検索結果一覧表示Fragment<br>
@@ -18,8 +23,12 @@ public class SearchFragment extends TweetListFragment {
 
     private String mQuery;
 
-    public static SearchFragment getInstance(String query) {
+    @Inject
+    TweetListPresenter presenter;
+
+    public static SearchFragment getInstance(long userId, String query) {
         Bundle data = new Bundle();
+        data.putLong(USER_ID, userId);
         data.putString(DataType.QUERY, query);
         SearchFragment fragment = new SearchFragment();
         fragment.setArguments(data);
@@ -36,6 +45,15 @@ public class SearchFragment extends TweetListFragment {
         if (actionBar== null) {
             throw new IllegalStateException("ActionBar is null!");
         }
+
+        long listOwnerId = getArguments().getLong(USER_ID);
+
+        SaezurishikiApp.mApplicationComponent.searchComponentBuilder()
+                .listOwnerId(listOwnerId)
+                .presenterView(this)
+                .module(new SearchModule())
+                .build()
+                .inject(this);
 
         actionBar.setTitle("\"" + mQuery + "\"");
 
@@ -59,5 +77,10 @@ public class SearchFragment extends TweetListFragment {
     @Override
     public String toString() {
         return "\"" + mQuery + "\"";
+    }
+
+    @Override
+    public TweetListPresenter getPresenter() {
+        return this.presenter;
     }
 }

@@ -20,13 +20,12 @@ import com.seki.saezurishiki.network.ConnectionReceiver;
 import com.seki.saezurishiki.view.control.RequestTabState;
 import com.seki.saezurishiki.view.control.TabManagedView;
 import com.seki.saezurishiki.view.control.TabViewControl;
-import com.seki.saezurishiki.view.customview.NotificationListView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class UserStreamTimeLineFragment extends TweetListFragment
+public abstract class UserStreamTimeLineFragment extends TweetListFragment
                                         implements ConnectionReceiver.Observer, TabManagedView {
 
     protected List<TweetEntity> mSavedStatuses;
@@ -37,29 +36,11 @@ public class UserStreamTimeLineFragment extends TweetListFragment
 
     boolean isNeedLoadButton = false;
 
-    private static final String TAB_POSITION = "tab-position";
-    private static final String LIST_NAME = "list-name";
+    protected static final String TAB_POSITION = "tab-position";
+    protected static final String LIST_NAME = "list-name";
     private int tabPosition;
     private String listName;
     TabViewControl tabViewControl;
-
-    public static TweetListFragment getHomeTimeLine(int tabPosition, String listName) {
-        Bundle data = new Bundle();
-        data.putInt(TAB_POSITION, tabPosition);
-        data.putString(LIST_NAME, listName);
-        TweetListFragment home = new UserStreamTimeLineFragment();
-        home.setArguments(data);
-        return home;
-    }
-
-    public static TweetListFragment getReplyTimeLine(int tabPosition, String listName) {
-        Bundle data = new Bundle();
-        data.putInt(TAB_POSITION, tabPosition);
-        data.putString(LIST_NAME, listName);
-        TweetListFragment fragment = new UserStreamTimeLineFragment();
-        fragment.setArguments(data);
-        return fragment;
-    }
 
     @Override
     public void onAttach(Context context) {
@@ -154,7 +135,7 @@ public class UserStreamTimeLineFragment extends TweetListFragment
 
 
     protected void onRefresh() {
-        this.presenter.load(new RequestInfo().count(50).sinceID(mAdapter.getItemIdAtPosition(0)));
+        getPresenter().load(new RequestInfo().count(50).sinceID(mAdapter.getItemIdAtPosition(0)));
     }
 
     @Override
@@ -232,7 +213,7 @@ public class UserStreamTimeLineFragment extends TweetListFragment
                                                   .maxID(mAdapter.getItemIdAtPosition(buttonPosition-1) - 1)
                                                   .sinceID(mAdapter.getItemIdAtPosition(buttonPosition+1) + 1);
 
-        this.presenter.load(info);
+        getPresenter().load(info);
     }
 
 
