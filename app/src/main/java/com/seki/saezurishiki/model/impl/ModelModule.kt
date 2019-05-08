@@ -67,7 +67,7 @@ class ModelModule {
 
     @Provides
     @Named("follower")
-    internal fun provideFriendListModel(model: FollowerListModel): UserListModel {
+    internal fun provideFollowerListModel(model: FollowerListModel): UserListModel {
         return model
     }
 
