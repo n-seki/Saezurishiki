@@ -8,5 +8,5 @@ package com.seki.saezurishiki.network.twitter.streamListener;
  * @author seki
  */
 public interface CustomUserStreamListener
-extends StatusUserStreamListener, DirectMessageUserStreamListener, UserStreamUserListener{
+extends StatusUserStreamListener, UserStreamUserListener{
 }

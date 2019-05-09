@@ -1,7 +1,6 @@
 package com.seki.saezurishiki.network.twitter;
 
 import com.seki.saezurishiki.network.twitter.streamListener.CustomUserStreamListener;
-import com.seki.saezurishiki.network.twitter.streamListener.DirectMessageUserStreamListener;
 import com.seki.saezurishiki.network.twitter.streamListener.StatusUserStreamListener;
 import com.seki.saezurishiki.network.twitter.streamListener.UserStreamUserListener;
 import com.seki.saezurishiki.repository.RemoteRepositoryImp;
@@ -88,19 +87,11 @@ public final class UserStreamManager {
         this.streamAdapter.addListener(listener);
     }
 
-    public void addListener(DirectMessageUserStreamListener listener) {
-        this.streamAdapter.addListener(listener);
-    }
-
     public void addListener(UserStreamUserListener listener) {
         this.streamAdapter.addListener(listener);
     }
 
     public void removeListener(StatusUserStreamListener listener) {
-        this.streamAdapter.removeListener(listener);
-    }
-
-    public void removeListener(DirectMessageUserStreamListener listener) {
         this.streamAdapter.removeListener(listener);
     }
 

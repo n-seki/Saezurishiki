@@ -73,12 +73,6 @@ public class SearchFragment extends TweetListFragment {
         menu.clear();
     }
 
-
-    @Override
-    public String toString() {
-        return "\"" + mQuery + "\"";
-    }
-
     @Override
     public TweetListPresenter getPresenter() {
         return this.presenter;

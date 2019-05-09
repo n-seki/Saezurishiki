@@ -53,11 +53,6 @@ public class UserTweetFragment extends TweetListFragment {
     }
 
     @Override
-    public String toString() {
-        return "Tweet";
-    }
-
-    @Override
     public TweetListPresenter getPresenter() {
         return presenter;
     }

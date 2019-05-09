@@ -7,7 +7,7 @@ import java.util.Date;
 
 public class LoadButton implements TwitterEntity {
 
-    public final Date createdAt;
+    private final Date createdAt;
     private final long id;
 
     private int labelResId = R.string.click_to_load;

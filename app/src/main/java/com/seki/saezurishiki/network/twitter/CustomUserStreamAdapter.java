@@ -1,7 +1,6 @@
 package com.seki.saezurishiki.network.twitter;
 
 import com.seki.saezurishiki.network.twitter.streamListener.CustomUserStreamListener;
-import com.seki.saezurishiki.network.twitter.streamListener.DirectMessageUserStreamListener;
 import com.seki.saezurishiki.network.twitter.streamListener.StatusUserStreamListener;
 import com.seki.saezurishiki.network.twitter.streamListener.UserStreamUserListener;
 import com.seki.saezurishiki.repository.RemoteRepositoryImp;
@@ -24,18 +23,13 @@ import twitter4j.UserStreamAdapter;
 class CustomUserStreamAdapter extends UserStreamAdapter {
 
     private final List<StatusUserStreamListener> statusListeners;
-    private final List<DirectMessageUserStreamListener> directMessageListeners;
     private final List<UserStreamUserListener> userStreamUserListeners;
 
-    private final RemoteRepositoryImp repository;
     private final long loginUserId;
 
     CustomUserStreamAdapter(RemoteRepositoryImp repository) {
         this.statusListeners = new ArrayList<>();
-        this.directMessageListeners = new ArrayList<>();
         this.userStreamUserListeners = new ArrayList<>();
-
-        this.repository  = repository;
         this.loginUserId = TwitterAccount.getLoginUserId();
     }
 
@@ -102,16 +96,11 @@ class CustomUserStreamAdapter extends UserStreamAdapter {
 
     void addListener(CustomUserStreamListener listener) {
         this.statusListeners.add(listener);
-        this.directMessageListeners.add(listener);
         this.userStreamUserListeners.add(listener);
     }
 
     void addListener(StatusUserStreamListener listener) {
         this.statusListeners.add(listener);
-    }
-
-    void addListener(DirectMessageUserStreamListener listener) {
-        this.directMessageListeners.add(listener);
     }
 
     void addListener(UserStreamUserListener listener) {
@@ -125,17 +114,12 @@ class CustomUserStreamAdapter extends UserStreamAdapter {
         this.statusListeners.remove(listener);
     }
 
-    void removeListener(DirectMessageUserStreamListener listener) {
-        this.directMessageListeners.remove(listener);
-    }
-
     void removeListener(UserStreamUserListener listener) {
         this.userStreamUserListeners.remove(listener);
     }
 
     void removeListener(CustomUserStreamListener listener) {
         this.statusListeners.remove(listener);
-        this.directMessageListeners.remove(listener);
         this.userStreamUserListeners.remove(listener);
     }
 }

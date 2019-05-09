@@ -53,11 +53,6 @@ public class FavoritesFragment extends TweetListFragment {
     }
 
     @Override
-    public String toString() {
-        return "Favorite";
-    }
-
-    @Override
     public TweetListPresenter getPresenter() {
         return presenter;
     }

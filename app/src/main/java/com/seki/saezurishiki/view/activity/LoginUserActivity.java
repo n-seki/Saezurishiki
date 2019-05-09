@@ -56,10 +56,11 @@ import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.Contract;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import twitter4j.HashtagEntity;
+
+import static com.seki.saezurishiki.control.ScreenNav.KEY_HASHTAG;
+import static com.seki.saezurishiki.control.ScreenNav.KEY_QUERY;
+import static com.seki.saezurishiki.control.ScreenNav.KEY_USER;
 
 /**
  * ログインユーザーに関する情報を管理するためのActivity<br>
@@ -185,11 +186,10 @@ public class LoginUserActivity extends    AppCompatActivity
     private void setupTweetButton(int theme) {
         FloatingActionButton editTweetButton = (FloatingActionButton) findViewById(R.id.edit_tweet_button);
         editTweetButton.setOnClickListener(v -> {
-            final Map<String, Object> args = new HashMap<>();
+            Bundle args = new Bundle();
             if (mHashTagEntities != null) {
-                args.put("hashTag", mHashTagEntities);
+                args.putSerializable(KEY_HASHTAG, mHashTagEntities);
             }
-
             LoginUserActivity.this.addFragment(ScreenNav.TWEET_EDITOR, args);
         });
         editTweetButton.setBackgroundTintList(UIControlUtil.buttonTint(this, theme));
@@ -209,11 +209,11 @@ public class LoginUserActivity extends    AppCompatActivity
     private final AdapterView.OnItemClickListener drawerItemClickListener = (parent, view, position, id) -> {
         mDrawerLayout.closeDrawer(GravityCompat.START);
         final ScreenNav screenNav = LoginUserActivity.this.userDrawerView.getButtonAtPosition(position).screenNav;
-        final Map<String, Object> args = new HashMap<>();
-        args.put("user", mLoginUser);
+        Bundle args = new Bundle();
+        args.putSerializable(KEY_USER, mLoginUser);
         screenNav.transition(this, getSupportFragmentManager(), R.id.home_container, args,
                 fragment -> {
-                    replaceTitle(fragment.toString());
+                    replaceTitle(screenNav.getTitleId());
                     changeActionBarIndicatorState();
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                 });
@@ -334,10 +334,10 @@ public class LoginUserActivity extends    AppCompatActivity
     }
 
 
-    private void addFragment(ScreenNav screenNav, Map<String, Object> args) {
+    private void addFragment(ScreenNav screenNav, Bundle args) {
         screenNav.transition(this, getSupportFragmentManager(), R.id.home_container, args,
                 fragment -> {
-                    replaceTitle(fragment.toString());
+                    replaceTitle(screenNav.getTitleId());
                     changeActionBarIndicatorState();
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                 });
@@ -457,18 +457,11 @@ public class LoginUserActivity extends    AppCompatActivity
 
         @Override
         public boolean onQueryTextSubmit(String query) {
-            final Map<String, Object> args = new HashMap<>();
-            args.put("user", mLoginUser);
-            args.put("query", query);
+            Bundle args = new Bundle();
+            args.putSerializable(KEY_USER, mLoginUser);
+            args.putString(KEY_QUERY, query);
             LoginUserActivity.this.addFragment(ScreenNav.SEARCH, args);
-
-//            ActionBar actionBar = getSupportActionBar();
-//            if ( actionBar != null ) {
-//                //actionBar.collapseActionView();
-//            }
-
             mSearchView.clearFocus();
-
             return false;
         }
 
@@ -645,7 +638,7 @@ public class LoginUserActivity extends    AppCompatActivity
 
 
     @Override
-    public void requestChangeScreen(ScreenNav screenNav, Map<String, Object> args) {
+    public void requestChangeScreen(ScreenNav screenNav, Bundle args) {
         this.addFragment(screenNav, args);
     }
 

@@ -116,12 +116,4 @@ public class RelationshipModel {
         return this.loginUserFollowing && this.loginUserFollowed;
     }
 
-//
-//    public void onFollowingLoginUser() {
-//        this.loginUserFollowed = true;
-//    }
-//
-//    public void onRemovingLoginUser() {
-//        this.loginUserFollowed = false;
-//    }
 }

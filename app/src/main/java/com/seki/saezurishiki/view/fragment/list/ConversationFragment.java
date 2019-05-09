@@ -66,8 +66,6 @@ public class ConversationFragment extends TweetListFragment {
         mListView.setAdapter(mAdapter);
     }
 
-
-
     @Override
     protected void loadTimeLine() {
         this.presenter.load(new RequestInfo().targetID(firstTweetId));
@@ -82,9 +80,4 @@ public class ConversationFragment extends TweetListFragment {
     public TweetListPresenter getPresenter() {
         return presenter;
     }
-
-    @Override
-    public String toString() {
-        return "Conversation";
-}
 }

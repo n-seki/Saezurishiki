@@ -29,11 +29,14 @@ import com.seki.saezurishiki.view.fragment.dialog.TweetSelectDialog;
 import com.seki.saezurishiki.view.fragment.dialog.YesNoSelectDialog;
 import com.seki.saezurishiki.view.fragment.dialog.adapter.DialogSelectAction;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import twitter4j.TwitterException;
+
+import static com.seki.saezurishiki.control.ScreenNav.KEY_POSITION;
+import static com.seki.saezurishiki.control.ScreenNav.KEY_TWEET;
+import static com.seki.saezurishiki.control.ScreenNav.KEY_TWEET_ID;
+import static com.seki.saezurishiki.control.ScreenNav.KEY_USER_ID;
 
 public abstract class TweetListFragment extends Fragment
         implements
@@ -90,7 +93,6 @@ public abstract class TweetListFragment extends Fragment
     public void onResume() {
         super.onResume();
         getPresenter().onResume();
-
         if (mAdapter.isEmpty()) {
             this.loadTimeLine();
         }
@@ -157,10 +159,11 @@ public abstract class TweetListFragment extends Fragment
 
     @Override
     public void openReplyEditor(TweetEntity tweet) {
-        final Map<String, Object> args = new HashMap<>();
-        args.put("tweet", tweet);
+        Bundle args = new Bundle();
+        args.putSerializable(KEY_TWEET, tweet);
         this.fragmentControl.requestChangeScreen(ScreenNav.TWEET_EDITOR, args);
     }
+
 
     @SuppressWarnings("unchecked")
     @Override
@@ -231,6 +234,7 @@ public abstract class TweetListFragment extends Fragment
         mAdapter.notifyDataSetChanged();
     }
 
+
     @Override
     public void errorProcess(Exception e) {
         if (e instanceof TwitterException) {
@@ -250,16 +254,16 @@ public abstract class TweetListFragment extends Fragment
 
     @Override
     public void displayDetailTweet(long userID, long tweetID) {
-        Map<String, Object> args = new HashMap<>();
-        args.put("userId", userID);
-        args.put("tweetId", tweetID);
+        Bundle args = new Bundle();
+        args.putLong(KEY_USER_ID, userID);
+        args.putLong(KEY_TWEET_ID, tweetID);
         this.fragmentControl.requestChangeScreen(ScreenNav.CONVERSATION, args);
     }
 
     @Override
     public void showUserActivity(long userID) {
-        final Map<String, Object> args = new HashMap<>();
-        args.put("userId", userID);
+        Bundle args = new Bundle();
+        args.putLong(KEY_USER_ID, userID);
         this.fragmentControl.requestChangeScreen(ScreenNav.USER_ACTIVITY, args);
     }
 
@@ -271,9 +275,9 @@ public abstract class TweetListFragment extends Fragment
 
     @Override
     public void showPicture(TweetEntity tweet, int position) {
-        final Map<String, Object> args = new HashMap<>();
-        args.put("tweet", tweet);
-        args.put("position", position);
+        Bundle args = new Bundle();
+        args.putSerializable(KEY_TWEET, tweet);
+        args.putInt(KEY_POSITION, position);
         this.fragmentControl.requestChangeScreen(ScreenNav.PICTURE, args);
     }
 
@@ -304,7 +308,6 @@ public abstract class TweetListFragment extends Fragment
 
         return mAdapter.getItemIdAtPosition(mAdapter.getCount() - 1);
     }
-
 
     protected void loadTimeLine() {
         final long maxID = this.getLastId() - 1;
