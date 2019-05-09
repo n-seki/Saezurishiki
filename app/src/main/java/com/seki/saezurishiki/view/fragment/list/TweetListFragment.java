@@ -31,6 +31,8 @@ import com.seki.saezurishiki.view.fragment.dialog.adapter.DialogSelectAction;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import twitter4j.TwitterException;
 
 import static com.seki.saezurishiki.control.ScreenNav.KEY_POSITION;
@@ -51,6 +53,9 @@ public abstract class TweetListFragment extends Fragment
     protected ListView mListView;
     protected View mFooterView;
     protected FragmentControl fragmentControl;
+
+    @Inject
+    TweetListPresenter presenter;
 
     @Override
     public void onAttach(Context context) {
@@ -84,7 +89,7 @@ public abstract class TweetListFragment extends Fragment
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mAdapter = new TimeLineAdapter(getActivity(), R.layout.tweet_layout_with_picture, getPresenter());
+        mAdapter = new TimeLineAdapter(getActivity(), R.layout.tweet_layout_with_picture, presenter);
         mListView.setAdapter(mAdapter);
     }
 
@@ -92,7 +97,7 @@ public abstract class TweetListFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
-        getPresenter().onResume();
+        presenter.onResume();
         if (mAdapter.isEmpty()) {
             this.loadTimeLine();
         }
@@ -101,7 +106,7 @@ public abstract class TweetListFragment extends Fragment
     @Override
     public void onPause() {
         super.onPause();
-        getPresenter().onPause();
+        presenter.onPause();
     }
 
 
@@ -138,7 +143,7 @@ public abstract class TweetListFragment extends Fragment
 
     boolean onItemLongClick(int position) {
         final TwitterEntity entity = mAdapter.getEntity(position);
-        getPresenter().onLongClickListItem(entity);
+        presenter.onLongClickListItem(entity);
         return true;
     }
 
@@ -171,9 +176,9 @@ public abstract class TweetListFragment extends Fragment
 
         YesNoSelectDialog.Listener<TweetEntity> action = (YesNoSelectDialog.Listener<TweetEntity>) tweet1 -> {
             if (tweet1.isFavorited) {
-                getPresenter().destroyFavorite(tweet1);
+                presenter.destroyFavorite(tweet1);
             } else {
-                getPresenter().createFavorite(tweet1);
+                presenter.createFavorite(tweet1);
             }
         };
 
@@ -185,7 +190,7 @@ public abstract class TweetListFragment extends Fragment
     @SuppressWarnings("unchecked")
     @Override
     public void showReTweetDialog(final TweetEntity tweet) {
-        YesNoSelectDialog.Listener<TweetEntity> action = (YesNoSelectDialog.Listener<TweetEntity>) tweet1 -> getPresenter().reTweet(tweet1);
+        YesNoSelectDialog.Listener<TweetEntity> action = (YesNoSelectDialog.Listener<TweetEntity>) tweet1 -> presenter.reTweet(tweet1);
 
         DialogFragment dialogFragment = YesNoSelectDialog.newRetweetDialog(tweet, action);
         dialogFragment.show(getChildFragmentManager(), "YesNoSelectDialog");
@@ -247,10 +252,8 @@ public abstract class TweetListFragment extends Fragment
 
     @Override
     public void onDialogItemClick(DialogSelectAction<TweetEntity> selectedItem) {
-        getPresenter().onClickDialogItem(selectedItem);
+        presenter.onClickDialogItem(selectedItem);
     }
-
-    protected abstract TweetListPresenter getPresenter();
 
     @Override
     public void displayDetailTweet(long userID, long tweetID) {
@@ -283,7 +286,7 @@ public abstract class TweetListFragment extends Fragment
 
     @Override
     public void onLongClickDialogItemSelect(DialogSelectAction<TweetEntity> selectedItem) {
-        getPresenter().onClickLongClickDialog(selectedItem);
+        presenter.onClickLongClickDialog(selectedItem);
     }
 
 
@@ -311,7 +314,6 @@ public abstract class TweetListFragment extends Fragment
 
     protected void loadTimeLine() {
         final long maxID = this.getLastId() - 1;
-        getPresenter().load(new RequestInfo().maxID(maxID == -1 ? 0 : maxID).count(50));
+        presenter.load(new RequestInfo().maxID(maxID == -1 ? 0 : maxID).count(50));
     }
-
 }

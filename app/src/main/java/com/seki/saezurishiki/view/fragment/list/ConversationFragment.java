@@ -8,11 +8,8 @@ import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.application.SaezurishikiApp;
 import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.model.adapter.RequestInfo;
-import com.seki.saezurishiki.presenter.list.TweetListPresenter;
 import com.seki.saezurishiki.view.fragment.ConversationModule;
 import com.seki.saezurishiki.view.fragment.util.DataType;
-
-import javax.inject.Inject;
 
 /**
  * 会話表示Fragment<BR>
@@ -22,9 +19,6 @@ import javax.inject.Inject;
 public class ConversationFragment extends TweetListFragment {
 
     private long firstTweetId;
-
-    @Inject
-    TweetListPresenter presenter;
 
     public static ConversationFragment getInstance(long userId, long statusId) {
         ConversationFragment fragment = new ConversationFragment();
@@ -76,8 +70,4 @@ public class ConversationFragment extends TweetListFragment {
         this.mAdapter.add(tweetEntity);
     }
 
-    @Override
-    public TweetListPresenter getPresenter() {
-        return presenter;
-    }
 }

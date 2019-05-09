@@ -3,11 +3,8 @@ package com.seki.saezurishiki.view.fragment.list;
 import android.os.Bundle;
 
 import com.seki.saezurishiki.application.SaezurishikiApp;
-import com.seki.saezurishiki.presenter.list.TweetListPresenter;
 import com.seki.saezurishiki.view.fragment.UserTweetModule;
 import com.seki.saezurishiki.view.fragment.util.DataType;
-
-import javax.inject.Inject;
 
 /**
  * Tweet一覧表示Fragment<br>
@@ -17,9 +14,6 @@ import javax.inject.Inject;
 public class UserTweetFragment extends TweetListFragment {
 
     int mCount;
-
-    @Inject
-    TweetListPresenter presenter;
 
     public static TweetListFragment getInstance(long userId, int count) {
         TweetListFragment fragment = new UserTweetFragment();
@@ -50,10 +44,5 @@ public class UserTweetFragment extends TweetListFragment {
                 .module(new UserTweetModule())
                 .build()
                 .inject(this);
-    }
-
-    @Override
-    public TweetListPresenter getPresenter() {
-        return presenter;
     }
 }

@@ -3,11 +3,8 @@ package com.seki.saezurishiki.view.fragment.list;
 import android.os.Bundle;
 
 import com.seki.saezurishiki.application.SaezurishikiApp;
-import com.seki.saezurishiki.presenter.list.TweetListPresenter;
 import com.seki.saezurishiki.view.fragment.FavoriteModule;
 import com.seki.saezurishiki.view.fragment.util.DataType;
-
-import javax.inject.Inject;
 
 /**
  * お気に入りTweet表示Fragment<br>
@@ -17,9 +14,6 @@ import javax.inject.Inject;
 public class FavoritesFragment extends TweetListFragment {
 
     int mCount;
-
-    @Inject
-    TweetListPresenter presenter;
 
     public static TweetListFragment getInstance(long userId, int count) {
         TweetListFragment fragment = new FavoritesFragment();
@@ -52,8 +46,4 @@ public class FavoritesFragment extends TweetListFragment {
                 .inject(this);
     }
 
-    @Override
-    public TweetListPresenter getPresenter() {
-        return presenter;
-    }
 }

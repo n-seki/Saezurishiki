@@ -58,7 +58,6 @@ public abstract class UserStreamTimeLineFragment extends TweetListFragment
         mLastReadId = readLastID();
     }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -135,7 +134,7 @@ public abstract class UserStreamTimeLineFragment extends TweetListFragment
 
 
     protected void onRefresh() {
-        getPresenter().load(new RequestInfo().count(50).sinceID(mAdapter.getItemIdAtPosition(0)));
+        presenter.load(new RequestInfo().count(50).sinceID(mAdapter.getItemIdAtPosition(0)));
     }
 
     @Override
@@ -213,7 +212,7 @@ public abstract class UserStreamTimeLineFragment extends TweetListFragment
                                                   .maxID(mAdapter.getItemIdAtPosition(buttonPosition-1) - 1)
                                                   .sinceID(mAdapter.getItemIdAtPosition(buttonPosition+1) + 1);
 
-        getPresenter().load(info);
+        presenter.load(info);
     }
 
 
@@ -272,9 +271,7 @@ public abstract class UserStreamTimeLineFragment extends TweetListFragment
         super.onStop();
     }
 
-
     protected long readLastID() {
         return SharedPreferenceUtil.readLatestID(getActivity(), this.listName);
     }
-
 }

@@ -8,11 +8,8 @@ import android.view.MenuInflater;
 
 import com.seki.saezurishiki.application.SaezurishikiApp;
 import com.seki.saezurishiki.model.adapter.RequestInfo;
-import com.seki.saezurishiki.presenter.list.TweetListPresenter;
 import com.seki.saezurishiki.view.fragment.SearchModule;
 import com.seki.saezurishiki.view.fragment.util.DataType;
-
-import javax.inject.Inject;
 
 /**
  * 検索結果一覧表示Fragment<br>
@@ -22,9 +19,6 @@ import javax.inject.Inject;
 public class SearchFragment extends TweetListFragment {
 
     private String mQuery;
-
-    @Inject
-    TweetListPresenter presenter;
 
     public static SearchFragment getInstance(long userId, String query) {
         Bundle data = new Bundle();
@@ -71,10 +65,5 @@ public class SearchFragment extends TweetListFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
         menu.clear();
-    }
-
-    @Override
-    public TweetListPresenter getPresenter() {
-        return this.presenter;
     }
 }

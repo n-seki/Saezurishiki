@@ -2,14 +2,9 @@ package com.seki.saezurishiki.view.fragment.list
 
 import android.os.Bundle
 import com.seki.saezurishiki.application.SaezurishikiApp
-import com.seki.saezurishiki.presenter.list.TweetListPresenter
 import com.seki.saezurishiki.view.fragment.HomeModule
-import javax.inject.Inject
 
 class HomeTimeLineFragment : UserStreamTimeLineFragment() {
-
-    @Inject
-    lateinit var homePresenter: TweetListPresenter
 
     companion object {
         @JvmStatic
@@ -34,9 +29,5 @@ class HomeTimeLineFragment : UserStreamTimeLineFragment() {
                 .module(HomeModule())
                 .build()
                 .inject(this)
-    }
-
-    override fun getPresenter(): TweetListPresenter {
-        return homePresenter
     }
 }

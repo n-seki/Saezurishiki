@@ -2,14 +2,9 @@ package com.seki.saezurishiki.view.fragment.list
 
 import android.os.Bundle
 import com.seki.saezurishiki.application.SaezurishikiApp
-import com.seki.saezurishiki.presenter.list.TweetListPresenter
 import com.seki.saezurishiki.view.fragment.ReplyModule
-import javax.inject.Inject
 
 class ReplyTimeLineFragment : UserStreamTimeLineFragment() {
-
-    @Inject
-    lateinit var replyPresenter: TweetListPresenter
 
     companion object {
         @JvmStatic
@@ -34,9 +29,5 @@ class ReplyTimeLineFragment : UserStreamTimeLineFragment() {
                 .module(ReplyModule())
                 .build()
                 .inject(this)
-    }
-
-    override fun getPresenter(): TweetListPresenter {
-        return replyPresenter
     }
 }
