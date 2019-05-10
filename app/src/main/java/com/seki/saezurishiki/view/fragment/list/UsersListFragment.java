@@ -10,31 +10,35 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.seki.saezurishiki.R;
+import com.seki.saezurishiki.application.SaezurishikiApp;
 import com.seki.saezurishiki.control.UIControlUtil;
 import com.seki.saezurishiki.entity.UserEntity;
+import com.seki.saezurishiki.model.GetUserById;
 import com.seki.saezurishiki.presenter.list.UserListPresenter;
 import com.seki.saezurishiki.view.activity.UserActivity;
 import com.seki.saezurishiki.view.adapter.UsersListAdapter;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 
 public abstract class UsersListFragment extends Fragment implements UserListPresenter.View {
 
+    private final int NEW_LOADING = -0x0003;
+    protected static final String USER_ID = "user_id";
     UsersListAdapter mAdapter;
-
     private View mFooterView;
     private ListView mListView;
-
-    private UserListPresenter presenter;
-
-    private final int NEW_LOADING = -0x0003;
+    @Inject
+    UserListPresenter presenter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mAdapter = new UsersListAdapter(getActivity(), R.layout.user_info_layout);
+        GetUserById repositoryAccessor = SaezurishikiApp.mApplicationComponent.getUserById();
+        mAdapter = new UsersListAdapter(getActivity(), R.layout.user_info_layout, repositoryAccessor);
         setRetainInstance(true);
     }
 

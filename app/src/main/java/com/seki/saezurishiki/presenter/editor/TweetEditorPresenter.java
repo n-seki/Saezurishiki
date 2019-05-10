@@ -16,7 +16,6 @@ public class TweetEditorPresenter {
     public TweetEditorPresenter(View view, TweetEditorModel model) {
         this.view = view;
         this.model = model;
-        this.view.setPresenter(this);
     }
 
     public interface View {
@@ -29,7 +28,6 @@ public class TweetEditorPresenter {
         void setTextCount(String length);
         void hideUploadImage();
         void closeImageSource();
-        void setPresenter(TweetEditorPresenter presenter);
     }
 
     public void onClickPostButton(String message, boolean hasMedia) {

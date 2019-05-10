@@ -6,6 +6,9 @@ import com.seki.saezurishiki.model.adapter.ModelMessage;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.multibindings.IntoMap;
 import twitter4j.StatusDeletionNotice;
 
 

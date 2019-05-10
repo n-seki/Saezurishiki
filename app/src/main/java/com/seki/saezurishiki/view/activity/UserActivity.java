@@ -23,18 +23,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.seki.saezurishiki.R;
+import com.seki.saezurishiki.application.SaezurishikiApp;
 import com.seki.saezurishiki.control.CustomToast;
 import com.seki.saezurishiki.control.FragmentController;
 import com.seki.saezurishiki.control.ScreenNav;
 import com.seki.saezurishiki.control.Setting;
 import com.seki.saezurishiki.entity.UserEntity;
-import com.seki.saezurishiki.model.impl.ModelContainer;
 import com.seki.saezurishiki.presenter.activity.UserPresenter;
 import com.seki.saezurishiki.view.adapter.BioHeaderPageAdapter;
 import com.seki.saezurishiki.view.adapter.DrawerButtonListAdapter;
 import com.seki.saezurishiki.view.control.FragmentControl;
+import com.seki.saezurishiki.view.UserModule;
 import com.seki.saezurishiki.view.fragment.dialog.YesNoSelectDialog;
 import com.seki.saezurishiki.view.fragment.editor.EditTweetFragment;
+
+import javax.inject.Inject;
 
 import static com.seki.saezurishiki.control.ScreenNav.KEY_USER;
 
@@ -51,7 +54,8 @@ public class UserActivity extends    AppCompatActivity
 
     private Setting setting;
 
-    private UserPresenter presenter;
+    @Inject
+    UserPresenter presenter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,7 +72,12 @@ public class UserActivity extends    AppCompatActivity
         mListAdapter = new DrawerButtonListAdapter(this, R.layout.drawer_list_button, theme);
 
         final long userId = getIntent().getLongExtra(USER_ID, -1);
-        this.presenter = new UserPresenter(this, ModelContainer.getUserScreenModel(), userId);
+        SaezurishikiApp.mApplicationComponent.userComponentBuilder()
+                .presenterView(this)
+                .userId(userId)
+                .module(new UserModule())
+                .build()
+                .inject(this);
     }
 
     @Override

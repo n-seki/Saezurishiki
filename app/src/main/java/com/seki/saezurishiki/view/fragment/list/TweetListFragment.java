@@ -19,6 +19,7 @@ import com.seki.saezurishiki.control.ScreenNav;
 import com.seki.saezurishiki.control.UIControlUtil;
 import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.entity.TwitterEntity;
+import com.seki.saezurishiki.model.GetTweetById;
 import com.seki.saezurishiki.model.adapter.RequestInfo;
 import com.seki.saezurishiki.network.twitter.TwitterError;
 import com.seki.saezurishiki.presenter.list.TweetListPresenter;
@@ -30,6 +31,8 @@ import com.seki.saezurishiki.view.fragment.dialog.YesNoSelectDialog;
 import com.seki.saezurishiki.view.fragment.dialog.adapter.DialogSelectAction;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import twitter4j.TwitterException;
 
@@ -44,18 +47,19 @@ public abstract class TweetListFragment extends Fragment
         TweetLongClickDialog.LongClickDialogListener,
         TweetListPresenter.TweetListView {
 
-    protected TimeLineAdapter mAdapter;
-
-    protected ListView mListView;
-
-    protected View mFooterView;
-
-    protected FragmentControl fragmentControl;
-
-    TweetListPresenter presenter;
-
+    protected static final String USER_ID = "user_id";
     final int NEW_LOADING = -0x0003;
 
+    protected TimeLineAdapter mAdapter;
+    protected ListView mListView;
+    protected View mFooterView;
+    protected FragmentControl fragmentControl;
+
+    @Inject
+    TweetListPresenter presenter;
+
+    @Inject
+    GetTweetById repositroyAccessor;
 
     @Override
     public void onAttach(Context context) {
@@ -63,11 +67,15 @@ public abstract class TweetListFragment extends Fragment
         this.fragmentControl = (FragmentControl)getActivity();
     }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+
+        Bundle argument = getArguments();
+        if (argument == null) {
+            throw new IllegalStateException("Argument is null");
+        }
     }
 
 
@@ -85,7 +93,11 @@ public abstract class TweetListFragment extends Fragment
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mAdapter = new TimeLineAdapter(getActivity(), R.layout.tweet_layout_with_picture, presenter);
+        mAdapter = new TimeLineAdapter(
+                getActivity(),
+                R.layout.tweet_layout_with_picture,
+                presenter,
+                repositroyAccessor);
         mListView.setAdapter(mAdapter);
     }
 
@@ -93,8 +105,7 @@ public abstract class TweetListFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
-        this.presenter.onResume();
-
+        presenter.onResume();
         if (mAdapter.isEmpty()) {
             this.loadTimeLine();
         }
@@ -103,7 +114,7 @@ public abstract class TweetListFragment extends Fragment
     @Override
     public void onPause() {
         super.onPause();
-        this.presenter.onPause();
+        presenter.onPause();
     }
 
 
@@ -140,7 +151,7 @@ public abstract class TweetListFragment extends Fragment
 
     boolean onItemLongClick(int position) {
         final TwitterEntity entity = mAdapter.getEntity(position);
-        this.presenter.onLongClickListItem(entity);
+        presenter.onLongClickListItem(entity);
         return true;
     }
 
@@ -236,10 +247,6 @@ public abstract class TweetListFragment extends Fragment
         mAdapter.notifyDataSetChanged();
     }
 
-    @Override
-    public void setPresenter(TweetListPresenter presenter) {
-        this.presenter = presenter;
-    }
 
     @Override
     public void errorProcess(Exception e) {
@@ -253,7 +260,7 @@ public abstract class TweetListFragment extends Fragment
 
     @Override
     public void onDialogItemClick(DialogSelectAction<TweetEntity> selectedItem) {
-       this.presenter.onClickDialogItem(selectedItem);
+        presenter.onClickDialogItem(selectedItem);
     }
 
     @Override
@@ -287,7 +294,7 @@ public abstract class TweetListFragment extends Fragment
 
     @Override
     public void onLongClickDialogItemSelect(DialogSelectAction<TweetEntity> selectedItem) {
-        this.presenter.onClickLongClickDialog(selectedItem);
+        presenter.onClickLongClickDialog(selectedItem);
     }
 
 
@@ -313,11 +320,8 @@ public abstract class TweetListFragment extends Fragment
         return mAdapter.getItemIdAtPosition(mAdapter.getCount() - 1);
     }
 
-
-    protected void
-    loadTimeLine() {
+    protected void loadTimeLine() {
         final long maxID = this.getLastId() - 1;
-        this.presenter.load(new RequestInfo().maxID(maxID == -1 ? 0 : maxID).count(50));
+        presenter.load(new RequestInfo().maxID(maxID == -1 ? 0 : maxID).count(50));
     }
-
 }

@@ -10,7 +10,13 @@ import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.entity.UserEntity;
 import com.seki.saezurishiki.view.activity.UserActivity;
-import com.seki.saezurishiki.view.fragment.Fragments;
+import com.seki.saezurishiki.view.fragment.editor.EditTweetFragment;
+import com.seki.saezurishiki.view.fragment.list.ConversationFragment;
+import com.seki.saezurishiki.view.fragment.list.FavoritesFragment;
+import com.seki.saezurishiki.view.fragment.list.FollowerListFragment;
+import com.seki.saezurishiki.view.fragment.list.FriendListFragment;
+import com.seki.saezurishiki.view.fragment.list.SearchFragment;
+import com.seki.saezurishiki.view.fragment.list.UserTweetFragment;
 import com.seki.saezurishiki.view.fragment.other.LicenseFragment;
 import com.seki.saezurishiki.view.fragment.other.PictureFragment;
 import com.seki.saezurishiki.view.fragment.other.SettingFragment;
@@ -53,7 +59,7 @@ public enum ScreenNav {
         @Override
         public void transition(Context context, FragmentManager fragmentManager, int layoutId, Bundle args, Consumer<Fragment> callback) {
             final UserEntity user = (UserEntity)args.getSerializable(KEY_USER);
-            Fragment fragment = Fragments.createInjectUserTweetFragment(user.getId(), user.getStatusesCount());
+            Fragment fragment = UserTweetFragment.getInstance(user.getId(), user.getStatusesCount());
             FragmentController.add(fragmentManager, fragment, layoutId);
             callback.accept(fragment);
         }
@@ -68,7 +74,7 @@ public enum ScreenNav {
         @Override
         public void transition(Context context, FragmentManager fragmentManager, int layoutId, Bundle args, Consumer<Fragment> callback) {
             final UserEntity user = (UserEntity)args.getSerializable(KEY_USER);
-            Fragment fragment = Fragments.createInjectFavoritesFragment(user.getId(), user.getFavouritesCount());
+            Fragment fragment = FavoritesFragment.getInstance(user.getId(), user.getFavouritesCount());
             FragmentController.add(fragmentManager, fragment, layoutId);
             callback.accept(fragment);
         }
@@ -83,7 +89,7 @@ public enum ScreenNav {
         @Override
         public void transition(Context context, FragmentManager fragmentManager, int layoutId, Bundle args, Consumer<Fragment> callback) {
             final UserEntity user = (UserEntity)args.getSerializable(KEY_USER);
-            Fragment fragment = Fragments.newFriendListFragment(user.getId());
+            Fragment fragment =  FriendListFragment.newInstance(user.getId());
             FragmentController.add(fragmentManager, fragment, layoutId);
             callback.accept(fragment);
         }
@@ -98,7 +104,7 @@ public enum ScreenNav {
         @Override
         public void transition(Context context, FragmentManager fragmentManager, int layoutId, Bundle args, Consumer<Fragment> callback) {
             final UserEntity user = (UserEntity)args.getSerializable(KEY_USER);
-            Fragment fragment = Fragments.newFollowerListFragment(user.getId());
+            Fragment fragment = FollowerListFragment.newInstance(user.getId());
             FragmentController.add(fragmentManager, fragment, layoutId);
             callback.accept(fragment);
         }
@@ -128,7 +134,7 @@ public enum ScreenNav {
         public void transition(Context context, FragmentManager fragmentManager, int layoutId, Bundle args, Consumer<Fragment> callback) {
             final long userId = args.getLong(KEY_USER_ID);
             final long tweetId = args.getLong(KEY_TWEET_ID);
-            final Fragment fragment = Fragments.createInjectConversationFragment(userId, tweetId);
+            final Fragment fragment = ConversationFragment.getInstance(userId, tweetId);
             FragmentController.add(fragmentManager, fragment, layoutId);
             callback.accept(fragment);
         }
@@ -158,7 +164,7 @@ public enum ScreenNav {
         public void transition(Context context, FragmentManager fragmentManager, int layoutId, Bundle args, Consumer<Fragment> callback) {
             final UserEntity user = (UserEntity)args.getSerializable(KEY_USER);
             final String query = args.getString(KEY_QUERY);
-            Fragment fragment = Fragments.createInjectSearchFragment(user.getId(), query);
+            Fragment fragment = SearchFragment.getInstance(user.getId(), query);
             FragmentController.add(fragmentManager, fragment, layoutId);
             callback.accept(fragment);
         }
@@ -188,18 +194,18 @@ public enum ScreenNav {
 
     private static Fragment createEditTweetFragment(Bundle args) {
         if (args.containsKey(KEY_HASHTAG)) {
-            return Fragments.newEditorWithHashTag((HashtagEntity[])args.getSerializable(KEY_HASHTAG));
+            return EditTweetFragment.newEditorWithHashTag((HashtagEntity[])args.getSerializable(KEY_HASHTAG));
         }
 
         if (args.containsKey(KEY_TWEET)) {
-            return Fragments.newReplyEditorFromStatus((TweetEntity)args.getSerializable(KEY_TWEET));
+            return EditTweetFragment.newReplyEditorFromStatus((TweetEntity)args.getSerializable(KEY_TWEET));
         }
 
         if (args.containsKey(KEY_USER)) {
-            return Fragments.newReplyEditorFromUser((UserEntity)args.getSerializable(KEY_USER));
+            return EditTweetFragment.newReplyEditorFromUser((UserEntity)args.getSerializable(KEY_USER));
         }
 
-        return Fragments.newNormalEditor();
+        return EditTweetFragment.newNormalEditor();
     }
 
     private static long getUserId(Bundle args) {

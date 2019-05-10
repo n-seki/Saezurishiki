@@ -7,12 +7,16 @@ import com.seki.saezurishiki.model.adapter.ModelMessage;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
 import com.seki.saezurishiki.repository.UserRepository;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import twitter4j.Relationship;
 import twitter4j.TwitterException;
 
-
+@Singleton
 class UserScreenModelImp extends ModelBaseImp implements UserScreenModel {
 
+    @Inject
     UserScreenModelImp() {
         super();
     }

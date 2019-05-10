@@ -5,15 +5,15 @@ import com.seki.saezurishiki.model.TweetListModel;
 import com.seki.saezurishiki.model.adapter.ModelMessage;
 import com.seki.saezurishiki.model.adapter.RequestInfo;
 
+import javax.inject.Inject;
+
 import twitter4j.StatusDeletionNotice;
 
 public class ConversationPresenter extends TweetListPresenter {
 
-
     public ConversationPresenter(TweetListView view, long listOwnerId, TweetListModel listModel) {
         super(view, listOwnerId, listModel);
     }
-
 
     @Override
     void dispatch(ModelMessage message) {
