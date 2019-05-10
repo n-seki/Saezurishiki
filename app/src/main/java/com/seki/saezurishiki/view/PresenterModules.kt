@@ -1,10 +1,38 @@
-package com.seki.saezurishiki.view.fragment
+package com.seki.saezurishiki.view
 
-import com.seki.saezurishiki.model.TweetListModel
+import com.seki.saezurishiki.model.*
+import com.seki.saezurishiki.presenter.activity.LoginUserPresenter
+import com.seki.saezurishiki.presenter.activity.UserPresenter
+import com.seki.saezurishiki.presenter.editor.TweetEditorPresenter
 import com.seki.saezurishiki.presenter.list.*
 import dagger.Module
 import dagger.Provides
 import javax.inject.Named
+
+@Module
+class LoginUserModule {
+
+    @Provides
+    fun provideLoginUserPresenter(
+            view: LoginUserPresenter.View,
+            model: LoginUserScreen
+    ): LoginUserPresenter {
+        return LoginUserPresenter(model, view)
+    }
+}
+
+@Module
+class UserModule {
+
+    @Provides
+    fun provideUserPresenter(
+            view: UserPresenter.View,
+            userId: Long,
+            model: UserScreenModel
+    ): UserPresenter {
+        return UserPresenter(view, model, userId)
+    }
+}
 
 @Module
 class ConversationModule {
@@ -81,5 +109,43 @@ class UserTweetModule {
             @Named("user_tweet") model: TweetListModel
     ): TweetListPresenter {
         return UserTweetListPresenter(view, listOwnerId, model)
+    }
+}
+
+@Module
+class FriendListModule {
+
+    @Provides
+    fun provideFriendUserListPresenter(
+            view: UserListPresenter.View,
+            userId: Long,
+            @Named("friend") model: UserListModel
+    ): UserListPresenter {
+        return FriendListPresenter(view, model, userId)
+    }
+}
+
+@Module
+class FollowerListModule {
+
+    @Provides
+    fun provideFollowerUserListPresenter(
+            view: UserListPresenter.View,
+            userId: Long,
+            @Named("follower") model: UserListModel
+    ): UserListPresenter {
+        return FollowerListPresenter(view, model, userId)
+    }
+}
+
+@Module
+class TweetEditorModule {
+
+    @Provides
+    fun provideTweetEditorPresenter(
+            view: TweetEditorPresenter.View,
+            model: TweetEditorModel
+    ): TweetEditorPresenter {
+        return TweetEditorPresenter(view, model)
     }
 }

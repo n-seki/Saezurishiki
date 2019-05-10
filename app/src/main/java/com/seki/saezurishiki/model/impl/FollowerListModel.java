@@ -12,6 +12,7 @@ import com.seki.saezurishiki.repository.UserRepository;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import twitter4j.TwitterException;
@@ -22,6 +23,7 @@ public class FollowerListModel implements UserListModel {
     private final Executor executor;
     private final ModelObservable observable;
 
+    @Inject
     FollowerListModel() {
         this.executor = Executors.newCachedThreadPool();
         this.observable = new ModelObservable();

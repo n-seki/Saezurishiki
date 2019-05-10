@@ -2,7 +2,7 @@ package com.seki.saezurishiki.view.fragment.list
 
 import android.os.Bundle
 import com.seki.saezurishiki.application.SaezurishikiApp
-import com.seki.saezurishiki.view.fragment.HomeModule
+import com.seki.saezurishiki.view.HomeModule
 
 class HomeTimeLineFragment : UserStreamTimeLineFragment() {
 

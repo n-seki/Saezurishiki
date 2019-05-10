@@ -10,7 +10,6 @@ import android.widget.ArrayAdapter;
 import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.entity.UserEntity;
 import com.seki.saezurishiki.model.GetUserById;
-import com.seki.saezurishiki.model.impl.ModelContainer;
 import com.seki.saezurishiki.view.adapter.viewholder.UserViewHolder;
 import com.squareup.picasso.Picasso;
 
@@ -22,12 +21,13 @@ import static com.seki.saezurishiki.control.UIControlUtil.formatDate;
 public class UsersListAdapter extends ArrayAdapter<Long> {
 
     private LayoutInflater mLayoutInflater;
-    private GetUserById repositoryAccessor = ModelContainer.getUserById();
+    private GetUserById repositoryAccessor;
 
 
-    public UsersListAdapter(Context context, int resourceId) {
+    public UsersListAdapter(Context context, int resourceId, GetUserById repositoryAccessor) {
         super(context, resourceId);
         mLayoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.repositoryAccessor = repositoryAccessor;
     }
 
 

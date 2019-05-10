@@ -3,7 +3,7 @@ package com.seki.saezurishiki.view.fragment.list;
 import android.os.Bundle;
 
 import com.seki.saezurishiki.application.SaezurishikiApp;
-import com.seki.saezurishiki.view.fragment.UserTweetModule;
+import com.seki.saezurishiki.view.UserTweetModule;
 import com.seki.saezurishiki.view.fragment.util.DataType;
 
 /**

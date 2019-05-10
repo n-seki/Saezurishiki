@@ -22,7 +22,6 @@ import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.entity.TwitterEntity;
 import com.seki.saezurishiki.entity.UserEntity;
 import com.seki.saezurishiki.model.GetTweetById;
-import com.seki.saezurishiki.model.impl.ModelContainer;
 import com.seki.saezurishiki.view.customview.TweetStatusBar;
 import com.squareup.picasso.Picasso;
 
@@ -53,14 +52,14 @@ public class TimeLineAdapter extends ArrayAdapter<ListElement> {
         void onClickQuotedTweet(final TweetEntity status);
     }
 
-    public TimeLineAdapter(Context context, int resourceId, ViewListener listener) {
+    public TimeLineAdapter(Context context, int resourceId, ViewListener listener, GetTweetById repositoryAccessor) {
         super(context, resourceId);
 
         mLayoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mContext = context;
         mListener = listener;
 
-        this.repositoryAccessor = ModelContainer.getRepositoryAccessor();
+        this.repositoryAccessor = repositoryAccessor;
 
         this.buttons = new HashMap<>();
     }

@@ -27,6 +27,7 @@ import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.seki.saezurishiki.R;
+import com.seki.saezurishiki.application.SaezurishikiApp;
 import com.seki.saezurishiki.control.CustomToast;
 import com.seki.saezurishiki.control.FragmentController;
 import com.seki.saezurishiki.control.ScreenNav;
@@ -38,11 +39,11 @@ import com.seki.saezurishiki.file.CachManager;
 import com.seki.saezurishiki.file.EncryptUtil;
 import com.seki.saezurishiki.file.Serializer;
 import com.seki.saezurishiki.file.SharedPreferenceUtil;
-import com.seki.saezurishiki.model.impl.ModelContainer;
 import com.seki.saezurishiki.network.ConnectionReceiver;
 import com.seki.saezurishiki.network.twitter.TwitterAccount;
 import com.seki.saezurishiki.network.twitter.TwitterUtil;
 import com.seki.saezurishiki.presenter.activity.LoginUserPresenter;
+import com.seki.saezurishiki.view.LoginUserModule;
 import com.seki.saezurishiki.view.adapter.DrawerButtonListAdapter;
 import com.seki.saezurishiki.view.adapter.TimeLinePager;
 import com.seki.saezurishiki.view.control.FragmentControl;
@@ -55,6 +56,8 @@ import com.seki.saezurishiki.view.fragment.editor.EditTweetFragment;
 import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.Contract;
+
+import javax.inject.Inject;
 
 import twitter4j.HashtagEntity;
 
@@ -99,7 +102,8 @@ public class LoginUserActivity extends    AppCompatActivity
 
     private TwitterUserDrawerView userDrawerView;
 
-    private LoginUserPresenter presenter;
+    @Inject
+    LoginUserPresenter presenter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -128,7 +132,12 @@ public class LoginUserActivity extends    AppCompatActivity
         setTheme(theme);
         setContentView(R.layout.activity_home);
 
-        new LoginUserPresenter(ModelContainer.getLoginUserScreen(), this);
+        SaezurishikiApp.mApplicationComponent.loginUserComponentBuilder()
+                .presenterView(this)
+                .module(new LoginUserModule())
+                .build()
+                .inject(this);
+
         this.presenter.loadUser();
         this.setupActionBar();
         this.setupNavigationDrawer(theme);
@@ -289,8 +298,6 @@ public class LoginUserActivity extends    AppCompatActivity
 
 
     void applicationFinalizer() {
-        ModelContainer.destroy();
-
         if (presenter != null) {
             this.presenter.onDestroy();
         }

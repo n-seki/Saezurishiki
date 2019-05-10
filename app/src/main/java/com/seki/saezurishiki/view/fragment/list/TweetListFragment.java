@@ -19,6 +19,7 @@ import com.seki.saezurishiki.control.ScreenNav;
 import com.seki.saezurishiki.control.UIControlUtil;
 import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.entity.TwitterEntity;
+import com.seki.saezurishiki.model.GetTweetById;
 import com.seki.saezurishiki.model.adapter.RequestInfo;
 import com.seki.saezurishiki.network.twitter.TwitterError;
 import com.seki.saezurishiki.presenter.list.TweetListPresenter;
@@ -57,6 +58,9 @@ public abstract class TweetListFragment extends Fragment
     @Inject
     TweetListPresenter presenter;
 
+    @Inject
+    GetTweetById repositroyAccessor;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -89,7 +93,11 @@ public abstract class TweetListFragment extends Fragment
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mAdapter = new TimeLineAdapter(getActivity(), R.layout.tweet_layout_with_picture, presenter);
+        mAdapter = new TimeLineAdapter(
+                getActivity(),
+                R.layout.tweet_layout_with_picture,
+                presenter,
+                repositroyAccessor);
         mListView.setAdapter(mAdapter);
     }
 

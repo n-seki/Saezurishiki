@@ -8,7 +8,7 @@ import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.application.SaezurishikiApp;
 import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.model.adapter.RequestInfo;
-import com.seki.saezurishiki.view.fragment.ConversationModule;
+import com.seki.saezurishiki.view.ConversationModule;
 import com.seki.saezurishiki.view.fragment.util.DataType;
 
 /**

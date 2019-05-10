@@ -2,7 +2,6 @@ package com.seki.saezurishiki.view.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +12,6 @@ import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.control.ScreenNav;
 import com.seki.saezurishiki.entity.UserEntity;
 import com.seki.saezurishiki.view.customview.TwitterUserDrawerView;
-import com.seki.saezurishiki.view.fragment.Fragments;
-import com.seki.saezurishiki.view.fragment.other.SettingFragment;
-
-import java.util.function.Supplier;
-
-import static com.seki.saezurishiki.view.activity.UserActivity.SHOW_ACTIVITY;
 
 /**
  * Navigation Drawerボタンアイテム用Adapter<br>

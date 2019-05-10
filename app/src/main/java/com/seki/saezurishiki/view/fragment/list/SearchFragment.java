@@ -8,7 +8,7 @@ import android.view.MenuInflater;
 
 import com.seki.saezurishiki.application.SaezurishikiApp;
 import com.seki.saezurishiki.model.adapter.RequestInfo;
-import com.seki.saezurishiki.view.fragment.SearchModule;
+import com.seki.saezurishiki.view.SearchModule;
 import com.seki.saezurishiki.view.fragment.util.DataType;
 
 /**

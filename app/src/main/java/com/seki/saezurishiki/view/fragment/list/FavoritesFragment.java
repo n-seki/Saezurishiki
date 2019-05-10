@@ -3,7 +3,7 @@ package com.seki.saezurishiki.view.fragment.list;
 import android.os.Bundle;
 
 import com.seki.saezurishiki.application.SaezurishikiApp;
-import com.seki.saezurishiki.view.fragment.FavoriteModule;
+import com.seki.saezurishiki.view.FavoriteModule;
 import com.seki.saezurishiki.view.fragment.util.DataType;
 
 /**
