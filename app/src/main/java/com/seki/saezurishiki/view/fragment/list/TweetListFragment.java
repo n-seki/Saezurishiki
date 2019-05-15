@@ -128,12 +128,16 @@ public abstract class TweetListFragment extends Fragment
 
 
     protected void initComponents(View rootView) {
-        mListView = (ListView) rootView.findViewById(R.id.list);
-        mListView.setOnItemClickListener((parent, view, position, id) -> TweetListFragment.this.onItemClick(position));
+        mListView = rootView.findViewById(R.id.list);
+        mListView.setOnItemClickListener(
+                (parent, view, position, id) ->
+                        presenter.onItemClick((TweetEntity)mAdapter.getEntity(position)));
 
-        mListView.setOnItemLongClickListener((adapterView, view, position, l) -> TweetListFragment.this.onItemLongClick(position));
+        mListView.setOnItemLongClickListener(
+                (adapterView, view, position, l) ->
+                        TweetListFragment.this.onItemLongClick(position));
 
-        mFooterView = getActivity().getLayoutInflater().inflate(R.layout.read_more_tweet, null);
+        mFooterView = LayoutInflater.from(rootView.getContext()).inflate(R.layout.read_more_tweet, null);
         mFooterView.setOnClickListener(footer -> TweetListFragment.this.clickReadMoreButton());
 
         mFooterView.setTag(NEW_LOADING, false);
@@ -142,12 +146,10 @@ public abstract class TweetListFragment extends Fragment
         mListView.setFooterDividersEnabled(false);
     }
 
-
-    void onItemClick(int position) {
-        final TwitterEntity entity = mAdapter.getEntity(position);
-        TweetListFragment.this.showDialog((TweetEntity)entity);
+    @Override
+    public void showTweetDialog(TweetEntity tweet, int[] forbidAction) {
+        showDialog(tweet, forbidAction);
     }
-
 
     boolean onItemLongClick(int position) {
         final TwitterEntity entity = mAdapter.getEntity(position);
@@ -163,8 +165,8 @@ public abstract class TweetListFragment extends Fragment
     }
 
 
-    protected void showDialog(TweetEntity status) {
-        DialogFragment dialog = TweetSelectDialog.getInstance(status.getId());
+    protected void showDialog(TweetEntity status, int[] forbidActions) {
+        DialogFragment dialog = TweetSelectDialog.getInstance(status.getId(), forbidActions);
         dialog.setTargetFragment(this, 0);
         dialog.show(getFragmentManager(), "tweet_select");
     }

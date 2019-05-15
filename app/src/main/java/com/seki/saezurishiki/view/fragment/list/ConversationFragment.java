@@ -2,7 +2,6 @@ package com.seki.saezurishiki.view.fragment.list;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ListView;
 
 import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.application.SaezurishikiApp;
@@ -47,14 +46,14 @@ public class ConversationFragment extends TweetListFragment {
 
     @Override
     protected void initComponents(View rootView) {
-        mListView = (ListView) rootView.findViewById(R.id.list);
+        mListView = rootView.findViewById(R.id.list);
         mListView.setOnItemLongClickListener((adapterView, view, i, l) -> {
             ConversationFragment.this.showLongClickDialog((TweetEntity)mAdapter.getEntity(i));
             return false;
         });
 
         mListView.setOnItemClickListener((adapterView, view, i, l) -> {
-            ConversationFragment.this.showDialog((TweetEntity)mAdapter.getEntity(i));
+            presenter.onItemClick((TweetEntity)mAdapter.getEntity(i));
         });
         mListView.setSmoothScrollbarEnabled(true);
         mListView.setAdapter(mAdapter);
