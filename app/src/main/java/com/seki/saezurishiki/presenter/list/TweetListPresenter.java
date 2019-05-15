@@ -38,6 +38,7 @@ public abstract class TweetListPresenter implements TimeLineAdapter.ViewListener
         void openLink(String url);
         void openReplyEditor(TweetEntity tweet);
         void showPicture(TweetEntity tweet, int position);
+        void showTweetDialog(TweetEntity tweet, int[] forbidAction);
         void showReTweetDialog(TweetEntity tweet);
         void showFavoriteDialog(TweetEntity tweet);
         void showLongClickDialog(TweetEntity tweet);
@@ -57,6 +58,10 @@ public abstract class TweetListPresenter implements TimeLineAdapter.ViewListener
         this.view = view;
         this.listOwnerId = listOwnerId;
         this.tweetListModel = listModel;
+    }
+
+    public void onItemClick(TweetEntity tweet) {
+        view.showTweetDialog(tweet, getForbidDialogActions());
     }
 
     public void onLongClickListItem(TwitterEntity entity) {
@@ -242,6 +247,9 @@ public abstract class TweetListPresenter implements TimeLineAdapter.ViewListener
         new Handler(Looper.getMainLooper()).post(() -> dispatch(message));
     }
 
+    protected int[] getForbidDialogActions() {
+        return new int[0];
+    }
 
     abstract void dispatch(ModelMessage message);
 
