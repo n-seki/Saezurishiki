@@ -187,7 +187,7 @@ public enum ScreenNav {
 
         @Override
         public int getTitleId() {
-            return -1;
+            return R.string.title_picture;
         }
     };
 

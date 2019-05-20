@@ -75,8 +75,8 @@
     <string name="user_icon">user icon</string>
 
     <!-- title -->
-    <string name="title_edit_tweet">Edit Tweet</string>
-    <string name="title_conversation">Conversation</string>
+    <string name="title_edit_tweet">ツイートする</string>
+    <string name="title_conversation">会話</string>
     <string name="title_favorite">Favorite</string>
     <string name="title_follower">Follower</string>
     <string name="title_friend">Friends</string>
@@ -84,6 +84,7 @@
     <string name="title_license">囀り式について</string>
     <string name="title_setting">Setting</string>
     <string name="title_search">検索結果</string>
+    <string name="title_picture">画像</string>
 
     <string name="send">送信</string>
     <string name="zero">0</string>
