@@ -41,18 +41,13 @@ import javax.inject.Inject;
 
 import static com.seki.saezurishiki.control.ScreenNav.KEY_USER;
 
-public class UserActivity extends    AppCompatActivity
-                          implements EditTweetFragment.Callback,
-                                     FragmentControl, UserPresenter.View {
+public class UserActivity extends AppCompatActivity
+        implements EditTweetFragment.Callback, FragmentControl, UserPresenter.View {
 
     public static final String USER_ID = "userID";
 
-    public static final int SHOW_ACTIVITY = 0x0800;
-
     private FragmentController mFragmentController;
     private DrawerButtonListAdapter mListAdapter;
-
-    private Setting setting;
 
     @Inject
     UserPresenter presenter;
@@ -63,8 +58,8 @@ public class UserActivity extends    AppCompatActivity
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         super.onCreate(savedInstanceState);
 
-        this.setting = new Setting();
-        final int theme = this.setting.getTheme();
+        Setting setting = new Setting();
+        final int theme = setting.getTheme();
         setTheme(theme);
         setContentView(R.layout.activity_biography);
 
@@ -95,7 +90,7 @@ public class UserActivity extends    AppCompatActivity
 
     @Override
     public void setupActionBar(UserEntity owner) {
-        Toolbar toolbar = (Toolbar)findViewById(R.id.tool_bar);
+        Toolbar toolbar = findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if ( actionBar == null ) {
@@ -109,18 +104,18 @@ public class UserActivity extends    AppCompatActivity
 
     @Override
     public void setupBioInformation(UserEntity owner) {
-        ViewPager headerPage = (ViewPager)findViewById(R.id.bio_header_page);
+        ViewPager headerPage = findViewById(R.id.bio_header_page);
         PagerAdapter pagerAdapter = new BioHeaderPageAdapter(getSupportFragmentManager(), owner);
         headerPage.setAdapter(pagerAdapter);
         headerPage.setCurrentItem(1);
 
-        Button replyButton = (Button)findViewById(R.id.bio_reply_button);
+        Button replyButton = findViewById(R.id.bio_reply_button);
         replyButton.setOnClickListener(view -> UserActivity.this.displayFragment(ScreenNav.TWEET_EDITOR, owner));
 
-        Button followButton = (Button)findViewById(R.id.bio_follow_button);
+        Button followButton = findViewById(R.id.bio_follow_button);
         followButton.setOnClickListener(view -> presenter.onClickFollowButton());
 
-        ListView drawerList = (ListView)findViewById(R.id.bio_drawer_list);
+        ListView drawerList = findViewById(R.id.bio_drawer_list);
         mListAdapter.setUserItem(owner);
         drawerList.setAdapter(mListAdapter);
         drawerList.setOnItemClickListener(drawerItemClickListener);
@@ -133,20 +128,20 @@ public class UserActivity extends    AppCompatActivity
 
     @Override
     public void disableFollowButton() {
-        Button followButton = (Button)findViewById(R.id.bio_follow_button);
+        Button followButton = findViewById(R.id.bio_follow_button);
         followButton.setClickable(false);
         followButton.setTextColor(ContextCompat.getColor(this, R.color.gray_808080));
     }
 
     @Override
     public void setFollowButton() {
-        Button followButton = (Button)findViewById(R.id.bio_follow_button);
+        Button followButton = findViewById(R.id.bio_follow_button);
         followButton.setText(R.string.follow_button_label);
     }
 
     @Override
     public void setRemoveButton() {
-        Button followButton = (Button)findViewById(R.id.bio_follow_button);
+        Button followButton = findViewById(R.id.bio_follow_button);
         followButton.setText(R.string.remove_button_label);
     }
 

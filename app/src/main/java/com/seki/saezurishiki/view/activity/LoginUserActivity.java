@@ -70,13 +70,9 @@ import static com.seki.saezurishiki.control.ScreenNav.KEY_USER;
  * 主にFragmentの管理,各コールバックの実装,ActionBar/NavigationDrawerの管理など
  * @author seki
  */
-public class LoginUserActivity extends    AppCompatActivity
-                               implements ViewPager.OnPageChangeListener,
-                                          EditTweetFragment.Callback,
-                                          ConnectionReceiver.Observer,
-                                          TabViewControl,
-                                          FragmentControl,
-                                          LoginUserPresenter.View {
+public class LoginUserActivity extends AppCompatActivity
+        implements ViewPager.OnPageChangeListener, EditTweetFragment.Callback,
+        ConnectionReceiver.Observer, TabViewControl, FragmentControl, LoginUserPresenter.View {
 
     private ConnectionReceiver mReceiver;
 
@@ -178,22 +174,20 @@ public class LoginUserActivity extends    AppCompatActivity
         });
     }
 
-
     private void setupNavigationDrawer(int theme) {
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout = findViewById(R.id.drawer_layout);
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close);
         mDrawerLayout.addDrawerListener(mDrawerToggle);
         mDrawerToggle.setDrawerIndicatorEnabled(true);
 
-        this.userDrawerView = (TwitterUserDrawerView)findViewById(R.id.drawer);
+        this.userDrawerView = findViewById(R.id.drawer);
         DrawerButtonListAdapter adapter = new DrawerButtonListAdapter(this, R.layout.drawer_list_button, theme);
         this.userDrawerView.setOnListButtonClickListener(this.drawerItemClickListener);
         this.userDrawerView.setAdapter(adapter);
     }
 
-
     private void setupTweetButton(int theme) {
-        FloatingActionButton editTweetButton = (FloatingActionButton) findViewById(R.id.edit_tweet_button);
+        FloatingActionButton editTweetButton = findViewById(R.id.edit_tweet_button);
         editTweetButton.setOnClickListener(v -> {
             Bundle args = new Bundle();
             if (mHashTagEntities != null) {
@@ -205,7 +199,7 @@ public class LoginUserActivity extends    AppCompatActivity
     }
 
     private void setupActionBar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        Toolbar toolbar = findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -213,7 +207,6 @@ public class LoginUserActivity extends    AppCompatActivity
             this.replaceTitle(R.string.actionbar_home);
         }
     }
-
 
     private final AdapterView.OnItemClickListener drawerItemClickListener = (parent, view, position, id) -> {
         mDrawerLayout.closeDrawer(GravityCompat.START);
@@ -228,30 +221,26 @@ public class LoginUserActivity extends    AppCompatActivity
                 });
     };
 
-
     private void setupTimeLine(int theme) {
         TimeLinePager pagerAdapter = new TimeLinePager(getSupportFragmentManager(), TwitterAccount.getLoginUserId());
 
-        mViewPager = (ViewPager) LoginUserActivity.this.findViewById(R.id.pager);
+        mViewPager = LoginUserActivity.this.findViewById(R.id.pager);
         mViewPager.addOnPageChangeListener(LoginUserActivity.this);
         mViewPager.setAdapter(pagerAdapter);
         mViewPager.setOffscreenPageLimit(2);
 
-        NotificationTabLayout tabLayout = (NotificationTabLayout) LoginUserActivity.this.findViewById(R.id.fragmentTab);
+        NotificationTabLayout tabLayout = LoginUserActivity.this.findViewById(R.id.fragmentTab);
         tabLayout.setupWithViewPager(mViewPager);
         tabLayout.setSelectedTabIndicatorColor(UIControlUtil.textColor(this));
 
         tabLayout.setup(theme);
     }
 
-
-
     @Override
     public void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         mDrawerToggle.syncState();
     }
-
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -261,7 +250,6 @@ public class LoginUserActivity extends    AppCompatActivity
         outState.putInt("tab-position", mTabPosition);
     }
 
-
     @Override
     public void onRestoreInstanceState(@NonNull Bundle inState) {
         super.onRestoreInstanceState(inState);
@@ -270,7 +258,6 @@ public class LoginUserActivity extends    AppCompatActivity
         mTabPosition = inState.getInt("tab-position");
     }
 
-
     @Override
     public void onResume() {
         super.onResume();
@@ -278,7 +265,6 @@ public class LoginUserActivity extends    AppCompatActivity
             this.presenter.onResume();
         }
     }
-
 
     @Override
     public void onPause() {
@@ -289,13 +275,11 @@ public class LoginUserActivity extends    AppCompatActivity
         CustomToast.cancelToast();
     }
 
-
     @Override
     public void onDestroy() {
         this.applicationFinalizer();
         super.onDestroy();
     }
-
 
     void applicationFinalizer() {
         if (presenter != null) {
@@ -309,8 +293,6 @@ public class LoginUserActivity extends    AppCompatActivity
         CachManager.deleteCache(this);
         Serializer.saveUser(this, mLoginUser);
     }
-
-
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
@@ -329,8 +311,6 @@ public class LoginUserActivity extends    AppCompatActivity
     @Override
     public void onPageScrollStateChanged(int state) {}
 
-
-
     private void changeActionBarIndicatorState() {
         if (getSupportActionBar() == null) {
             throw new IllegalStateException("ActionBar is null!");
@@ -339,7 +319,6 @@ public class LoginUserActivity extends    AppCompatActivity
         getSupportActionBar().setHomeButtonEnabled(true);
         mDrawerToggle.setDrawerIndicatorEnabled(false);
     }
-
 
     private void addFragment(ScreenNav screenNav, Bundle args) {
         screenNav.transition(this, getSupportFragmentManager(), R.id.home_container, args,
@@ -350,29 +329,19 @@ public class LoginUserActivity extends    AppCompatActivity
                 });
     }
 
-
     @Override
     public void removeEditTweetFragment(Fragment tweetEditor) {
         onBackPressed();
     }
-
-
 
     @Override
     public void onConnect() {
         this.presenter.connectNetwork();
     }
 
-
     @Override
     public void onDisconnect() {
         this.presenter.disconnectNetwork();
-    }
-
-    private void replaceTitle(String title) {
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar == null) throw new NullPointerException("ActionBar is null!");
-        actionBar.setTitle(title);
     }
 
     private void replaceTitle(int title) {
@@ -445,7 +414,6 @@ public class LoginUserActivity extends    AppCompatActivity
         return true;
     }
 
-
     private final MenuItem.OnActionExpandListener SEARCH_VIEW_EX_LISTENER = new MenuItem.OnActionExpandListener() {
         @Override
         public boolean onMenuItemActionExpand(MenuItem item) {
@@ -478,8 +446,6 @@ public class LoginUserActivity extends    AppCompatActivity
             return false;
         }
     };
-
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -528,8 +494,6 @@ public class LoginUserActivity extends    AppCompatActivity
         dialogFragment.show(getSupportFragmentManager(), "YesNoSelectDialog");
     }
 
-
-
     @Override
     public void onBackPressed() {
         //Navigation Drawerが開いていたら閉じる
@@ -563,7 +527,6 @@ public class LoginUserActivity extends    AppCompatActivity
         super.onBackPressed();
     }
 
-
     void onHomePressed() {
         mFragmentController.removeAllFragment(R.id.home_container);
         mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
@@ -576,7 +539,6 @@ public class LoginUserActivity extends    AppCompatActivity
         changeTitle();
         ((FloatingActionButton)LoginUserActivity.this.findViewById(R.id.edit_tweet_button)).show();
     }
-
 
     @Override
     public void onCompletePostTweet(TweetEntity tweet) {
@@ -591,7 +553,6 @@ public class LoginUserActivity extends    AppCompatActivity
 
         this.mHashTagEntities = hashTagEntity;
     }
-
 
     /**
      * ActionBarのタイトルを変更する
@@ -608,7 +569,6 @@ public class LoginUserActivity extends    AppCompatActivity
         this.changeTitle(mViewPager.getCurrentItem());
     }
 
-
     private void changeTitle(int tabPosition) {
         if (tabPosition == TimeLinePager.POSITION_HOME) {
             this.replaceTitle(R.string.actionbar_home);
@@ -618,7 +578,6 @@ public class LoginUserActivity extends    AppCompatActivity
             throw new IllegalStateException("onPageSelected position is " + tabPosition);
         }
     }
-
 
     public void logout() {
         Intent intent = new Intent(this, TwitterOauthActivity.class);
@@ -640,7 +599,6 @@ public class LoginUserActivity extends    AppCompatActivity
         ((NotificationTabLayout)findViewById(R.id.fragmentTab)).onRequestChangeTab(
                 view.tabPosition(), view.getRequestTabState());
     }
-
 
     @Override
     public void requestChangeScreen(ScreenNav screenNav, Bundle args) {
