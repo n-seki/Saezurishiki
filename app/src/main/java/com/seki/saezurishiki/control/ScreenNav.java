@@ -3,6 +3,8 @@ package com.seki.saezurishiki.control;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
@@ -20,6 +22,9 @@ import com.seki.saezurishiki.view.fragment.list.UserTweetFragment;
 import com.seki.saezurishiki.view.fragment.other.LicenseFragment;
 import com.seki.saezurishiki.view.fragment.other.PictureFragment;
 import com.seki.saezurishiki.view.fragment.other.SettingFragment;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import twitter4j.HashtagEntity;
 
@@ -216,9 +221,34 @@ public enum ScreenNav {
         return args.getLong(KEY_USER_ID);
     }
 
+    @StringRes
+    @NonNull
+    public static int getTitle(Class<? extends Fragment> fClass) {
+        Integer id = FRAGMENT_TITLE_MAP.get(fClass);
+        if (id == null) {
+            throw new IllegalStateException("No title for " + fClass.toString());
+        }
+        return id;
+    }
+
 
     public abstract void transition(Context context, FragmentManager fragmentManager, int layoutId, Bundle args, Consumer<Fragment> callback);
     public abstract int getTitleId();
+
+    private static Map<Class<? extends Fragment>, Integer> FRAGMENT_TITLE_MAP = new HashMap<>();
+
+    static {
+        FRAGMENT_TITLE_MAP.put(SettingFragment.class, R.string.title_setting);
+        FRAGMENT_TITLE_MAP.put(UserTweetFragment.class, R.string.title_user_tweet);
+        FRAGMENT_TITLE_MAP.put(FavoritesFragment.class, R.string.title_favorite);
+        FRAGMENT_TITLE_MAP.put(FriendListFragment.class, R.string.title_friend);
+        FRAGMENT_TITLE_MAP.put(FollowerListFragment.class, R.string.title_follower);
+        FRAGMENT_TITLE_MAP.put(EditTweetFragment.class, R.string.title_edit_tweet);
+        FRAGMENT_TITLE_MAP.put(ConversationFragment.class, R.string.title_conversation);
+        FRAGMENT_TITLE_MAP.put(LicenseFragment.class, R.string.title_license);
+        FRAGMENT_TITLE_MAP.put(SearchFragment.class, R.string.title_search);
+        FRAGMENT_TITLE_MAP.put(PictureFragment.class, R.string.title_picture);
+    }
 
     public static String KEY_USER = "user";
     public static String KEY_USER_ID = "user_id";

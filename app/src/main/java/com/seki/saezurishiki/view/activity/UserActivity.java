@@ -285,6 +285,15 @@ public class UserActivity extends    AppCompatActivity
         actionBar.setSubtitle(subTitle);
     }
 
+    private void replaceTitle(String title, @StringRes int subTitle) {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar == null) {
+            return;
+        }
+        actionBar.setTitle(title);
+        actionBar.setSubtitle(subTitle);
+    }
+
     @Override
     public void updateTitle(UserEntity user) {
         if (!mFragmentController.hasFragment()) {
@@ -293,7 +302,7 @@ public class UserActivity extends    AppCompatActivity
         }
 
         Fragment currentFragment = mFragmentController.getFragment(R.id.biography_container);
-        replaceTitle(user.getName(), currentFragment.toString());
+        replaceTitle(user.getName(), ScreenNav.getTitle(currentFragment.getClass()));
     }
 
     private void changeSubtitle(@StringRes int id) {

@@ -602,11 +602,9 @@ public class LoginUserActivity extends    AppCompatActivity
     protected void changeTitle() {
         if (mFragmentController.hasFragment()) {
             Fragment currentFragment = mFragmentController.getFragment(R.id.home_container);
-            replaceTitle(currentFragment.toString());
+            replaceTitle(ScreenNav.getTitle(currentFragment.getClass()));
             return;
         }
-
-
         this.changeTitle(mViewPager.getCurrentItem());
     }
 
