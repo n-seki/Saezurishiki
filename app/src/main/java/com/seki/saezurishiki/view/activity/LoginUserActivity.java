@@ -222,7 +222,7 @@ public class LoginUserActivity extends    AppCompatActivity
         args.putSerializable(KEY_USER, mLoginUser);
         screenNav.transition(this, getSupportFragmentManager(), R.id.home_container, args,
                 fragment -> {
-                    replaceTitle(screenNav.getTitleId());
+                    replaceTitle(ScreenNav.getTitle(fragment.getClass()));
                     changeActionBarIndicatorState();
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                 });
@@ -344,7 +344,7 @@ public class LoginUserActivity extends    AppCompatActivity
     private void addFragment(ScreenNav screenNav, Bundle args) {
         screenNav.transition(this, getSupportFragmentManager(), R.id.home_container, args,
                 fragment -> {
-                    replaceTitle(screenNav.getTitleId());
+                    replaceTitle(ScreenNav.getTitle(fragment.getClass()));
                     changeActionBarIndicatorState();
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                 });

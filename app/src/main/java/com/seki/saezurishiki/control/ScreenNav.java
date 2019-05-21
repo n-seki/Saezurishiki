@@ -3,7 +3,6 @@ package com.seki.saezurishiki.control;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -39,11 +38,6 @@ public enum ScreenNav {
             intent.putExtra(UserActivity.USER_ID, userId);
             context.startActivity(intent);
         }
-
-        @Override
-        public int getTitleId() {
-            return -1;
-        }
     },
 
     SETTING {
@@ -52,11 +46,6 @@ public enum ScreenNav {
             Fragment fragment = SettingFragment.getInstance();
             FragmentController.add(fragmentManager, fragment, layoutId);
             callback.accept(fragment);
-        }
-
-        @Override
-        public int getTitleId() {
-            return R.string.title_setting;
         }
     },
 
@@ -68,11 +57,6 @@ public enum ScreenNav {
             FragmentController.add(fragmentManager, fragment, layoutId);
             callback.accept(fragment);
         }
-
-        @Override
-        public int getTitleId() {
-            return R.string.title_user_tweet;
-        }
     },
 
     FAVORITE {
@@ -82,11 +66,6 @@ public enum ScreenNav {
             Fragment fragment = FavoritesFragment.getInstance(user.getId(), user.getFavouritesCount());
             FragmentController.add(fragmentManager, fragment, layoutId);
             callback.accept(fragment);
-        }
-
-        @Override
-        public int getTitleId() {
-            return R.string.title_favorite;
         }
     },
 
@@ -98,11 +77,6 @@ public enum ScreenNav {
             FragmentController.add(fragmentManager, fragment, layoutId);
             callback.accept(fragment);
         }
-
-        @Override
-        public int getTitleId() {
-            return R.string.title_friend;
-        }
     },
 
     FOLLOWER {
@@ -113,11 +87,6 @@ public enum ScreenNav {
             FragmentController.add(fragmentManager, fragment, layoutId);
             callback.accept(fragment);
         }
-
-        @Override
-        public int getTitleId() {
-            return R.string.title_follower;
-        }
     },
 
     TWEET_EDITOR {
@@ -126,11 +95,6 @@ public enum ScreenNav {
             final Fragment fragment = ScreenNav.createEditTweetFragment(args);
             FragmentController.add(fragmentManager, fragment, layoutId);
             callback.accept(fragment);
-        }
-
-        @Override
-        public int getTitleId() {
-            return R.string.title_edit_tweet;
         }
     },
 
@@ -143,11 +107,6 @@ public enum ScreenNav {
             FragmentController.add(fragmentManager, fragment, layoutId);
             callback.accept(fragment);
         }
-
-        @Override
-        public int getTitleId() {
-            return R.string.title_conversation;
-        }
     },
 
     LICENSE {
@@ -156,11 +115,6 @@ public enum ScreenNav {
             Fragment fragment = LicenseFragment.newInstance();
             FragmentController.add(fragmentManager, fragment, layoutId);
             callback.accept(fragment);
-        }
-
-        @Override
-        public int getTitleId() {
-            return R.string.title_license;
         }
     },
 
@@ -173,11 +127,6 @@ public enum ScreenNav {
             FragmentController.add(fragmentManager, fragment, layoutId);
             callback.accept(fragment);
         }
-
-        @Override
-        public int getTitleId() {
-            return R.string.title_search;
-        }
     },
 
     PICTURE {
@@ -188,11 +137,6 @@ public enum ScreenNav {
             Fragment fragment = PictureFragment.getInstance(position, tweet);
             FragmentController.add(fragmentManager, fragment, layoutId);
             callback.accept(fragment);
-        }
-
-        @Override
-        public int getTitleId() {
-            return R.string.title_picture;
         }
     };
 
@@ -222,7 +166,6 @@ public enum ScreenNav {
     }
 
     @StringRes
-    @NonNull
     public static int getTitle(Class<? extends Fragment> fClass) {
         Integer id = FRAGMENT_TITLE_MAP.get(fClass);
         if (id == null) {
@@ -233,7 +176,6 @@ public enum ScreenNav {
 
 
     public abstract void transition(Context context, FragmentManager fragmentManager, int layoutId, Bundle args, Consumer<Fragment> callback);
-    public abstract int getTitleId();
 
     private static Map<Class<? extends Fragment>, Integer> FRAGMENT_TITLE_MAP = new HashMap<>();
 

@@ -390,7 +390,7 @@ public class UserActivity extends    AppCompatActivity
     public void requestChangeScreen(ScreenNav screenNav, Bundle args) {
         screenNav.transition(this, getSupportFragmentManager(), R.id.biography_container, args,
                 fragment -> {
-                    changeSubtitle(screenNav.getTitleId());
+                    changeSubtitle(ScreenNav.getTitle(fragment.getClass()));
                     changeActionBarIndicatorState();
                 });
     }
