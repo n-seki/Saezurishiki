@@ -26,6 +26,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
+import com.seki.saezurishiki.BuildConfig;
 import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.application.SaezurishikiApp;
 import com.seki.saezurishiki.control.CustomToast;
@@ -53,6 +54,7 @@ import com.seki.saezurishiki.view.customview.NotificationTabLayout;
 import com.seki.saezurishiki.view.customview.TwitterUserDrawerView;
 import com.seki.saezurishiki.view.fragment.dialog.YesNoSelectDialog;
 import com.seki.saezurishiki.view.fragment.editor.EditTweetFragment;
+import com.seki.saezurishiki.view.fragment.other.PictureFragment;
 import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.Contract;
@@ -72,29 +74,21 @@ import static com.seki.saezurishiki.control.ScreenNav.KEY_USER;
  */
 public class LoginUserActivity extends AppCompatActivity
         implements ViewPager.OnPageChangeListener, EditTweetFragment.Callback,
-        ConnectionReceiver.Observer, TabViewControl, FragmentControl, LoginUserPresenter.View {
+        ConnectionReceiver.Observer, TabViewControl, FragmentControl,
+        PictureFragment.Listener, LoginUserPresenter.View {
 
     private ConnectionReceiver mReceiver;
-
     private HashtagEntity[] mHashTagEntities;
-
     private SearchView mSearchView;
-
     private DrawerLayout mDrawerLayout;
-
     private int mDisplayPosition = -1;
-
     private FragmentController mFragmentController;
-
     private ActionBarDrawerToggle mDrawerToggle;
-
     private UserEntity mLoginUser;
-
     private ViewPager mViewPager;
-
-    private final boolean DEBUG = false;
-
     private int mTabPosition = 0;
+    private int mPictureNum = 0;
+    private int mPicturePosition = 0;
 
     private TwitterUserDrawerView userDrawerView;
 
@@ -106,7 +100,7 @@ public class LoginUserActivity extends AppCompatActivity
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         super.onCreate(savedInstanceState);
 
-        if (DEBUG) {
+        if (BuildConfig.DEBUG) {
             this.setExceptionHandle();
             Picasso.with(this).setIndicatorsEnabled(true);
             String result = EncryptUtil.encrypt("test", this);
@@ -348,6 +342,15 @@ public class LoginUserActivity extends AppCompatActivity
         ActionBar actionBar = getSupportActionBar();
         if (actionBar == null) throw new NullPointerException("ActionBar is null!");
         actionBar.setTitle(title);
+        actionBar.setSubtitle(null);
+    }
+
+    private void replaceSubTitle(String subTitle) {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar == null) {
+            throw new NullPointerException("ActionBar is null!");
+        }
+        actionBar.setSubtitle(subTitle);
     }
 
     @Override
@@ -556,14 +559,20 @@ public class LoginUserActivity extends AppCompatActivity
 
     /**
      * ActionBarのタイトルを変更する
+     *
      * Fragmentが表示されている場合には,そのタイトルを{@code toString}で取得しする
-     * 表示していない場合には{@code ViewPager}より表示中のitem positionを取得して,
-     * そのFragmentのタイトルを表示する
+     * 表示されていない場合には{@code ViewPager}より表示中のFragmentタイトルを表示する
      */
     protected void changeTitle() {
         if (mFragmentController.hasFragment()) {
             Fragment currentFragment = mFragmentController.getFragment(R.id.home_container);
-            replaceTitle(ScreenNav.getTitle(currentFragment.getClass()));
+            Class<? extends Fragment> fClass = currentFragment.getClass();
+            replaceTitle(ScreenNav.getTitle(fClass));
+            if (fClass == PictureFragment.class) {
+                if (mPictureNum != 0 && mPicturePosition != 0) {
+                    applyPictureInfoToTitle();
+                }
+            }
             return;
         }
         this.changeTitle(mViewPager.getCurrentItem());
@@ -615,5 +624,17 @@ public class LoginUserActivity extends AppCompatActivity
     @Override
     public void setPresenter(LoginUserPresenter presenter) {
         this.presenter = presenter;
+    }
+
+    @Override
+    public void onChangePicture(int pictureNum, int position) {
+        mPictureNum = pictureNum;
+        mPicturePosition = position;
+        applyPictureInfoToTitle();
+    }
+
+    private void applyPictureInfoToTitle() {
+        String subTitle = getString(R.string.sub_title_picture, mPicturePosition, mPictureNum);
+        replaceSubTitle(subTitle);
     }
 }

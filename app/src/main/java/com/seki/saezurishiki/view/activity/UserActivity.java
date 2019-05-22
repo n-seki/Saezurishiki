@@ -36,18 +36,22 @@ import com.seki.saezurishiki.view.control.FragmentControl;
 import com.seki.saezurishiki.view.UserModule;
 import com.seki.saezurishiki.view.fragment.dialog.YesNoSelectDialog;
 import com.seki.saezurishiki.view.fragment.editor.EditTweetFragment;
+import com.seki.saezurishiki.view.fragment.other.PictureFragment;
 
 import javax.inject.Inject;
 
 import static com.seki.saezurishiki.control.ScreenNav.KEY_USER;
 
 public class UserActivity extends AppCompatActivity
-        implements EditTweetFragment.Callback, FragmentControl, UserPresenter.View {
+        implements EditTweetFragment.Callback, FragmentControl,
+        PictureFragment.Listener, UserPresenter.View {
 
     public static final String USER_ID = "userID";
 
     private FragmentController mFragmentController;
     private DrawerButtonListAdapter mListAdapter;
+    private int mPictureNum;
+    private int mPicturePosition;
 
     @Inject
     UserPresenter presenter;
@@ -274,8 +278,9 @@ public class UserActivity extends AppCompatActivity
 
     private void replaceTitle(String title, String subTitle) {
         ActionBar actionBar = getSupportActionBar();
-        if (actionBar == null) throw new NullPointerException("ActionBar is null!");
-
+        if (actionBar == null) {
+            throw new NullPointerException("ActionBar is null!");
+        }
         actionBar.setTitle(title);
         actionBar.setSubtitle(subTitle);
     }
@@ -289,6 +294,14 @@ public class UserActivity extends AppCompatActivity
         actionBar.setSubtitle(subTitle);
     }
 
+    private void replaceSubTitle(String subTitle) {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar == null) {
+            throw new NullPointerException("ActionBar is null!");
+        }
+        actionBar.setSubtitle(subTitle);
+    }
+
     @Override
     public void updateTitle(UserEntity user) {
         if (!mFragmentController.hasFragment()) {
@@ -297,12 +310,22 @@ public class UserActivity extends AppCompatActivity
         }
 
         Fragment currentFragment = mFragmentController.getFragment(R.id.biography_container);
-        replaceTitle(user.getName(), ScreenNav.getTitle(currentFragment.getClass()));
+        Class<? extends Fragment> fClass = currentFragment.getClass();
+        if (fClass == PictureFragment.class) {
+            if (mPictureNum != 0 && mPicturePosition != 0) {
+                replaceTitle(user.getName(),
+                        getString(R.string.sub_title_picture, mPicturePosition, mPictureNum));
+            }
+        } else {
+            replaceTitle(user.getName(), ScreenNav.getTitle(currentFragment.getClass()));
+        }
     }
 
     private void changeSubtitle(@StringRes int id) {
         ActionBar actionBar = getSupportActionBar();
-        if (actionBar == null) throw new NullPointerException("ActionBar is null!");
+        if (actionBar == null) {
+            throw new NullPointerException("ActionBar is null!");
+        }
         actionBar.setSubtitle(id);
     }
 
@@ -390,4 +413,15 @@ public class UserActivity extends AppCompatActivity
                 });
     }
 
+    @Override
+    public void onChangePicture(int pictureNum, int position) {
+        mPictureNum = pictureNum;
+        mPicturePosition = position;
+        applyPictureInfoToTitle();
+    }
+
+    private void applyPictureInfoToTitle() {
+        String subTitle = getString(R.string.sub_title_picture, mPicturePosition, mPictureNum);
+        replaceSubTitle(subTitle);
+    }
 }
