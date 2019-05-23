@@ -36,23 +36,22 @@ import com.seki.saezurishiki.view.control.FragmentControl;
 import com.seki.saezurishiki.view.UserModule;
 import com.seki.saezurishiki.view.fragment.dialog.YesNoSelectDialog;
 import com.seki.saezurishiki.view.fragment.editor.EditTweetFragment;
+import com.seki.saezurishiki.view.fragment.other.PictureFragment;
 
 import javax.inject.Inject;
 
 import static com.seki.saezurishiki.control.ScreenNav.KEY_USER;
 
-public class UserActivity extends    AppCompatActivity
-                          implements EditTweetFragment.Callback,
-                                     FragmentControl, UserPresenter.View {
+public class UserActivity extends AppCompatActivity
+        implements EditTweetFragment.Callback, FragmentControl,
+        PictureFragment.Listener, UserPresenter.View {
 
     public static final String USER_ID = "userID";
 
-    public static final int SHOW_ACTIVITY = 0x0800;
-
     private FragmentController mFragmentController;
     private DrawerButtonListAdapter mListAdapter;
-
-    private Setting setting;
+    private int mPictureNum;
+    private int mPicturePosition;
 
     @Inject
     UserPresenter presenter;
@@ -63,8 +62,8 @@ public class UserActivity extends    AppCompatActivity
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         super.onCreate(savedInstanceState);
 
-        this.setting = new Setting();
-        final int theme = this.setting.getTheme();
+        Setting setting = new Setting();
+        final int theme = setting.getTheme();
         setTheme(theme);
         setContentView(R.layout.activity_biography);
 
@@ -95,7 +94,7 @@ public class UserActivity extends    AppCompatActivity
 
     @Override
     public void setupActionBar(UserEntity owner) {
-        Toolbar toolbar = (Toolbar)findViewById(R.id.tool_bar);
+        Toolbar toolbar = findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if ( actionBar == null ) {
@@ -109,18 +108,18 @@ public class UserActivity extends    AppCompatActivity
 
     @Override
     public void setupBioInformation(UserEntity owner) {
-        ViewPager headerPage = (ViewPager)findViewById(R.id.bio_header_page);
+        ViewPager headerPage = findViewById(R.id.bio_header_page);
         PagerAdapter pagerAdapter = new BioHeaderPageAdapter(getSupportFragmentManager(), owner);
         headerPage.setAdapter(pagerAdapter);
         headerPage.setCurrentItem(1);
 
-        Button replyButton = (Button)findViewById(R.id.bio_reply_button);
+        Button replyButton = findViewById(R.id.bio_reply_button);
         replyButton.setOnClickListener(view -> UserActivity.this.displayFragment(ScreenNav.TWEET_EDITOR, owner));
 
-        Button followButton = (Button)findViewById(R.id.bio_follow_button);
+        Button followButton = findViewById(R.id.bio_follow_button);
         followButton.setOnClickListener(view -> presenter.onClickFollowButton());
 
-        ListView drawerList = (ListView)findViewById(R.id.bio_drawer_list);
+        ListView drawerList = findViewById(R.id.bio_drawer_list);
         mListAdapter.setUserItem(owner);
         drawerList.setAdapter(mListAdapter);
         drawerList.setOnItemClickListener(drawerItemClickListener);
@@ -133,20 +132,20 @@ public class UserActivity extends    AppCompatActivity
 
     @Override
     public void disableFollowButton() {
-        Button followButton = (Button)findViewById(R.id.bio_follow_button);
+        Button followButton = findViewById(R.id.bio_follow_button);
         followButton.setClickable(false);
         followButton.setTextColor(ContextCompat.getColor(this, R.color.gray_808080));
     }
 
     @Override
     public void setFollowButton() {
-        Button followButton = (Button)findViewById(R.id.bio_follow_button);
+        Button followButton = findViewById(R.id.bio_follow_button);
         followButton.setText(R.string.follow_button_label);
     }
 
     @Override
     public void setRemoveButton() {
-        Button followButton = (Button)findViewById(R.id.bio_follow_button);
+        Button followButton = findViewById(R.id.bio_follow_button);
         followButton.setText(R.string.remove_button_label);
     }
 
@@ -279,9 +278,27 @@ public class UserActivity extends    AppCompatActivity
 
     private void replaceTitle(String title, String subTitle) {
         ActionBar actionBar = getSupportActionBar();
-        if (actionBar == null) throw new NullPointerException("ActionBar is null!");
-
+        if (actionBar == null) {
+            throw new NullPointerException("ActionBar is null!");
+        }
         actionBar.setTitle(title);
+        actionBar.setSubtitle(subTitle);
+    }
+
+    private void replaceTitle(String title, @StringRes int subTitle) {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar == null) {
+            return;
+        }
+        actionBar.setTitle(title);
+        actionBar.setSubtitle(subTitle);
+    }
+
+    private void replaceSubTitle(String subTitle) {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar == null) {
+            throw new NullPointerException("ActionBar is null!");
+        }
         actionBar.setSubtitle(subTitle);
     }
 
@@ -293,12 +310,22 @@ public class UserActivity extends    AppCompatActivity
         }
 
         Fragment currentFragment = mFragmentController.getFragment(R.id.biography_container);
-        replaceTitle(user.getName(), currentFragment.toString());
+        Class<? extends Fragment> fClass = currentFragment.getClass();
+        if (fClass == PictureFragment.class) {
+            if (mPictureNum != 0 && mPicturePosition != 0) {
+                replaceTitle(user.getName(),
+                        getString(R.string.sub_title_picture, mPicturePosition, mPictureNum));
+            }
+        } else {
+            replaceTitle(user.getName(), ScreenNav.getTitle(currentFragment.getClass()));
+        }
     }
 
     private void changeSubtitle(@StringRes int id) {
         ActionBar actionBar = getSupportActionBar();
-        if (actionBar == null) throw new NullPointerException("ActionBar is null!");
+        if (actionBar == null) {
+            throw new NullPointerException("ActionBar is null!");
+        }
         actionBar.setSubtitle(id);
     }
 
@@ -381,9 +408,20 @@ public class UserActivity extends    AppCompatActivity
     public void requestChangeScreen(ScreenNav screenNav, Bundle args) {
         screenNav.transition(this, getSupportFragmentManager(), R.id.biography_container, args,
                 fragment -> {
-                    changeSubtitle(screenNav.getTitleId());
+                    changeSubtitle(ScreenNav.getTitle(fragment.getClass()));
                     changeActionBarIndicatorState();
                 });
     }
 
+    @Override
+    public void onChangePicture(int pictureNum, int position) {
+        mPictureNum = pictureNum;
+        mPicturePosition = position;
+        applyPictureInfoToTitle();
+    }
+
+    private void applyPictureInfoToTitle() {
+        String subTitle = getString(R.string.sub_title_picture, mPicturePosition, mPictureNum);
+        replaceSubTitle(subTitle);
+    }
 }
