@@ -6,11 +6,16 @@ import com.seki.saezurishiki.model.adapter.ModelActionType;
 import com.seki.saezurishiki.model.adapter.ModelMessage;
 import com.seki.saezurishiki.repository.TweetRepository;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import twitter4j.StatusUpdate;
 import twitter4j.TwitterException;
 
+@Singleton
 public class TweetEditorModelImp extends ModelBaseImp implements TweetEditorModel {
 
+    @Inject
     TweetEditorModelImp() {
         super();
     }

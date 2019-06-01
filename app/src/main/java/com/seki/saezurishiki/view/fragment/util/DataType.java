@@ -22,4 +22,5 @@ public class DataType {
     public static final String HASH_TAG        = "hash_tag";
     public static final String QUOTED_TWEET    = "quotedTweet";
     public static final String STATUS_ID       = "statusId";
+    public static final String FORBID_ACTIONS  = "forbidActions";
 }

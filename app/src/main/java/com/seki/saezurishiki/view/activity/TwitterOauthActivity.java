@@ -26,7 +26,6 @@ public class TwitterOauthActivity extends AppCompatActivity {
     private RequestToken mRequestToken;
     private String mCallback;
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,9 +56,7 @@ public class TwitterOauthActivity extends AppCompatActivity {
         };
 
         new AsyncTwitterTask<>(this, TASK, AFTER_TASK, getSupportLoaderManager()).run();
-
     }
-
 
     @Override
     public void onNewIntent(Intent intent) {
@@ -71,8 +68,6 @@ public class TwitterOauthActivity extends AppCompatActivity {
         String verifier = intent.getData().getQueryParameter("oauth_verifier");
         this.oauthAccess(verifier);
     }
-
-
 
     public void oauthAccess(final String verifier) {
         final AsyncTwitterTask.AfterTask<AccessToken> AFTER_TASK = result -> {
@@ -88,8 +83,6 @@ public class TwitterOauthActivity extends AppCompatActivity {
 
         TwitterWrapper.getOAuthAccessToken(this, getSupportLoaderManager(), mRequestToken, verifier, AFTER_TASK);
     }
-
-
 
     private void successOauth(AccessToken accessToken) {
         TwitterUtil.storeAccessToken(this, accessToken);

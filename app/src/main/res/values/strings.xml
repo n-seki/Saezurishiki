@@ -74,6 +74,19 @@
     <string name="click_to_oauth">承認します</string>
     <string name="user_icon">user icon</string>
 
+    <!-- title -->
+    <string name="title_edit_tweet">ツイートする</string>
+    <string name="title_conversation">会話</string>
+    <string name="title_favorite">Favorite</string>
+    <string name="title_follower">Follower</string>
+    <string name="title_friend">Friends</string>
+    <string name="title_user_tweet">Tweet</string>
+    <string name="title_license">囀り式について</string>
+    <string name="title_setting">Setting</string>
+    <string name="title_search">検索結果</string>
+    <string name="title_picture">画像</string>
+    <string name="sub_title_picture">Picture %d/%d</string>
+
     <string name="send">送信</string>
     <string name="zero">0</string>
     <string name="per_140">/ 140</string>
@@ -150,10 +163,10 @@
     <string name="unfavorite_by">お気に入りから解除されました</string>
     <string name="message_by">DM受信</string>
     <string name="about_license">ライセンスについて</string>
-    <string name="version">バージョン</string>
+    <string name="version">バージョン %s</string>
     <string name="about_version">バージョン情報</string>
     <string name="update_date">更新日</string>
-    <string name="last_update_date">リリース日 2018/01/08</string>
+    <string name="last_update_date">リリース日 %s</string>
     <string name="showing_loginUser">あなたです！</string>
     <string name="pref_category_operation">操作設定</string>
     <string name="pref_favorite_operation_Key">pref_favorite_operation_Key</string>

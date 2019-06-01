@@ -4,7 +4,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.seki.saezurishiki.view.fragment.Fragments;
+import com.seki.saezurishiki.view.fragment.list.HomeTimeLineFragment;
+import com.seki.saezurishiki.view.fragment.list.ReplyTimeLineFragment;
+
+import static com.seki.saezurishiki.file.SharedPreferenceUtil.HOME;
+import static com.seki.saezurishiki.file.SharedPreferenceUtil.REPLY;
 
 
 /**
@@ -20,7 +24,6 @@ public class TimeLinePager extends FragmentPagerAdapter {
 
     public TimeLinePager(FragmentManager fragmentManager, long loginUserId) {
         super(fragmentManager);
-
         this.loginUserId = loginUserId;
     }
 
@@ -29,21 +32,20 @@ public class TimeLinePager extends FragmentPagerAdapter {
         return 2;
     }
 
-
     @Override
     public Fragment getItem(int position) {
         Fragment fragment;
 
         switch (position) {
             case POSITION_HOME:
-                fragment = Fragments.createInjectHomeTimeLineFragment(POSITION_HOME, this.loginUserId);
+                fragment = HomeTimeLineFragment.getInstance(this.loginUserId, POSITION_HOME, HOME);
                 break;
 
             case POSITION_REPLY:
-                fragment = Fragments.createInjectReplyTimeLineFragment(POSITION_REPLY, this.loginUserId);
+                fragment = ReplyTimeLineFragment.getInstance(this.loginUserId, POSITION_REPLY, REPLY);
                 break;
 
-            default :
+            default:
                 throw new IllegalStateException("position is " + position );
         }
 

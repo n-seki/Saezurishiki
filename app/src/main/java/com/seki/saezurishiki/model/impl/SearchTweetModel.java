@@ -8,10 +8,15 @@ import com.seki.saezurishiki.repository.TweetRepository;
 
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import twitter4j.TwitterException;
 
+@Singleton
 class SearchTweetModel extends TweetListModelImp {
 
+    @Inject
     SearchTweetModel() {
         super();
     }

@@ -40,12 +40,9 @@ public class Serializer {
         }
     }
 
-
-
     public static UserEntity loadUser(Context context) {
         return load(context, UserEntity.class, LOGIN_USER_FILE);
     }
-
 
     @Nullable
     private static <T> T load(Context context, Class<T> type, String key) {

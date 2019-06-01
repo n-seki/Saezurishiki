@@ -5,8 +5,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,11 +28,14 @@ import java.util.List;
 public class PictureFragment extends Fragment implements ViewPager.OnPageChangeListener {
 
     private TweetEntity mStatus;
-    private int mTouchedPicturePosition;
+    private int mCurrentPosition;
+    private Listener mListener;
 
     private int mPicCount;
 
-    private ActionBar mActionBar;
+    public interface Listener {
+        void onChangePicture(int pictureNum, int position);
+    }
 
     public static Fragment getInstance(int position, TweetEntity status) {
         Fragment fragment = new PictureFragment();
@@ -47,6 +48,15 @@ public class PictureFragment extends Fragment implements ViewPager.OnPageChangeL
     }
 
     @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        if (getActivity() instanceof Listener) {
+            mListener = (Listener)getActivity();
+        }
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -55,8 +65,7 @@ public class PictureFragment extends Fragment implements ViewPager.OnPageChangeL
             throw new IllegalStateException("Argument is null");
         }
         mStatus = (TweetEntity) data.getSerializable(DataType.STATUS);
-        mTouchedPicturePosition = data.getInt(DataType.PIC_POSITION);
-        mActionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
+        mCurrentPosition = data.getInt(DataType.PIC_POSITION);
     }
 
     @Override
@@ -70,12 +79,16 @@ public class PictureFragment extends Fragment implements ViewPager.OnPageChangeL
         viewPager.setAdapter(pageAdapter);
         viewPager.addOnPageChangeListener(this);
         viewPager.setOffscreenPageLimit(mPicCount - 1);
-
-        viewPager.setCurrentItem(mTouchedPicturePosition);
-
-        setActionBarTitle(mTouchedPicturePosition + 1);
-
+        viewPager.setCurrentItem(mCurrentPosition);
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mListener != null) {
+            mListener.onChangePicture(mPicCount, mCurrentPosition + 1);
+        }
     }
 
     @Override
@@ -85,21 +98,14 @@ public class PictureFragment extends Fragment implements ViewPager.OnPageChangeL
 
     @Override
     public void onPageSelected(int position) {
-        setActionBarTitle(position + 1);
+        if (mListener != null) {
+            mListener.onChangePicture(mPicCount, position + 1);
+        }
     }
 
     @Override
     public void onPageScrollStateChanged(int state) {
         //do nothing
-    }
-
-    private void setActionBarTitle(int picPosition) {
-        mActionBar.setTitle("Picture" + " " + picPosition + "/" + mPicCount);
-    }
-
-    @Override
-    public String toString() {
-        return "Picture";
     }
 
     public static class PictureScreen extends Fragment {

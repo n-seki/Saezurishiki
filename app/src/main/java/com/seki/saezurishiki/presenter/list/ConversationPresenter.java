@@ -4,16 +4,20 @@ import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.model.TweetListModel;
 import com.seki.saezurishiki.model.adapter.ModelMessage;
 import com.seki.saezurishiki.model.adapter.RequestInfo;
+import com.seki.saezurishiki.view.fragment.dialog.adapter.DialogSelectAction;
 
 import twitter4j.StatusDeletionNotice;
 
 public class ConversationPresenter extends TweetListPresenter {
 
-
     public ConversationPresenter(TweetListView view, long listOwnerId, TweetListModel listModel) {
         super(view, listOwnerId, listModel);
     }
 
+    @Override
+    protected int[] getForbidDialogActions() {
+        return new int[] { DialogSelectAction.SHOW_TWEET };
+    }
 
     @Override
     void dispatch(ModelMessage message) {

@@ -14,15 +14,14 @@ import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.control.UIControlUtil;
 
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 public class LicenseFragment extends Fragment {
-
 
     @Contract(" -> !null")
     public static Fragment newInstance() {
         return new LicenseFragment();
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -30,28 +29,25 @@ public class LicenseFragment extends Fragment {
         setHasOptionsMenu(true);
     }
 
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NotNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_license, container, false);
 
-        TextView version = (TextView)v.findViewById(R.id.current_version);
-        version.setText(getActivity().getString(R.string.version) + " " + BuildConfig.VERSION_NAME);
+        TextView version = v.findViewById(R.id.current_version);
+        String versionText = getString(R.string.version, BuildConfig.VERSION_NAME);
+        version.setText(versionText);
 
-        v.setBackgroundColor(UIControlUtil.backgroundColor(getActivity()));
+        TextView releaseDate = v.findViewById(R.id.release_date);
+        String releaseDateText = getString(R.string.last_update_date, BuildConfig.BUILD_DATE);
+        releaseDate.setText(releaseDateText);
 
+        v.setBackgroundColor(UIControlUtil.backgroundColor(container.getContext()));
         return v;
     }
-
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
-    }
-
-
-    @Override
-    public String toString() {
-        return "囀り式について";
     }
 }
