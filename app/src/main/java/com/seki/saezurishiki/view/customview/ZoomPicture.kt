@@ -53,7 +53,9 @@ class ZoomPicture @JvmOverloads constructor(
     override fun onTouchEvent(ev: MotionEvent): Boolean {
         scaleDetector.onTouchEvent(ev)
         doubleTapDetector.onTouchEvent(ev)
-        performTouch(ev)
+        if (!scaleDetector.isInProgress) {
+            performTouch(ev)
+        }
         return true
     }
 
