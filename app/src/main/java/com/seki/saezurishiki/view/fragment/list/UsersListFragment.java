@@ -18,6 +18,8 @@ import com.seki.saezurishiki.presenter.list.UserListPresenter;
 import com.seki.saezurishiki.view.activity.UserActivity;
 import com.seki.saezurishiki.view.adapter.UsersListAdapter;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 import javax.inject.Inject;
@@ -44,24 +46,25 @@ public abstract class UsersListFragment extends Fragment implements UserListPres
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_list_view, container, false);
         this.initComponents(rootView);
 
-        rootView.setBackgroundColor(UIControlUtil.backgroundColor(getActivity()));
+        rootView.setBackgroundColor(UIControlUtil.backgroundColor(rootView.getContext()));
 
         return rootView;
     }
 
 
     protected void initComponents(View rootView) {
-        mListView = (ListView) rootView.findViewById(R.id.list);
+        mListView = rootView.findViewById(R.id.list);
         mListView.setOnItemClickListener((parent, view, position, id) -> {
             final UserEntity user = mAdapter.getEntity(position);
             presenter.onClickListItem(user);
         });
 
-        mFooterView = getActivity().getLayoutInflater().inflate(R.layout.read_more_tweet, null);
+        mFooterView =
+                LayoutInflater.from(rootView.getContext()).inflate(R.layout.read_more_tweet, null);
         mFooterView.setOnClickListener(v -> UsersListFragment.this.clickReadMoreButton());
         mFooterView.setTag(NEW_LOADING, false);
 
@@ -118,7 +121,7 @@ public abstract class UsersListFragment extends Fragment implements UserListPres
             return;
         }
 
-        TextView footerText = (TextView)mFooterView.findViewById(R.id.read_more);
+        TextView footerText = mFooterView.findViewById(R.id.read_more);
         footerText.setText(R.string.now_loading);
         mFooterView.setTag(NEW_LOADING, true);
 
