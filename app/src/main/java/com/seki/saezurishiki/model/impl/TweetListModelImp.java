@@ -19,7 +19,6 @@ abstract class TweetListModelImp extends ModelBaseImp implements TweetListModel 
 
     TweetListModelImp() {
         super();
-        this.streamManager.addListener(this);
     }
 
     @Override

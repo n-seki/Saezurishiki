@@ -44,20 +44,16 @@ public class LoginUserPresenter implements ModelObserver {
     }
 
     public void onDestroy() {
-        this.model.finishUserStream();
     }
 
     public void logout() {
-        this.model.finishUserStream();
     }
 
     public void connectNetwork() {
         loadUser();
-        this.model.startUserStream();
     }
 
     public void disconnectNetwork() {
-        this.model.stopUserStream();
     }
 
     public void loadUser() {

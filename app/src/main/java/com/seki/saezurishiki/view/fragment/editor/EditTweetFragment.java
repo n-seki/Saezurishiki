@@ -32,10 +32,10 @@ import com.seki.saezurishiki.control.Setting;
 import com.seki.saezurishiki.control.StatusUtil;
 import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.entity.UserEntity;
-import com.seki.saezurishiki.network.twitter.TwitterAccount;
+import com.seki.saezurishiki.network.twitter.TwitterProvider;
 import com.seki.saezurishiki.presenter.editor.TweetEditorPresenter;
-import com.seki.saezurishiki.view.customview.TweetTextEditor;
 import com.seki.saezurishiki.view.TweetEditorModule;
+import com.seki.saezurishiki.view.customview.TweetTextEditor;
 import com.seki.saezurishiki.view.fragment.util.DataType;
 
 import org.jetbrains.annotations.Contract;
@@ -69,6 +69,8 @@ public class EditTweetFragment extends Fragment implements TweetEditorPresenter.
 
     @Inject
     TweetEditorPresenter presenter;
+    @Inject
+    TwitterProvider mTwitterProvider;
 
     private TextView counter;
 
@@ -190,7 +192,7 @@ public class EditTweetFragment extends Fragment implements TweetEditorPresenter.
 
         mEditorType = data.getInt(EDITOR_TYPE);
 
-        this.loginUserId = TwitterAccount.getLoginUserId();
+        this.loginUserId = mTwitterProvider.getLoginUserId();
 
         setHasOptionsMenu(true);
     }

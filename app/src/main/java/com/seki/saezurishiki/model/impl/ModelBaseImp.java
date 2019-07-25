@@ -4,16 +4,12 @@ package com.seki.saezurishiki.model.impl;
 import com.seki.saezurishiki.model.ModelBase;
 import com.seki.saezurishiki.model.util.ModelObservable;
 import com.seki.saezurishiki.model.util.ModelObserver;
-import com.seki.saezurishiki.network.twitter.TwitterAccount;
-import com.seki.saezurishiki.network.twitter.UserStreamManager;
-import com.seki.saezurishiki.repository.RemoteRepositoryImp;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 abstract class ModelBaseImp implements ModelBase {
 
-    final UserStreamManager streamManager;
     final static ModelObservable observable;
     final ModelObservable userStreamObservable;
     final Executor executor = Executors.newCachedThreadPool();
@@ -23,7 +19,6 @@ abstract class ModelBaseImp implements ModelBase {
     }
 
     ModelBaseImp() {
-        this.streamManager = UserStreamManager.getInstance();
         this.userStreamObservable = new ModelObservable();
     }
 

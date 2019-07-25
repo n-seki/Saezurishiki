@@ -9,6 +9,6 @@ public class SaezurishikiApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        mApplicationComponent = DaggerApplicationComponent.builder().build();
+        mApplicationComponent = DaggerApplicationComponent.builder().setAppicationContext(this).build();
     }
 }
