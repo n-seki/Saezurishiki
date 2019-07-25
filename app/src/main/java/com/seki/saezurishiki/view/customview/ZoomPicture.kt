@@ -67,7 +67,10 @@ class ZoomPicture @JvmOverloads constructor(
 
         when (ev.action) {
             MotionEvent.ACTION_DOWN -> {
-                parent.requestDisallowInterceptTouchEvent(true)
+                // for ViewPager
+                if (scaleX != 1.0f) {
+                    parent.requestDisallowInterceptTouchEvent(true)
+                }
                 //タップ時点の左上の座標を取得
                 currentX = left
                 currentY = top
