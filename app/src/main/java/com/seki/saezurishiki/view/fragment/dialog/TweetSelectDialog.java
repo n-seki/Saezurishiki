@@ -13,7 +13,7 @@ import com.seki.saezurishiki.control.Setting;
 import com.seki.saezurishiki.control.StatusUtil;
 import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.model.GetTweetById;
-import com.seki.saezurishiki.network.twitter.TwitterAccount;
+import com.seki.saezurishiki.network.twitter.TwitterProvider;
 import com.seki.saezurishiki.view.fragment.dialog.adapter.DialogSelectAction;
 import com.seki.saezurishiki.view.fragment.util.DataType;
 
@@ -40,6 +40,9 @@ public class TweetSelectDialog extends DialogFragment {
 
     @Inject
     GetTweetById repositoryAccessor;
+
+    @Inject
+    TwitterProvider mTwitterProvider;
 
     public interface DialogCallback {
         void onDialogItemClick(DialogSelectAction<TweetEntity> action);
@@ -71,7 +74,7 @@ public class TweetSelectDialog extends DialogFragment {
         mStatus = tweet.isRetweet ? tweet.retweet : tweet;
         mIsDelete = mStatus.isDeleted();
 
-        this.loginUserId = TwitterAccount.getLoginUserId();
+        this.loginUserId = mTwitterProvider.getLoginUserId();
     }
 
     @Override

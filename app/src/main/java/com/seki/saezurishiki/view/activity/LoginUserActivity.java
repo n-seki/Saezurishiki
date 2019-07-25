@@ -41,7 +41,7 @@ import com.seki.saezurishiki.file.EncryptUtil;
 import com.seki.saezurishiki.file.Serializer;
 import com.seki.saezurishiki.file.SharedPreferenceUtil;
 import com.seki.saezurishiki.network.ConnectionReceiver;
-import com.seki.saezurishiki.network.twitter.TwitterAccount;
+import com.seki.saezurishiki.network.twitter.TwitterProvider;
 import com.seki.saezurishiki.network.twitter.TwitterUtil;
 import com.seki.saezurishiki.presenter.activity.LoginUserPresenter;
 import com.seki.saezurishiki.view.LoginUserModule;
@@ -95,6 +95,9 @@ public class LoginUserActivity extends AppCompatActivity
     @Inject
     LoginUserPresenter presenter;
 
+    @Inject
+    TwitterProvider mTwitterProvider;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -114,8 +117,6 @@ public class LoginUserActivity extends AppCompatActivity
             return;
         }
 
-        TwitterAccount.onCreate(getApplicationContext());
-
         Setting.init(this);
         final Setting setting = new Setting();
         final int theme = setting.getTheme();
@@ -128,6 +129,7 @@ public class LoginUserActivity extends AppCompatActivity
                 .build()
                 .inject(this);
 
+        mTwitterProvider.init();
         this.presenter.loadUser();
         this.setupActionBar();
         this.setupNavigationDrawer(theme);
@@ -216,7 +218,7 @@ public class LoginUserActivity extends AppCompatActivity
     };
 
     private void setupTimeLine(int theme) {
-        TimeLinePager pagerAdapter = new TimeLinePager(getSupportFragmentManager(), TwitterAccount.getLoginUserId());
+        TimeLinePager pagerAdapter = new TimeLinePager(getSupportFragmentManager(), mTwitterProvider.getLoginUserId());
 
         mViewPager = LoginUserActivity.this.findViewById(R.id.pager);
         mViewPager.addOnPageChangeListener(LoginUserActivity.this);

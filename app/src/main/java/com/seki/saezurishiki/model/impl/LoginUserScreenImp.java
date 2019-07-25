@@ -6,15 +6,13 @@ import com.seki.saezurishiki.model.LoginUserScreen;
 import com.seki.saezurishiki.model.adapter.ModelActionType;
 import com.seki.saezurishiki.model.adapter.ModelMessage;
 import com.seki.saezurishiki.model.util.ModelObserver;
-import com.seki.saezurishiki.network.twitter.TwitterAccount;
-import com.seki.saezurishiki.network.twitter.UserStreamManager;
+import com.seki.saezurishiki.network.twitter.TwitterProvider;
 import com.seki.saezurishiki.repository.TweetRepository;
 import com.seki.saezurishiki.repository.UserRepository;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import twitter4j.DirectMessage;
 import twitter4j.Status;
 import twitter4j.StatusDeletionNotice;
 import twitter4j.TwitterException;
@@ -23,51 +21,23 @@ import twitter4j.User;
 @Singleton
 public class LoginUserScreenImp extends ModelBaseImp implements LoginUserScreen {
 
+    private final TwitterProvider mTwitterProvider;
+
     @Inject
-    LoginUserScreenImp() {
+    LoginUserScreenImp(TwitterProvider twitterProvider) {
         super();
-        this.streamManager.addListener(this);
+        mTwitterProvider = twitterProvider;
     }
 
     @Override
     public void getLoginUser() {
         this.executor.execute(() -> {
             try {
-                final UserEntity loginUser = UserRepository.INSTANCE.find(TwitterAccount.getLoginUserId());
+                final UserEntity loginUser = UserRepository.INSTANCE.find(mTwitterProvider.getLoginUserId());
                 final ModelMessage message = ModelMessage.of(ModelActionType.LOAD_USER, loginUser);
                 observable.notifyObserver(message);
             } catch (TwitterException e) {
                 observable.notifyObserver(ModelMessage.error(e));
-            }
-        });
-    }
-
-    @Override
-    public void startUserStream() {
-        this.executor.execute(() ->  {
-            if (UserStreamManager.getInstance().start()) {
-                final ModelMessage message = ModelMessage.of(ModelActionType.START_USER_STREAM, null);
-                observable.notifyObserver(message);
-            }
-        });
-    }
-
-    @Override
-    public void stopUserStream() {
-        this.executor.execute(() -> {
-            if (UserStreamManager.getInstance().stop()) {
-                final ModelMessage message = ModelMessage.of(ModelActionType.STOP_USER_STREAM, null);
-                observable.notifyObserver(message);
-            }
-        });
-    }
-
-    @Override
-    public void finishUserStream() {
-        this.executor.execute(() -> {
-            if (UserStreamManager.getInstance().destroy()) {
-                final ModelMessage message = ModelMessage.of(ModelActionType.DESTROY_USER_STREAM, null);
-                observable.notifyObserver(message);
             }
         });
     }
