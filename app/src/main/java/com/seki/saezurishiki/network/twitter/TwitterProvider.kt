@@ -4,7 +4,6 @@ import android.content.Context
 import com.seki.saezurishiki.cache.TweetCache
 import com.seki.saezurishiki.cache.UserCache
 import com.seki.saezurishiki.entity.mapper.EntityMapper
-import com.seki.saezurishiki.repository.RemoteRepositoryImp
 import com.seki.saezurishiki.repository.TweetRepository
 import com.seki.saezurishiki.repository.UserRepository
 import twitter4j.Twitter
@@ -39,13 +38,9 @@ class TwitterProvider @Inject constructor(
         val configuration = TwitterUtil.AccountConfig(applicationContext)
         instance = TwitterFactory(configuration.configuration).getInstance(configuration.token)
         loginUserId = configuration.loginUserId
-        val mapper = EntityMapper(configuration.loginUserId)
-        RemoteRepositoryImp.onCreate(instance, mapper)
-        TweetRepository.setup(instance!!, mapper, TweetCache())
-        UserRepository.setup(instance!!, mapper, UserCache())
     }
 
-    fun provide(): Twitter {
+    fun getInstance(): Twitter {
         return instance!!
     }
 }

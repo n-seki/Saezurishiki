@@ -2,8 +2,11 @@ package com.seki.saezurishiki.cache
 
 import com.seki.saezurishiki.entity.UserEntity
 import java.util.concurrent.ConcurrentHashMap
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class UserCache {
+@Singleton
+class UserCache @Inject constructor() {
     private val cache = ConcurrentHashMap<Long, UserEntity>()
     operator fun get(id: Long) = cache.getValue(id)
     fun get(range: LongRange): List<UserEntity> {
@@ -20,11 +23,11 @@ class UserCache {
     }
 
     fun put(user: UserEntity) {
-        cache.put(user.id, user)
+        cache[user.id] = user
     }
 
     fun put(users: List<UserEntity>) {
-        users.forEach {cache.put(it.id, it)}
+        users.forEach { cache[it.id] = it }
     }
 
     fun has(id: Long) = cache.contains(id)

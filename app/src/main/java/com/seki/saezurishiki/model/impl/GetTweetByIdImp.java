@@ -10,11 +10,15 @@ import javax.inject.Singleton;
 @Singleton
 class GetTweetByIdImp implements GetTweetById {
 
+    private final TweetRepository mRepository;
+
     @Inject
-    GetTweetByIdImp() {}
+    GetTweetByIdImp(TweetRepository repository) {
+        mRepository = repository;
+    }
 
     @Override
     public TweetEntity get(long id) {
-        return TweetRepository.INSTANCE.get(id);
+        return mRepository.get(id);
     }
 }
