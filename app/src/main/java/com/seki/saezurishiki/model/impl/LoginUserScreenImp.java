@@ -22,18 +22,24 @@ import twitter4j.User;
 public class LoginUserScreenImp extends ModelBaseImp implements LoginUserScreen {
 
     private final TwitterProvider mTwitterProvider;
+    private final TweetRepository mTweetRepository;
+    private final UserRepository mUserRepository;
 
     @Inject
-    LoginUserScreenImp(TwitterProvider twitterProvider) {
+    LoginUserScreenImp(TwitterProvider twitterProvider,
+                       TweetRepository tweetRepository,
+                       UserRepository userRepository) {
         super();
         mTwitterProvider = twitterProvider;
+        mTweetRepository = tweetRepository;
+        mUserRepository = userRepository;
     }
 
     @Override
     public void getLoginUser() {
         this.executor.execute(() -> {
             try {
-                final UserEntity loginUser = UserRepository.INSTANCE.find(mTwitterProvider.getLoginUserId());
+                final UserEntity loginUser = mUserRepository.find(mTwitterProvider.getLoginUserId());
                 final ModelMessage message = ModelMessage.of(ModelActionType.LOAD_USER, loginUser);
                 observable.notifyObserver(message);
             } catch (TwitterException e) {
@@ -76,37 +82,37 @@ public class LoginUserScreenImp extends ModelBaseImp implements LoginUserScreen 
 
     @Override
     public void onStatus(Status status) {
-        final TweetEntity tweet = TweetRepository.INSTANCE.mappingAdd(status);
+        final TweetEntity tweet = mTweetRepository.mappingAdd(status);
         final ModelMessage message = ModelMessage.of(ModelActionType.RECEIVE_TWEET, tweet);
         this.userStreamObservable.notifyObserver(message);
     }
 
     @Override
     public void onDeletionNotice(StatusDeletionNotice deletionNotice) {
-        if (!TweetRepository.INSTANCE.has(deletionNotice.getStatusId())) {
+        if (!mTweetRepository.has(deletionNotice.getStatusId())) {
             //削除されたtweetがローカルに存在しない場合には何もすることがない
             return;
         }
 
-        final TweetEntity deletedTweet = TweetRepository.INSTANCE.get(deletionNotice.getStatusId());
+        final TweetEntity deletedTweet = mTweetRepository.get(deletionNotice.getStatusId());
         final ModelMessage message = ModelMessage.of(ModelActionType.RECEIVE_DELETION, deletedTweet);
         this.userStreamObservable.notifyObserver(message);
     }
 
     @Override
     public void onFavorite(User sourceUser, User targetUser, Status targetTweet) {
-        final TweetEntity tweet = TweetRepository.INSTANCE.mappingAdd(targetTweet);
-        final UserEntity source = UserRepository.INSTANCE.add(sourceUser);
-        final UserEntity target = UserRepository.INSTANCE.add(targetUser);
+        final TweetEntity tweet = mTweetRepository.mappingAdd(targetTweet);
+        final UserEntity source = mUserRepository.add(sourceUser);
+        final UserEntity target = mUserRepository.add(targetUser);
         final ModelMessage message = ModelMessage.of(ModelActionType.RECEIVE_FAVORITE, tweet, source, target);
         this.userStreamObservable.notifyObserver(message);
     }
 
     @Override
     public void onUnFavorite(User sourceUser, User targetUser, Status targetTweet) {
-        final TweetEntity tweet = TweetRepository.INSTANCE.mappingAdd(targetTweet);
-        final UserEntity source = UserRepository.INSTANCE.add(sourceUser);
-        final UserEntity target = UserRepository.INSTANCE.add(targetUser);
+        final TweetEntity tweet = mTweetRepository.mappingAdd(targetTweet);
+        final UserEntity source = mUserRepository.add(sourceUser);
+        final UserEntity target = mUserRepository.add(targetUser);
         final ModelMessage message = ModelMessage.of(ModelActionType.RECEIVE_UN_FAVORITE, tweet, source, target);
         this.userStreamObservable.notifyObserver(message);
     }

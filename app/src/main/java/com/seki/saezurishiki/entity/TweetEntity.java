@@ -46,7 +46,6 @@ public class TweetEntity implements TwitterEntity, Serializable, Comparable<Twee
     public final ExtendedMediaEntity[] extendedMediaEntities;
     public final List<String> mediaUrlList;
 
-
     private final long id;
 
     public TweetEntity(Status status, boolean isLoginUserStatus, boolean isReplyToLoginUser, EntityMapper mapper) {

@@ -5,6 +5,7 @@ import com.seki.saezurishiki.model.adapter.ModelActionType;
 import com.seki.saezurishiki.model.adapter.ModelMessage;
 import com.seki.saezurishiki.model.adapter.RequestInfo;
 import com.seki.saezurishiki.repository.TweetRepository;
+import com.seki.saezurishiki.repository.UserRepository;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -15,15 +16,15 @@ import twitter4j.TwitterException;
 class ConversationModel extends TweetListModelImp {
 
     @Inject
-    ConversationModel() {
-        super();
+    ConversationModel(TweetRepository tweetRepository, UserRepository userRepository) {
+        super(tweetRepository, userRepository);
     }
 
     @Override
     public void request(final RequestInfo info) {
         this.executor.execute(() -> {
             try {
-                final TweetEntity tweet = TweetRepository.INSTANCE.find(info.toTargetID());
+                final TweetEntity tweet = mTweetRepository.find(info.toTargetID());
                 final ModelMessage message = ModelMessage.of(ModelActionType.LOAD_TWEET, tweet);
                 observable.notifyObserver(message);
             } catch (TwitterException e) {

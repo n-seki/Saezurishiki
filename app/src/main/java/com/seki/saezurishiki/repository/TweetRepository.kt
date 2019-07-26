@@ -3,19 +3,18 @@ package com.seki.saezurishiki.repository
 import com.seki.saezurishiki.cache.TweetCache
 import com.seki.saezurishiki.entity.TweetEntity
 import com.seki.saezurishiki.entity.mapper.EntityMapper
+import com.seki.saezurishiki.network.twitter.TwitterProvider
 import twitter4j.*
 import java.util.concurrent.ConcurrentHashMap
+import javax.inject.Inject
+import javax.inject.Singleton
 
-object TweetRepository {
-    private lateinit var mTwitter: Twitter
-    private lateinit var mMapper: EntityMapper
-    private lateinit var mCache: TweetCache
-
-    fun setup(twitter: Twitter, mapper: EntityMapper, cache: TweetCache) {
-        mTwitter = twitter
-        mMapper = mapper
-        mCache = cache
-    }
+@Singleton
+class TweetRepository @Inject constructor(
+        private val twitterProvider: TwitterProvider,
+        private val mapper: EntityMapper,
+        private val cache: TweetCache
+) {
 
     private val deletedNotice: MutableMap<Long, StatusDeletionNotice>
 
@@ -25,78 +24,73 @@ object TweetRepository {
 
     @Throws(TwitterException::class)
     fun getHomeTweetList(paging: Paging): List<TweetEntity> {
-        val result = mTwitter.getHomeTimeline(paging)
+        val result = twitterProvider.getInstance().getHomeTimeline(paging)
         return mappingAdd(result)
     }
 
     @Throws(TwitterException::class)
     fun getReplyTweetList(paging: Paging): List<TweetEntity> {
-        val result = mTwitter.getMentionsTimeline(paging)
+        val result = twitterProvider.getInstance().getMentionsTimeline(paging)
         return mappingAdd(result)
     }
 
     @Throws(TwitterException::class)
     fun getUserTweets(userId: Long, paging: Paging): List<TweetEntity> {
-        val result = mTwitter.getUserTimeline(userId, paging)
+        val result = twitterProvider.getInstance().getUserTimeline(userId, paging)
         return mappingAdd(result)
     }
 
     @Throws(TwitterException::class)
     fun getFavoriteList(userId: Long, paging: Paging): List<TweetEntity> {
-        val result = mTwitter.getFavorites(userId, paging)
+        val result = twitterProvider.getInstance().getFavorites(userId, paging)
         return mappingAdd(result)
     }
 
     @Throws(TwitterException::class)
     fun search(query: Query): List<TweetEntity> {
-        val result = mTwitter.search(query)
+        val result = twitterProvider.getInstance().search(query)
         return mappingAdd(result.tweets)
     }
 
     @Throws(TwitterException::class)
     fun favorite(tweetId: Long): TweetEntity {
-        val result = mTwitter.createFavorite(tweetId)
+        val result = twitterProvider.getInstance().createFavorite(tweetId)
         return mappingAdd(result)
     }
 
     @Throws(TwitterException::class)
     fun unfavorite(tweetId: Long): TweetEntity {
-        val result = mTwitter.destroyFavorite(tweetId)
+        val result = twitterProvider.getInstance().destroyFavorite(tweetId)
         return mappingAdd(result)
     }
 
     @Throws(TwitterException::class)
     fun retweet(tweetId: Long): TweetEntity {
-        val result = mTwitter.retweetStatus(tweetId)
+        val result = twitterProvider.getInstance().retweetStatus(tweetId)
         return mappingAdd(result)
     }
 
     @Throws(TwitterException::class)
     fun destroy(tweetId: Long): TweetEntity {
-        val result = mTwitter.destroyStatus(tweetId)
+        val result = twitterProvider.getInstance().destroyStatus(tweetId)
         return mappingAdd(result)
     }
 
     @Throws(TwitterException::class)
     fun updateTweet(tweet: StatusUpdate): TweetEntity {
-        val result = mTwitter.updateStatus(tweet)
+        val result = twitterProvider.getInstance().updateStatus(tweet)
         return mappingAdd(result)
     }
 
-    fun get(tweetId: Long) = mCache[tweetId]
+    fun get(tweetId: Long) = cache[tweetId]
 
     @Throws(TwitterException::class)
     fun find(tweetId: Long): TweetEntity {
-        if (mCache.has(tweetId)) {
-            return mCache[tweetId]
+        if (cache.has(tweetId)) {
+            return cache[tweetId]
         }
-        val tweet = mTwitter.showStatus(tweetId)
+        val tweet = twitterProvider.getInstance().showStatus(tweetId)
         return mappingAdd(tweet)
-    }
-
-    fun addStatusDeletionNotice(deletionNotice: StatusDeletionNotice) {
-        deletedNotice.put(deletionNotice.statusId, deletionNotice)
-        mCache[deletionNotice.statusId].onDelete()
     }
 
     fun hasDeletionNotice(statusID: Long): Boolean {
@@ -104,7 +98,7 @@ object TweetRepository {
     }
 
     @Synchronized private fun add(tweet: TweetEntity) {
-        mCache.put(tweet)
+        cache.put(tweet)
         if (tweet.isRetweet) {
             add(tweet.retweet)
         }
@@ -113,26 +107,26 @@ object TweetRepository {
         }
     }
 
-    fun has(id: Long) = mCache.has(id)
+    fun has(id: Long) = cache.has(id)
 
     private fun addAllTweet(tweetList: List<TweetEntity>) {
         tweetList.forEach { add(it) }
     }
 
     fun mappingAdd(status: Status): TweetEntity {
-        val tweet = mMapper.map(status)
+        val tweet = mapper.map(status)
         add(tweet)
         return tweet
     }
 
     private fun mappingAdd(statusList: List<Status>): List<TweetEntity> {
-        val tweets = mMapper.map(statusList)
+        val tweets = mapper.map(statusList)
         addAllTweet(tweets)
         return tweets
     }
 
     fun clear() {
-        mCache.clearAll()
+        cache.clearAll()
         deletedNotice.clear()
     }
 }
