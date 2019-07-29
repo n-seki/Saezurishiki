@@ -1,83 +1,57 @@
 package com.seki.saezurishiki.model.impl
 
 import com.seki.saezurishiki.model.*
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import javax.inject.Named
 
 @Module
-class ModelModule {
+abstract class ModelModule {
 
-    @Provides
-    internal fun provideUseScreenModel(model: UserScreenModelImp): UserScreenModel {
-        return model
-    }
+    @Binds
+    internal abstract fun provideUseScreenModel(model: UserScreenModelImp): UserScreenModel
 
-    @Provides
+    @Binds
     @Named("home")
-    internal fun provideHomeListModel(model: HomeTweetListModel): TweetListModel {
-        return model
-    }
+    internal abstract fun provideHomeListModel(model: HomeTweetListModel): TweetListModel
 
-    @Provides
+    @Binds
     @Named("reply")
-    internal fun provideReplyListModel(model: ReplyTweetListModel): TweetListModel {
-        return model
-    }
+    internal abstract fun provideReplyListModel(model: ReplyTweetListModel): TweetListModel
 
-    @Provides
+    @Binds
     @Named("favorite")
-    internal fun provideFavoriteListModel(model: FavoriteListModel): TweetListModel {
-        return model
-    }
+    internal abstract fun provideFavoriteListModel(model: FavoriteListModel): TweetListModel
 
-    @Provides
+    @Binds
     @Named("user_tweet")
-    internal fun provideUserTweetListModel(model: UserTweetListModel): TweetListModel {
-        return model
-    }
+    internal abstract fun provideUserTweetListModel(model: UserTweetListModel): TweetListModel
 
-    @Provides
+    @Binds
     @Named("conversation")
-    internal fun provideConversationListModel(model: ConversationModel): TweetListModel {
-        return model
-    }
+    internal abstract fun provideConversationListModel(model: ConversationModel): TweetListModel
 
-    @Provides
+    @Binds
     @Named("search")
-    internal fun provideSearchTweetModel(model: SearchTweetModel): TweetListModel {
-        return model
-    }
+    internal abstract fun provideSearchTweetModel(model: SearchTweetModel): TweetListModel
 
-    @Provides
-    internal fun provideGetTweetById(model: GetTweetByIdImp): GetTweetById {
-        return model
-    }
+    @Binds
+    internal abstract fun provideGetTweetById(model: GetTweetByIdImp): GetTweetById
 
-    @Provides
-    internal fun provideGetUserById(model: GetUserByIdImp): GetUserById {
-        return model
-    }
+    @Binds
+    internal abstract fun provideGetUserById(model: GetUserByIdImp): GetUserById
 
-    @Provides
+    @Binds
     @Named("friend")
-    internal fun provideFriendListModel(model: FriendListModel): UserListModel {
-        return model
-    }
+    internal abstract fun provideFriendListModel(model: FriendListModel): UserListModel
 
-    @Provides
+    @Binds
     @Named("follower")
-    internal fun provideFollowerListModel(model: FollowerListModel): UserListModel {
-        return model
-    }
+    internal abstract fun provideFollowerListModel(model: FollowerListModel): UserListModel
 
-    @Provides
-    internal fun provideLoginUserModel(model: LoginUserScreenImp): LoginUserScreen {
-        return model
-    }
+    @Binds
+    internal abstract fun provideLoginUserModel(model: LoginUserScreenImp): LoginUserScreen
 
-    @Provides
-    internal fun provideTweetEditorModel(model: TweetEditorModelImp): TweetEditorModel {
-        return model
-    }
+    @Binds
+    internal abstract fun provideTweetEditorModel(model: TweetEditorModelImp): TweetEditorModel
 }
