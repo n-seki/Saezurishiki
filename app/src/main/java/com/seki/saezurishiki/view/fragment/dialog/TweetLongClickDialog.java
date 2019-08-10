@@ -60,7 +60,7 @@ public class TweetLongClickDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Dialog dialog = new Dialog(getActivity());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.fragment_list_view);
+        dialog.setContentView(R.layout.dialog_list);
         this.initDialog(dialog);
         return dialog;
     }
