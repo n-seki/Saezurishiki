@@ -14,13 +14,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <com.seki.saezurishiki.view.customview.NotificationListView
+        <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:divider="@color/gray_808080"
-            android:dividerHeight="1sp"
             android:id="@+id/list"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
     </android.support.v4.widget.SwipeRefreshLayout>
 </FrameLayout>
 </layout>
