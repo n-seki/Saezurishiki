@@ -9,6 +9,8 @@ import com.seki.saezurishiki.model.adapter.RequestInfo;
 import com.seki.saezurishiki.repository.TweetRepository;
 import com.seki.saezurishiki.repository.UserRepository;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import twitter4j.Status;
 import twitter4j.StatusDeletionNotice;
 import twitter4j.TwitterException;
@@ -19,6 +21,7 @@ abstract class TweetListModelImp extends ModelBaseImp implements TweetListModel 
 
     final TweetRepository mTweetRepository;
     private final UserRepository mUserRepository;
+    AtomicBoolean isLoading = new AtomicBoolean(false);
 
     TweetListModelImp(TweetRepository tweetRepository, UserRepository userRepository) {
         super();
