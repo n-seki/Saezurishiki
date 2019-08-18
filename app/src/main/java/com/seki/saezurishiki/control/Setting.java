@@ -2,7 +2,7 @@ package com.seki.saezurishiki.control;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.v7.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 
 import com.seki.saezurishiki.R;
 

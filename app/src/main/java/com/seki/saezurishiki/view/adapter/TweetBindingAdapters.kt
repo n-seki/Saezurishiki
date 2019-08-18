@@ -1,6 +1,6 @@
 package com.seki.saezurishiki.view.adapter
 
-import android.databinding.BindingAdapter
+import androidx.databinding.BindingAdapter
 import android.util.TypedValue
 import android.view.View
 import android.widget.ImageView
@@ -17,6 +17,20 @@ fun loadImage(view: ImageView, imageUrl: String?, size: Int) {
             .resize(size, size)
             .centerInside()
             .into(view)
+}
+
+@BindingAdapter("tweet", "position", "imageSize")
+fun loadMediaThumbnail(view: ImageView, tweet: TweetEntity, position: Int, size: Int) {
+    if (tweet.mediaUrlList == null || tweet.mediaUrlList.size <= position) {
+        view.visibility = View.GONE
+        return
+    }
+    Picasso.with(view.context)
+            .load(tweet.mediaUrlList[position].thumbnail)
+            .resize(size, size)
+            .centerInside()
+            .into(view)
+    view.visibility = View.VISIBLE
 }
 
 @BindingAdapter("tweet")

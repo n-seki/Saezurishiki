@@ -3,12 +3,14 @@ package com.seki.saezurishiki.control;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.StyleRes;
-import android.support.v4.content.ContextCompat;
 import android.util.TypedValue;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.StyleRes;
+import androidx.core.content.ContextCompat;
+
 import com.seki.saezurishiki.R;
+import com.seki.saezurishiki.entity.Media;
 import com.seki.saezurishiki.entity.TweetEntity;
 
 import org.jetbrains.annotations.Contract;
@@ -17,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import twitter4j.ExtendedMediaEntity;
+import twitter4j.MediaEntity;
 
 import static com.seki.saezurishiki.view.adapter.TimeLinePager.POSITION_HOME;
 import static com.seki.saezurishiki.view.adapter.TimeLinePager.POSITION_REPLY;
@@ -27,26 +29,29 @@ public final class UIControlUtil {
     private UIControlUtil() {}
 
 
-    public static List<String> createMediaURLList(TweetEntity status) {
-        if ( status.mediaEntities == null || status.mediaEntities.length == 0 ) {
+    public static List<Media> createMediaURLList(TweetEntity status) {
+        if (status.mediaEntities == null || status.mediaEntities.length == 0) {
             return new ArrayList<>(0);
         }
 
-        List<String> URLList = new ArrayList<>();
+        List<Media> URLList = new ArrayList<>();
 
-        //mStatus.getMediaEntities()[0].getMediaURL() should return valid URL String
-        String firstPicURL = status.mediaEntities[0].getMediaURL();
-        URLList.add(firstPicURL);
+        for (MediaEntity mediaEntity : status.mediaEntities) {
+            if (!mediaEntity.getType().equals("video")) {
+                URLList.add(Media.from(mediaEntity.getMediaURLHttps(), null, mediaEntity.getType()));
+                continue;
+            }
 
-        ExtendedMediaEntity[] extendedMediaEntities = status.extendedMediaEntities;
-
-        if ( extendedMediaEntities == null || extendedMediaEntities.length == 0 ) return URLList;
-
-        for ( ExtendedMediaEntity mediaEntity : extendedMediaEntities ) {
-            if ( mediaEntity.getMediaURL().equals(firstPicURL)) continue;
-            URLList.add(mediaEntity.getMediaURL());
+            // TODO
+            MediaEntity.Variant[] variants = mediaEntity.getVideoVariants();
+            if (variants != null) {
+                for (MediaEntity.Variant v : variants) {
+                    String url = v.getUrl();
+                    URLList.add(Media.from(url, mediaEntity.getMediaURLHttps(), mediaEntity.getType()));
+                    break;
+                }
+            }
         }
-
         return URLList;
     }
 
