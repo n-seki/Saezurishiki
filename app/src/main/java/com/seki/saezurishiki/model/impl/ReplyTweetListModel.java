@@ -24,6 +24,9 @@ class ReplyTweetListModel extends TweetListModelImp {
 
     @Override
     public void request(final RequestInfo info) {
+        if (isLoading.getAndSet(true)) {
+            return;
+        }
         this.executor.execute(() -> {
             try {
                 final List<TweetEntity> tweets = mTweetRepository.getReplyTweetList(info.toPaging());
@@ -33,6 +36,7 @@ class ReplyTweetListModel extends TweetListModelImp {
                 final ModelMessage error = ModelMessage.error(e);
                 observable.notifyObserver(error);
             }
+            isLoading.set(false);
         });
     }
 }
