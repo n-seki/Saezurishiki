@@ -42,17 +42,27 @@ public final class UIControlUtil {
                 continue;
             }
 
-            // TODO
             MediaEntity.Variant[] variants = mediaEntity.getVideoVariants();
-            if (variants != null) {
-                for (MediaEntity.Variant v : variants) {
-                    String url = v.getUrl();
-                    URLList.add(Media.from(url, mediaEntity.getMediaURLHttps(), mediaEntity.getType()));
-                    break;
-                }
-            }
+            MediaEntity.Variant targetVariant = findLowestBitrateVariant(variants);
+            URLList.add(Media.from(targetVariant.getUrl(),
+                    mediaEntity.getMediaURLHttps(), mediaEntity.getType()));
         }
         return URLList;
+    }
+
+    private static MediaEntity.Variant findLowestBitrateVariant(MediaEntity.Variant[] variants) {
+        MediaEntity.Variant lowestBitrateVariant = variants[0];
+        int lowestBitrate = Integer.MAX_VALUE;
+        for (MediaEntity.Variant variant : variants) {
+            if (!variant.getContentType().startsWith("video")) {
+                continue;
+            }
+            if (variant.getBitrate() > 0 && variant.getBitrate() <= lowestBitrate) {
+                lowestBitrateVariant = variant;
+                lowestBitrate = variant.getBitrate();
+            }
+        }
+        return lowestBitrateVariant;
     }
 
 
