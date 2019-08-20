@@ -120,16 +120,15 @@ task createGradleProperties {
     if (!isCI) {
         return
     }
-
+    def gradleProperties = file(GRADLE_PROPERTIES_PATH)
+    if (!gradleProperties.createNewFile()) {
+        return
+    }
     def properties = [
             'android.useAnroidX' : true,
             'android.enableJetifier' : true
     ]
-
-    def gradleProperties = file(GRADLE_PROPERTIES_PATH)
-
     properties.forEach { key, val ->
-        gradleProperties += "$key=$val"
+        gradleProperties.text += "$key=$val"
     }
-
 }
