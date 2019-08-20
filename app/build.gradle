@@ -113,7 +113,7 @@ def static buildDate() {
     return format.format(new Date())
 }
 
-def GRADLE_PROPERTIES_PATH = '../../gradle.properties'
+def GRADLE_PROPERTIES_PATH = '../gradle.properties2'
 
 // Create gradle.properties to take build settings to CI if CI build.
 task createGradleProperties {
@@ -129,6 +129,6 @@ task createGradleProperties {
             'android.enableJetifier' : true
     ]
     properties.forEach { key, val ->
-        gradleProperties.text += "$key=$val"
+        gradleProperties.text += "$key=$val\n"
     }
 }
