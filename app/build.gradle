@@ -112,3 +112,24 @@ def static buildDate() {
     def format = new SimpleDateFormat("yyyy/MM/dd")
     return format.format(new Date())
 }
+
+def GRADLE_PROPERTIES_PATH = '../../gradle.properties'
+
+// Create gradle.properties to take build settings to CI if CI build.
+task createGradleProperties {
+    if (!isCI) {
+        return
+    }
+
+    def properties = [
+            'android.useAnroidX' : true,
+            'android.enableJetifier' : true
+    ]
+
+    def gradleProperties = file(GRADLE_PROPERTIES_PATH)
+
+    properties.forEach { key, val ->
+        gradleProperties += "$key=$val"
+    }
+
+}
