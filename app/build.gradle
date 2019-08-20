@@ -113,7 +113,7 @@ def static buildDate() {
     return format.format(new Date())
 }
 
-def GRADLE_PROPERTIES_PATH = '../gradle.properties2'
+def GRADLE_PROPERTIES_PATH = '../gradle.properties'
 
 // Create gradle.properties to take build settings to CI if CI build.
 task createGradleProperties {
