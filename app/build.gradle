@@ -125,7 +125,7 @@ task createGradleProperties {
         return
     }
     def properties = [
-            'android.useAnroidX' : true,
+            'android.useAndroidX' : true,
             'android.enableJetifier' : true
     ]
     properties.forEach { key, val ->
