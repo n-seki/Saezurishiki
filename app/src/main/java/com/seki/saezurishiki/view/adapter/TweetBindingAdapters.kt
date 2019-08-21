@@ -19,9 +19,20 @@ fun loadImage(view: ImageView, imageUrl: String?, size: Int) {
             .into(view)
 }
 
-@BindingAdapter(value = ["tweet", "position", "imageSize"])
-fun loadMediaThumbnail(view: ImageView, tweet: TweetEntity, position: Int, size: Int) {
-    if (tweet.mediaUrlList == null || tweet.mediaUrlList.size <= position) {
+@BindingAdapter(value = [
+    "thumbnail_tweet",
+    "thumbnail_position",
+    "thumbnail_imageSize",
+    "thumbnail_isShowThumbnail"
+])
+fun loadMediaThumbnail(
+        view: ImageView,
+        tweet: TweetEntity,
+        position: Int,
+        size: Int,
+        isShowThumbnail: Boolean
+) {
+    if (tweet.mediaUrlList == null || tweet.mediaUrlList.size <= position || !isShowThumbnail) {
         view.visibility = View.GONE
         return
     }

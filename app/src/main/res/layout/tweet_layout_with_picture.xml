@@ -194,9 +194,10 @@
 
             <ImageView
                 android:id="@+id/picture1"
-                bind:tweet="@{tweet}"
-                bind:position="@{0}"
-                bind:imageSize="@{45}"
+                bind:thumbnail_tweet="@{tweet}"
+                bind:thumbnail_position="@{0}"
+                bind:thumbnail_imageSize="@{45}"
+                bind:thumbnail_isShowThumbnail="@{setting.showThumbnail}"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_below="@id/quoted_status_layout"
@@ -210,9 +211,10 @@
 
             <ImageView
                 android:id="@+id/picture2"
-                bind:tweet="@{tweet}"
-                bind:position="@{1}"
-                bind:imageSize="@{45}"
+                bind:thumbnail_tweet="@{tweet}"
+                bind:thumbnail_position="@{1}"
+                bind:thumbnail_imageSize="@{45}"
+                bind:thumbnail_isShowThumbnail="@{setting.showThumbnail}"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_below="@id/quoted_status_layout"
@@ -226,9 +228,10 @@
 
             <ImageView
                 android:id="@+id/picture3"
-                bind:tweet="@{tweet}"
-                bind:position="@{2}"
-                bind:imageSize="@{45}"
+                bind:thumbnail_tweet="@{tweet}"
+                bind:thumbnail_position="@{2}"
+                bind:thumbnail_imageSize="@{45}"
+                bind:thumbnail_isShowThumbnail="@{setting.showThumbnail}"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_below="@id/quoted_status_layout"
@@ -242,9 +245,10 @@
 
             <ImageView
                 android:id="@+id/picture4"
-                bind:tweet="@{tweet}"
-                bind:position="@{3}"
-                bind:imageSize="@{45}"
+                bind:thumbnail_tweet="@{tweet}"
+                bind:thumbnail_position="@{3}"
+                bind:thumbnail_imageSize="@{45}"
+                bind:thumbnail_isShowThumbnail="@{setting.showThumbnail}"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_below="@id/quoted_status_layout"
