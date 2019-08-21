@@ -2,8 +2,8 @@ package com.seki.saezurishiki.view.fragment.dialog;
 
 import android.app.Dialog;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
 import android.view.Window;
 import android.widget.ListView;
 
@@ -11,6 +11,7 @@ import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.application.SaezurishikiApp;
 import com.seki.saezurishiki.control.Setting;
 import com.seki.saezurishiki.control.StatusUtil;
+import com.seki.saezurishiki.entity.Media;
 import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.model.GetTweetById;
 import com.seki.saezurishiki.network.twitter.TwitterProvider;
@@ -147,7 +148,7 @@ public class TweetSelectDialog extends DialogFragment {
         }
 
         if (!forbidDialogActions.contains(DialogSelectAction.MEDIA)) {
-            List<String> mediaURL = mStatus.mediaUrlList;
+            List<String> mediaURL = Media.mapToUrl(mStatus.mediaUrlList);
             if (!mediaURL.isEmpty()) {
                 final int icon = isThemeDark ? R.drawable.image_update : R.drawable.image_update_light;
                 for (int position = 0; position < mediaURL.size(); position++) {

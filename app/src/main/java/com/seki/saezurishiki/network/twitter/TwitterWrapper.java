@@ -1,7 +1,7 @@
 package com.seki.saezurishiki.network.twitter;
 
 import android.content.Context;
-import android.support.v4.app.LoaderManager;
+import androidx.loader.app.LoaderManager;
 
 import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;

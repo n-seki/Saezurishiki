@@ -1,7 +1,7 @@
 package com.seki.saezurishiki.file;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.seki.saezurishiki.entity.UserEntity;
 
@@ -9,8 +9,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
-
-import twitter4j.User;
 
 public class Serializer {
 

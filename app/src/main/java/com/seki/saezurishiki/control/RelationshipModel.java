@@ -1,6 +1,6 @@
 package com.seki.saezurishiki.control;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.seki.saezurishiki.R;
 

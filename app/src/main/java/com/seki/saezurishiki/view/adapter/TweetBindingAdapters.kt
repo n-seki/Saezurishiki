@@ -1,6 +1,6 @@
 package com.seki.saezurishiki.view.adapter
 
-import android.databinding.BindingAdapter
+import androidx.databinding.BindingAdapter
 import android.util.TypedValue
 import android.view.View
 import android.widget.ImageView
@@ -9,7 +9,7 @@ import com.seki.saezurishiki.entity.TweetEntity
 import com.seki.saezurishiki.view.customview.TweetStatusBar
 import com.squareup.picasso.Picasso
 
-@BindingAdapter("imageUrl", "imageSize")
+@BindingAdapter(value = ["imageUrl", "imageSize"])
 fun loadImage(view: ImageView, imageUrl: String?, size: Int) {
     imageUrl ?: return
     Picasso.with(view.context)
@@ -19,11 +19,25 @@ fun loadImage(view: ImageView, imageUrl: String?, size: Int) {
             .into(view)
 }
 
-@BindingAdapter("tweet")
+@BindingAdapter(value = ["tweet", "position", "imageSize"])
+fun loadMediaThumbnail(view: ImageView, tweet: TweetEntity, position: Int, size: Int) {
+    if (tweet.mediaUrlList == null || tweet.mediaUrlList.size <= position) {
+        view.visibility = View.GONE
+        return
+    }
+    Picasso.with(view.context)
+            .load(tweet.mediaUrlList[position].thumbnail)
+            .resize(size, size)
+            .centerInside()
+            .into(view)
+    view.visibility = View.VISIBLE
+}
+
+@BindingAdapter(value = ["tweet"])
 fun setStatusColor(view: TweetStatusBar, tweet: TweetEntity) {
     if (tweet.isDeleted) {
         view.setDeletedColor(view.context)
-        return;
+        return
     }
 
     if (tweet.isSentToLoginUser) {
@@ -39,7 +53,7 @@ fun setStatusColor(view: TweetStatusBar, tweet: TweetEntity) {
     view.visibility = View.INVISIBLE
 }
 
-@BindingAdapter("textSize")
+@BindingAdapter(value = ["textSize"])
 fun setTextSize(textView: TextView, rawSize: Int) {
     textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, rawSize.toFloat())
 }

@@ -1,7 +1,7 @@
 package com.seki.saezurishiki.view.customview;
 
 import android.content.Context;
-import android.support.design.widget.NavigationView;
+import com.google.android.material.navigation.NavigationView;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
@@ -14,8 +14,6 @@ import com.seki.saezurishiki.entity.UserEntity;
 import com.seki.saezurishiki.view.adapter.DrawerButtonListAdapter;
 import com.seki.saezurishiki.control.UIControlUtil;
 import com.squareup.picasso.Picasso;
-
-import twitter4j.User;
 
 /**
  *

@@ -194,7 +194,8 @@
 
             <ImageView
                 android:id="@+id/picture1"
-                bind:imageUrl="@{tweet.mediaUrlList.size() > 0 ? tweet.mediaUrlList.get(0) : null}"
+                bind:tweet="@{tweet}"
+                bind:position="@{0}"
                 bind:imageSize="@{45}"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
@@ -204,13 +205,13 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginStart="8dp"
-                android:visibility="@{setting.showThumbnail &amp;&amp; tweet.mediaUrlList.size() &gt; 0 ? View.VISIBLE : View.GONE}"
                 android:contentDescription="@string/picture"
                 android:onClick="@{() -> listener.onClickPicture(0, tweet)}"/>
 
             <ImageView
                 android:id="@+id/picture2"
-                bind:imageUrl="@{tweet.mediaUrlList.size() > 1 ? tweet.mediaUrlList.get(1) : null}"
+                bind:tweet="@{tweet}"
+                bind:position="@{1}"
                 bind:imageSize="@{45}"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
@@ -220,13 +221,13 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginStart="8dp"
-                android:visibility="@{setting.showThumbnail &amp;&amp; tweet.mediaUrlList.size() &gt; 1 ? View.VISIBLE : View.GONE}"
                 android:contentDescription="@string/picture"
                 android:onClick="@{() -> listener.onClickPicture(1, tweet)}"/>
 
             <ImageView
                 android:id="@+id/picture3"
-                bind:imageUrl="@{tweet.mediaUrlList.size() > 2 ? tweet.mediaUrlList.get(2) : null}"
+                bind:tweet="@{tweet}"
+                bind:position="@{2}"
                 bind:imageSize="@{45}"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
@@ -236,13 +237,13 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginStart="8dp"
-                android:visibility="@{setting.showThumbnail &amp;&amp; tweet.mediaUrlList.size() &gt; 2 ? View.VISIBLE : View.GONE}"
                 android:contentDescription="@string/picture"
                 android:onClick="@{() -> listener.onClickPicture(2, tweet)}"/>
 
             <ImageView
                 android:id="@+id/picture4"
-                bind:imageUrl="@{tweet.mediaUrlList.size() > 3 ? tweet.mediaUrlList.get(3) : null}"
+                bind:tweet="@{tweet}"
+                bind:position="@{3}"
                 bind:imageSize="@{45}"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
@@ -252,7 +253,6 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginStart="8dp"
-                android:visibility="@{setting.showThumbnail &amp;&amp; tweet.mediaUrlList.size() &gt; 3 ? View.VISIBLE : View.GONE}"
                 android:contentDescription="@string/picture"
                 android:onClick="@{() -> listener.onClickPicture(3, tweet)}"/>
 
