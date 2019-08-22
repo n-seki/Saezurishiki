@@ -1,7 +1,7 @@
 package com.seki.saezurishiki.view.customview;
 
 import android.content.Context;
-import android.support.v7.widget.AppCompatEditText;
+import androidx.appcompat.widget.AppCompatEditText;
 import android.util.AttributeSet;
 
 import com.seki.saezurishiki.control.UIControlUtil;

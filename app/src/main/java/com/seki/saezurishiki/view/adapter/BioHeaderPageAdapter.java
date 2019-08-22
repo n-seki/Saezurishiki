@@ -1,9 +1,9 @@
 package com.seki.saezurishiki.view.adapter;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +15,6 @@ import com.seki.saezurishiki.control.UIControlUtil;
 import com.seki.saezurishiki.entity.UserEntity;
 import com.seki.saezurishiki.view.fragment.util.DataType;
 import com.squareup.picasso.Picasso;
-
-import twitter4j.User;
 
 
 public class BioHeaderPageAdapter extends FragmentPagerAdapter {

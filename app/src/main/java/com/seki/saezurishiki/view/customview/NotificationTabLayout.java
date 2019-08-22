@@ -1,7 +1,7 @@
 package com.seki.saezurishiki.view.customview;
 
 import android.content.Context;
-import android.support.design.widget.TabLayout;
+import com.google.android.material.tabs.TabLayout;
 import android.util.AttributeSet;
 
 import com.seki.saezurishiki.view.control.RequestTabState;

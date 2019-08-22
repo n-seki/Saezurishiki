@@ -10,11 +10,15 @@ import javax.inject.Singleton;
 @Singleton
 public class GetUserByIdImp implements GetUserById {
 
+    private final UserRepository mRepository;
+
     @Inject
-    GetUserByIdImp() {}
+    GetUserByIdImp(UserRepository repository) {
+        mRepository = repository;
+    }
 
     @Override
     public UserEntity get(long id) {
-        return UserRepository.INSTANCE.getUser(id);
+        return mRepository.getUser(id);
     }
 }

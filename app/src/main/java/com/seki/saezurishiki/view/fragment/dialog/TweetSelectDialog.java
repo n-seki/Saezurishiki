@@ -2,8 +2,8 @@ package com.seki.saezurishiki.view.fragment.dialog;
 
 import android.app.Dialog;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
 import android.view.Window;
 import android.widget.ListView;
 
@@ -11,9 +11,10 @@ import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.application.SaezurishikiApp;
 import com.seki.saezurishiki.control.Setting;
 import com.seki.saezurishiki.control.StatusUtil;
+import com.seki.saezurishiki.entity.Media;
 import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.model.GetTweetById;
-import com.seki.saezurishiki.network.twitter.TwitterAccount;
+import com.seki.saezurishiki.network.twitter.TwitterProvider;
 import com.seki.saezurishiki.view.fragment.dialog.adapter.DialogSelectAction;
 import com.seki.saezurishiki.view.fragment.util.DataType;
 
@@ -40,6 +41,9 @@ public class TweetSelectDialog extends DialogFragment {
 
     @Inject
     GetTweetById repositoryAccessor;
+
+    @Inject
+    TwitterProvider mTwitterProvider;
 
     public interface DialogCallback {
         void onDialogItemClick(DialogSelectAction<TweetEntity> action);
@@ -71,7 +75,7 @@ public class TweetSelectDialog extends DialogFragment {
         mStatus = tweet.isRetweet ? tweet.retweet : tweet;
         mIsDelete = mStatus.isDeleted();
 
-        this.loginUserId = TwitterAccount.getLoginUserId();
+        this.loginUserId = mTwitterProvider.getLoginUserId();
     }
 
     @Override
@@ -85,7 +89,7 @@ public class TweetSelectDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Dialog dialog = new Dialog(getContext());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.fragment_list_view);
+        dialog.setContentView(R.layout.dialog_list);
         this.initDialog(dialog);
         return dialog;
     }
@@ -144,7 +148,7 @@ public class TweetSelectDialog extends DialogFragment {
         }
 
         if (!forbidDialogActions.contains(DialogSelectAction.MEDIA)) {
-            List<String> mediaURL = mStatus.mediaUrlList;
+            List<String> mediaURL = Media.mapToUrl(mStatus.mediaUrlList);
             if (!mediaURL.isEmpty()) {
                 final int icon = isThemeDark ? R.drawable.image_update : R.drawable.image_update_light;
                 for (int position = 0; position < mediaURL.size(); position++) {

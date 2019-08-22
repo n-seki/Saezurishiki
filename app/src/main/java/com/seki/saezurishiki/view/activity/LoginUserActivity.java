@@ -5,18 +5,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.NonNull;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.core.view.GravityCompat;
+import androidx.viewpager.widget.ViewPager;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -41,7 +41,7 @@ import com.seki.saezurishiki.file.EncryptUtil;
 import com.seki.saezurishiki.file.Serializer;
 import com.seki.saezurishiki.file.SharedPreferenceUtil;
 import com.seki.saezurishiki.network.ConnectionReceiver;
-import com.seki.saezurishiki.network.twitter.TwitterAccount;
+import com.seki.saezurishiki.network.twitter.TwitterProvider;
 import com.seki.saezurishiki.network.twitter.TwitterUtil;
 import com.seki.saezurishiki.presenter.activity.LoginUserPresenter;
 import com.seki.saezurishiki.view.LoginUserModule;
@@ -95,6 +95,9 @@ public class LoginUserActivity extends AppCompatActivity
     @Inject
     LoginUserPresenter presenter;
 
+    @Inject
+    TwitterProvider mTwitterProvider;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -114,8 +117,6 @@ public class LoginUserActivity extends AppCompatActivity
             return;
         }
 
-        TwitterAccount.onCreate(getApplicationContext());
-
         Setting.init(this);
         final Setting setting = new Setting();
         final int theme = setting.getTheme();
@@ -128,6 +129,7 @@ public class LoginUserActivity extends AppCompatActivity
                 .build()
                 .inject(this);
 
+        mTwitterProvider.init();
         this.presenter.loadUser();
         this.setupActionBar();
         this.setupNavigationDrawer(theme);
@@ -216,7 +218,7 @@ public class LoginUserActivity extends AppCompatActivity
     };
 
     private void setupTimeLine(int theme) {
-        TimeLinePager pagerAdapter = new TimeLinePager(getSupportFragmentManager(), TwitterAccount.getLoginUserId());
+        TimeLinePager pagerAdapter = new TimeLinePager(getSupportFragmentManager(), mTwitterProvider.getLoginUserId());
 
         mViewPager = LoginUserActivity.this.findViewById(R.id.pager);
         mViewPager.addOnPageChangeListener(LoginUserActivity.this);

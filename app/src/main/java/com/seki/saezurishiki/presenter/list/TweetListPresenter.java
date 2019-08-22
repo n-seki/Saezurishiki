@@ -7,20 +7,19 @@ import android.view.View;
 
 import com.seki.saezurishiki.control.Setting;
 import com.seki.saezurishiki.entity.TweetEntity;
-import com.seki.saezurishiki.entity.TwitterEntity;
 import com.seki.saezurishiki.entity.UserEntity;
 import com.seki.saezurishiki.model.TweetListModel;
 import com.seki.saezurishiki.model.adapter.ModelMessage;
 import com.seki.saezurishiki.model.adapter.RequestInfo;
 import com.seki.saezurishiki.model.util.ModelObservable;
 import com.seki.saezurishiki.model.util.ModelObserver;
-import com.seki.saezurishiki.view.adapter.TimeLineAdapter;
+import com.seki.saezurishiki.view.adapter.TweetListAdapter;
 import com.seki.saezurishiki.view.fragment.dialog.adapter.DialogSelectAction;
 
 import java.util.List;
 
 
-public abstract class TweetListPresenter implements TimeLineAdapter.ViewListener, ModelObserver {
+public abstract class TweetListPresenter implements TweetListAdapter.TweetListener, ModelObserver {
 
     final TweetListView view;
     final TweetListModel tweetListModel;
@@ -60,20 +59,17 @@ public abstract class TweetListPresenter implements TimeLineAdapter.ViewListener
         this.tweetListModel = listModel;
     }
 
-    public void onItemClick(TweetEntity tweet) {
+    public void onClick(TweetEntity tweet) {
         view.showTweetDialog(tweet, getForbidDialogActions());
     }
 
-    public void onLongClickListItem(TwitterEntity entity) {
-        if (entity.getItemType() == TwitterEntity.Type.LoadButton) {
-            return;
+    public boolean onLongClick(TweetEntity entity) {
+        if (this.tweetListModel.isDelete(entity)) {
+            return false;
         }
 
-        if (this.tweetListModel.isDelete((TweetEntity) entity)) {
-            return;
-        }
-
-        this.view.showLongClickDialog((TweetEntity)entity);
+        this.view.showLongClickDialog(entity);
+        return true;
     }
 
     public void createFavorite(TweetEntity tweet) {

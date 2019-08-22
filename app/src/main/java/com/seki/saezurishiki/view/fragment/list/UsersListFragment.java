@@ -2,12 +2,13 @@ package com.seki.saezurishiki.view.fragment.list;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import com.seki.saezurishiki.R;
 import com.seki.saezurishiki.application.SaezurishikiApp;
@@ -16,7 +17,9 @@ import com.seki.saezurishiki.entity.UserEntity;
 import com.seki.saezurishiki.model.GetUserById;
 import com.seki.saezurishiki.presenter.list.UserListPresenter;
 import com.seki.saezurishiki.view.activity.UserActivity;
-import com.seki.saezurishiki.view.adapter.UsersListAdapter;
+import com.seki.saezurishiki.view.adapter.UserListAdapter;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -25,52 +28,47 @@ import javax.inject.Inject;
 
 public abstract class UsersListFragment extends Fragment implements UserListPresenter.View {
 
-    private final int NEW_LOADING = -0x0003;
     protected static final String USER_ID = "user_id";
-    UsersListAdapter mAdapter;
-    private View mFooterView;
-    private ListView mListView;
+    UserListAdapter mUserListAdapter;
     @Inject
-    UserListPresenter presenter;
+    UserListPresenter mPresenter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        GetUserById repositoryAccessor = SaezurishikiApp.mApplicationComponent.getUserById();
-        mAdapter = new UsersListAdapter(getActivity(), R.layout.user_info_layout, repositoryAccessor);
         setRetainInstance(true);
     }
 
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_list_view, container, false);
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_user_list, container, false);
         this.initComponents(rootView);
-
-        rootView.setBackgroundColor(UIControlUtil.backgroundColor(getActivity()));
-
+        rootView.setBackgroundColor(UIControlUtil.backgroundColor(rootView.getContext()));
         return rootView;
     }
 
-
     protected void initComponents(View rootView) {
-        mListView = (ListView) rootView.findViewById(R.id.list);
-        mListView.setOnItemClickListener((parent, view, position, id) -> {
-            final UserEntity user = mAdapter.getEntity(position);
-            presenter.onClickListItem(user);
-        });
+        GetUserById repositoryAccessor = SaezurishikiApp.mApplicationComponent.getUserById();
 
-        mFooterView = getActivity().getLayoutInflater().inflate(R.layout.read_more_tweet, null);
-        mFooterView.setOnClickListener(v -> UsersListFragment.this.clickReadMoreButton());
-        mFooterView.setTag(NEW_LOADING, false);
+        RecyclerView.LayoutManager layoutManager =
+                new LinearLayoutManager(rootView.getContext(), LinearLayoutManager.VERTICAL, false);
+        RecyclerView.ItemDecoration dividerDecoration =
+                new DividerItemDecoration(rootView.getContext(), DividerItemDecoration.VERTICAL);
 
-        mListView.addFooterView(mFooterView, null ,true);
-        mListView.setFooterDividersEnabled(false);
-        mListView.setAdapter(mAdapter);
+        UserListAdapter.OnClickUserListener listener =(user) -> mPresenter.onClickListItem(user);
+
+        View.OnClickListener onClickFooter = (v) -> {
+            mUserListAdapter.setLoading(true);
+            mPresenter.request();
+        };
+        mUserListAdapter =
+                new UserListAdapter(rootView.getContext(), repositoryAccessor, listener, onClickFooter);
+
+        RecyclerView recyclerView = rootView.findViewById(R.id.list);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.addItemDecoration(dividerDecoration);
+        recyclerView.setAdapter(mUserListAdapter);
     }
-
-
 
     @Override
     public void showUser(UserEntity user) {
@@ -79,58 +77,35 @@ public abstract class UsersListFragment extends Fragment implements UserListPres
         startActivity(intent);
     }
 
-
     @Override
     public void onResume() {
         super.onResume();
-        this.presenter.onResume();
+        this.mPresenter.onResume();
 
-        if (mAdapter.isEmpty()) {
-            this.load();
+        if (mUserListAdapter.isEmpty()) {
+            mPresenter.request();
         }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        this.presenter.onPause();
+        this.mPresenter.onPause();
     }
-
 
     @Override
     public void loadUsers(List<UserEntity> users) {
-        mAdapter.addAll(users);
-        mFooterView.setTag(NEW_LOADING, false);
-        ((TextView) mFooterView.findViewById(R.id.read_more)).setText(R.string.click_to_load);
+        mUserListAdapter.addAll(users);
+        mUserListAdapter.setLoading(false);
     }
-
 
     @Override
     public void hideFooterLoadButton() {
-        mListView.removeFooterView(mFooterView);
-    }
-
-
-    protected void clickReadMoreButton() {
-        final boolean isLoading = (Boolean)mFooterView.getTag(NEW_LOADING);
-
-        if (isLoading) {
-            return;
-        }
-
-        TextView footerText = (TextView)mFooterView.findViewById(R.id.read_more);
-        footerText.setText(R.string.now_loading);
-        mFooterView.setTag(NEW_LOADING, true);
-
-        load();
-    }
-
-    private void load() {
-       this.presenter.request();
+        mUserListAdapter.setNeedFooter(false);
     }
 
     @Override
     public void setPresenter(UserListPresenter presenter) {
-        this.presenter = presenter;
+        this.mPresenter = presenter;
     }
 }

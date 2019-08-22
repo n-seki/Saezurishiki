@@ -43,20 +43,10 @@ public class ConversationFragment extends TweetListFragment {
                 .inject(this);
     }
 
-
     @Override
     protected void initComponents(View rootView) {
-        mListView = rootView.findViewById(R.id.list);
-        mListView.setOnItemLongClickListener((adapterView, view, i, l) -> {
-            ConversationFragment.this.showLongClickDialog((TweetEntity)mAdapter.getEntity(i));
-            return false;
-        });
-
-        mListView.setOnItemClickListener((adapterView, view, i, l) -> {
-            presenter.onItemClick((TweetEntity)mAdapter.getEntity(i));
-        });
-        mListView.setSmoothScrollbarEnabled(true);
-        mListView.setAdapter(mAdapter);
+        super.initComponents(rootView);
+        mAdapter.setNeedFooter(false);
     }
 
     @Override
@@ -68,5 +58,4 @@ public class ConversationFragment extends TweetListFragment {
     public void catchNewTweet(TweetEntity tweetEntity) {
         this.mAdapter.add(tweetEntity);
     }
-
 }

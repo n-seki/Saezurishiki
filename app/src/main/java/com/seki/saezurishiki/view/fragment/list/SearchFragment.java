@@ -1,8 +1,8 @@
 package com.seki.saezurishiki.view.fragment.list;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 
@@ -56,7 +56,7 @@ public class SearchFragment extends TweetListFragment {
 
     @Override
     protected void loadTimeLine() {
-        final long maxID = mAdapter.isEmpty() ? -1 : mAdapter.getItemIdAtPosition(mAdapter.getCount() - 1) -1;
+        final long maxID = mAdapter.isEmpty() ? -1 : mAdapter.getLastTweetId() -1;
         final RequestInfo info = new RequestInfo().query(mQuery).maxID(maxID);
         this.presenter.load(info);
     }

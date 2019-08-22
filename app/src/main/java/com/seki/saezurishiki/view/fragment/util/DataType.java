@@ -15,7 +15,8 @@ public class DataType {
     public static final String IS_REPLY        = "isReply";
     public static final String USER            = "user";
     public static final String QUERY           = "query";
-    public static final String URL             = "url";
+    public static final String URL             = "thumbnail";
+    public static final String MEDIA           = "media";
     public static final String IS_FRIENDS_LIST = "isFriendsList";
     public static final String IS_DELETED      = "isDeleted";
     public static final String IS_FOLLOW       = "isFollow";

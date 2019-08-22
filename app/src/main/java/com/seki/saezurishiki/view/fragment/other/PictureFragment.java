@@ -1,16 +1,19 @@
 package com.seki.saezurishiki.view.fragment.other;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+
 import com.seki.saezurishiki.R;
+import com.seki.saezurishiki.entity.Media;
 import com.seki.saezurishiki.entity.TweetEntity;
+import com.seki.saezurishiki.entity.Video;
 import com.seki.saezurishiki.view.customview.ZoomPicture;
 import com.seki.saezurishiki.view.fragment.util.DataType;
 import com.squareup.picasso.Picasso;
@@ -72,7 +75,7 @@ public class PictureFragment extends Fragment implements ViewPager.OnPageChangeL
     public View onCreateView(@NotNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_picture, container, false);
-        List<String> URLs = mStatus.mediaUrlList;
+        List<Media> URLs = mStatus.mediaUrlList;
         mPicCount = URLs.size();
         PicturePager pageAdapter = new PicturePager(getChildFragmentManager(), URLs);
         ViewPager viewPager = view.findViewById(R.id.pic_pager);
@@ -110,13 +113,13 @@ public class PictureFragment extends Fragment implements ViewPager.OnPageChangeL
 
     public static class PictureScreen extends Fragment {
 
-        private String mUrl;
+        private Media mMedia;
         private ZoomPicture mPictureView;
 
-        public static Fragment getInstance(String url) {
+        public static Fragment getInstance(Media media) {
             Fragment fragment = new PictureScreen();
             Bundle data = new Bundle();
-            data.putString(DataType.URL, url);
+            data.putParcelable(DataType.MEDIA, media);
             fragment.setArguments(data);
             return fragment;
         }
@@ -125,7 +128,7 @@ public class PictureFragment extends Fragment implements ViewPager.OnPageChangeL
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             if (getArguments() != null) {
-                mUrl = getArguments().getString(DataType.URL);
+                mMedia = getArguments().getParcelable(DataType.MEDIA);
             }
         }
 
@@ -134,8 +137,9 @@ public class PictureFragment extends Fragment implements ViewPager.OnPageChangeL
                                  ViewGroup container, Bundle savedInstanceState) {
             View view = inflater.inflate(R.layout.picture_screen, container, false);
             mPictureView = view.findViewById(R.id.picture);
-            Picasso.with(getActivity())
-                    .load(mUrl)
+
+            Picasso.with(container.getContext())
+                    .load(mMedia.getThumbnail())
                     .skipMemoryCache()
                     .into(mPictureView);
 
@@ -149,16 +153,20 @@ public class PictureFragment extends Fragment implements ViewPager.OnPageChangeL
      */
     public static class PicturePager extends FragmentPagerAdapter {
 
-        private final List<String> mUrls;
+        private final List<Media> mUrls;
 
-        PicturePager(FragmentManager fragmentManager, List<String> urls) {
+        PicturePager(FragmentManager fragmentManager, List<Media> urls) {
             super(fragmentManager);
             mUrls = urls;
         }
 
         @Override
         public Fragment getItem(int position) {
-            return PictureScreen.getInstance(mUrls.get(position));
+            if (mUrls.get(position) instanceof Video) {
+                return VideoFragment.getInstance((Video)mUrls.get(position));
+            } else {
+                return PictureScreen.getInstance(mUrls.get(position));
+            }
         }
 
         @Override
