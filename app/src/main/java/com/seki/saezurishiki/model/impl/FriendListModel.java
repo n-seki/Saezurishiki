@@ -12,17 +12,23 @@ import com.seki.saezurishiki.repository.UserRepository;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import twitter4j.TwitterException;
 
-
+@Singleton
 class FriendListModel implements UserListModel {
 
     private final Executor executor;
     private final ModelObservable observable;
+    private final UserRepository mRepository;
 
-    FriendListModel() {
+    @Inject
+    FriendListModel(UserRepository repository) {
         this.executor = Executors.newCachedThreadPool();
         this.observable = new ModelObservable();
+        mRepository = repository;
     }
 
 
@@ -30,7 +36,7 @@ class FriendListModel implements UserListModel {
     public void request(long userId, long nextCursor) {
         executor.execute(() -> {
             try {
-                final SupportCursorList<UserEntity> list = UserRepository.INSTANCE.getFriendList(userId, nextCursor);
+                final SupportCursorList<UserEntity> list = mRepository.getFriendList(userId, nextCursor);
                 final ModelMessage message = ModelMessage.of(ModelActionType.LOAD_FRIENDS, list);
                 observable.notifyObserver(message);
             } catch (TwitterException e) {

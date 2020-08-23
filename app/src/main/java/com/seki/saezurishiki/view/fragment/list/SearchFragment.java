@@ -1,12 +1,14 @@
 package com.seki.saezurishiki.view.fragment.list;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 
+import com.seki.saezurishiki.application.SaezurishikiApp;
 import com.seki.saezurishiki.model.adapter.RequestInfo;
+import com.seki.saezurishiki.view.SearchModule;
 import com.seki.saezurishiki.view.fragment.util.DataType;
 
 /**
@@ -18,8 +20,9 @@ public class SearchFragment extends TweetListFragment {
 
     private String mQuery;
 
-    public static SearchFragment getInstance(String query) {
+    public static SearchFragment getInstance(long userId, String query) {
         Bundle data = new Bundle();
+        data.putLong(USER_ID, userId);
         data.putString(DataType.QUERY, query);
         SearchFragment fragment = new SearchFragment();
         fragment.setArguments(data);
@@ -37,6 +40,15 @@ public class SearchFragment extends TweetListFragment {
             throw new IllegalStateException("ActionBar is null!");
         }
 
+        long listOwnerId = getArguments().getLong(USER_ID);
+
+        SaezurishikiApp.mApplicationComponent.searchComponentBuilder()
+                .listOwnerId(listOwnerId)
+                .presenterView(this)
+                .module(new SearchModule())
+                .build()
+                .inject(this);
+
         actionBar.setTitle("\"" + mQuery + "\"");
 
         setHasOptionsMenu(true);
@@ -44,7 +56,7 @@ public class SearchFragment extends TweetListFragment {
 
     @Override
     protected void loadTimeLine() {
-        final long maxID = mAdapter.isEmpty() ? -1 : mAdapter.getItemIdAtPosition(mAdapter.getCount() - 1) -1;
+        final long maxID = mAdapter.isEmpty() ? -1 : mAdapter.getLastTweetId() -1;
         final RequestInfo info = new RequestInfo().query(mQuery).maxID(maxID);
         this.presenter.load(info);
     }
@@ -53,11 +65,5 @@ public class SearchFragment extends TweetListFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
         menu.clear();
-    }
-
-
-    @Override
-    public String toString() {
-        return "\"" + mQuery + "\"";
     }
 }

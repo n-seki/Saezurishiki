@@ -4,11 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.core.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -33,8 +32,9 @@ import com.seki.saezurishiki.control.Setting;
 import com.seki.saezurishiki.control.StatusUtil;
 import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.entity.UserEntity;
-import com.seki.saezurishiki.network.twitter.TwitterAccount;
+import com.seki.saezurishiki.network.twitter.TwitterProvider;
 import com.seki.saezurishiki.presenter.editor.TweetEditorPresenter;
+import com.seki.saezurishiki.view.TweetEditorModule;
 import com.seki.saezurishiki.view.customview.TweetTextEditor;
 import com.seki.saezurishiki.view.fragment.util.DataType;
 
@@ -46,10 +46,11 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import twitter4j.HashtagEntity;
 import twitter4j.Status;
 import twitter4j.StatusUpdate;
-import twitter4j.User;
 
 
 public class EditTweetFragment extends Fragment implements TweetEditorPresenter.View {
@@ -66,10 +67,12 @@ public class EditTweetFragment extends Fragment implements TweetEditorPresenter.
 
     private ImageView uploadImage1;
 
-    private TweetEditorPresenter presenter;
+    @Inject
+    TweetEditorPresenter presenter;
+    @Inject
+    TwitterProvider mTwitterProvider;
 
     private TextView counter;
-
 
     private static final String EDITOR_TYPE = "editor_type";
     private static final int NORMAL_TWEET = 0x0001;
@@ -136,12 +139,6 @@ public class EditTweetFragment extends Fragment implements TweetEditorPresenter.
     }
 
 
-    @Override
-    public void setPresenter(TweetEditorPresenter presenter) {
-        this.presenter = presenter;
-    }
-
-
     private View.OnClickListener uploadImageClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -187,9 +184,15 @@ public class EditTweetFragment extends Fragment implements TweetEditorPresenter.
         Bundle data = getArguments();
         if (data == null) throw new NullPointerException("Bundle data is null!");
 
+        SaezurishikiApp.mApplicationComponent.tweetEditorComponentBuilder()
+                .presenterView(this)
+                .module(new TweetEditorModule())
+                .build()
+                .inject(this);
+
         mEditorType = data.getInt(EDITOR_TYPE);
 
-        this.loginUserId = TwitterAccount.getLoginUserId();
+        this.loginUserId = mTwitterProvider.getLoginUserId();
 
         setHasOptionsMenu(true);
     }
@@ -510,11 +513,5 @@ public class EditTweetFragment extends Fragment implements TweetEditorPresenter.
 
     private boolean hasMediaItem() {
         return this.media != null;
-    }
-
-
-    @Override
-    public String toString() {
-        return "Edit Tweet";
     }
 }

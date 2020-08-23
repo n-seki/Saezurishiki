@@ -1,11 +1,14 @@
 package com.seki.saezurishiki.view.adapter;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
 
-import com.seki.saezurishiki.view.fragment.Fragments;
-import com.seki.saezurishiki.view.fragment.list.RecentlyDirectMessageListFragment;
+import com.seki.saezurishiki.view.fragment.list.HomeTimeLineFragment;
+import com.seki.saezurishiki.view.fragment.list.ReplyTimeLineFragment;
+
+import static com.seki.saezurishiki.file.SharedPreferenceUtil.HOME;
+import static com.seki.saezurishiki.file.SharedPreferenceUtil.REPLY;
 
 
 /**
@@ -16,21 +19,18 @@ public class TimeLinePager extends FragmentPagerAdapter {
 
     public static final int POSITION_HOME = 0;
     public static final int POSITION_REPLY = 1;
-    public static final int POSITION_MESSAGE = 2;
 
     private final long loginUserId;
 
     public TimeLinePager(FragmentManager fragmentManager, long loginUserId) {
         super(fragmentManager);
-
         this.loginUserId = loginUserId;
     }
 
     @Override
     public int getCount() {
-        return 3;
+        return 2;
     }
-
 
     @Override
     public Fragment getItem(int position) {
@@ -38,18 +38,14 @@ public class TimeLinePager extends FragmentPagerAdapter {
 
         switch (position) {
             case POSITION_HOME:
-                fragment = Fragments.createInjectHomeTimeLineFragment(POSITION_HOME, this.loginUserId);
+                fragment = HomeTimeLineFragment.getInstance(this.loginUserId, POSITION_HOME, HOME);
                 break;
 
             case POSITION_REPLY:
-                fragment = Fragments.createInjectReplyTimeLineFragment(POSITION_REPLY, this.loginUserId);
+                fragment = ReplyTimeLineFragment.getInstance(this.loginUserId, POSITION_REPLY, REPLY);
                 break;
 
-            case POSITION_MESSAGE:
-                fragment = Fragments.createInjectRecentlyDMListFragment(POSITION_MESSAGE);
-                break;
-
-            default :
+            default:
                 throw new IllegalStateException("position is " + position );
         }
 

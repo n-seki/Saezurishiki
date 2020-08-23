@@ -15,11 +15,13 @@ public class DataType {
     public static final String IS_REPLY        = "isReply";
     public static final String USER            = "user";
     public static final String QUERY           = "query";
-    public static final String URL             = "url";
+    public static final String URL             = "thumbnail";
+    public static final String MEDIA           = "media";
     public static final String IS_FRIENDS_LIST = "isFriendsList";
     public static final String IS_DELETED      = "isDeleted";
     public static final String IS_FOLLOW       = "isFollow";
     public static final String HASH_TAG        = "hash_tag";
     public static final String QUOTED_TWEET    = "quotedTweet";
     public static final String STATUS_ID       = "statusId";
+    public static final String FORBID_ACTIONS  = "forbidActions";
 }

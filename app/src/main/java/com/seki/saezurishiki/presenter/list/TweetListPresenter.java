@@ -7,22 +7,19 @@ import android.view.View;
 
 import com.seki.saezurishiki.control.Setting;
 import com.seki.saezurishiki.entity.TweetEntity;
-import com.seki.saezurishiki.entity.TwitterEntity;
 import com.seki.saezurishiki.entity.UserEntity;
 import com.seki.saezurishiki.model.TweetListModel;
 import com.seki.saezurishiki.model.adapter.ModelMessage;
 import com.seki.saezurishiki.model.adapter.RequestInfo;
 import com.seki.saezurishiki.model.util.ModelObservable;
 import com.seki.saezurishiki.model.util.ModelObserver;
-import com.seki.saezurishiki.view.adapter.TimeLineAdapter;
+import com.seki.saezurishiki.view.adapter.TweetListAdapter;
 import com.seki.saezurishiki.view.fragment.dialog.adapter.DialogSelectAction;
 
 import java.util.List;
 
-import twitter4j.User;
 
-
-public abstract class TweetListPresenter implements TimeLineAdapter.ViewListener, ModelObserver {
+public abstract class TweetListPresenter implements TweetListAdapter.TweetListener, ModelObserver {
 
     final TweetListView view;
     final TweetListModel tweetListModel;
@@ -35,12 +32,12 @@ public abstract class TweetListPresenter implements TimeLineAdapter.ViewListener
         void completeDeleteTweet(TweetEntity tweet);
         void completeReTweet(TweetEntity tweet);
         void deletionTweet(long deletedTweetId);
-        void setPresenter(TweetListPresenter presenter);
         void displayDetailTweet(long userID, long tweetID);
         void showUserActivity(long userID);
         void openLink(String url);
         void openReplyEditor(TweetEntity tweet);
         void showPicture(TweetEntity tweet, int position);
+        void showTweetDialog(TweetEntity tweet, int[] forbidAction);
         void showReTweetDialog(TweetEntity tweet);
         void showFavoriteDialog(TweetEntity tweet);
         void showLongClickDialog(TweetEntity tweet);
@@ -60,21 +57,19 @@ public abstract class TweetListPresenter implements TimeLineAdapter.ViewListener
         this.view = view;
         this.listOwnerId = listOwnerId;
         this.tweetListModel = listModel;
-
-        this.view.setPresenter(this);
     }
 
+    public void onClick(TweetEntity tweet) {
+        view.showTweetDialog(tweet, getForbidDialogActions());
+    }
 
-    public void onLongClickListItem(TwitterEntity entity) {
-        if (entity.getItemType() == TwitterEntity.Type.LoadButton) {
-            return;
+    public boolean onLongClick(TweetEntity entity) {
+        if (this.tweetListModel.isDelete(entity)) {
+            return false;
         }
 
-        if (this.tweetListModel.isDelete((TweetEntity) entity)) {
-            return;
-        }
-
-        this.view.showLongClickDialog((TweetEntity)entity);
+        this.view.showLongClickDialog(entity);
+        return true;
     }
 
     public void createFavorite(TweetEntity tweet) {
@@ -248,6 +243,9 @@ public abstract class TweetListPresenter implements TimeLineAdapter.ViewListener
         new Handler(Looper.getMainLooper()).post(() -> dispatch(message));
     }
 
+    protected int[] getForbidDialogActions() {
+        return new int[0];
+    }
 
     abstract void dispatch(ModelMessage message);
 

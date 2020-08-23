@@ -6,16 +6,16 @@ import com.seki.saezurishiki.model.adapter.ModelMessage;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import twitter4j.StatusDeletionNotice;
 
 
 public class FavoriteListPresenter extends TweetListPresenter {
 
-
     public FavoriteListPresenter(TweetListView view, long listOwnerId, TweetListModel listModel) {
         super(view, listOwnerId, listModel);
     }
-
 
     @SuppressWarnings("unchecked")
     @Override

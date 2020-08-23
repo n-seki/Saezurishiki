@@ -1,6 +1,6 @@
 package com.seki.saezurishiki.control;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.seki.saezurishiki.R;
 
@@ -116,12 +116,4 @@ public class RelationshipModel {
         return this.loginUserFollowing && this.loginUserFollowed;
     }
 
-//
-//    public void onFollowingLoginUser() {
-//        this.loginUserFollowed = true;
-//    }
-//
-//    public void onRemovingLoginUser() {
-//        this.loginUserFollowed = false;
-//    }
 }

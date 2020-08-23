@@ -4,40 +4,43 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.seki.saezurishiki.R;
-import com.seki.saezurishiki.application.SaezurishikiApp;
 import com.seki.saezurishiki.control.CustomToast;
 import com.seki.saezurishiki.control.ScreenNav;
 import com.seki.saezurishiki.control.UIControlUtil;
 import com.seki.saezurishiki.entity.TweetEntity;
-import com.seki.saezurishiki.entity.TwitterEntity;
+import com.seki.saezurishiki.model.GetTweetById;
 import com.seki.saezurishiki.model.adapter.RequestInfo;
-import com.seki.saezurishiki.network.twitter.TwitterAccount;
 import com.seki.saezurishiki.network.twitter.TwitterError;
 import com.seki.saezurishiki.presenter.list.TweetListPresenter;
-import com.seki.saezurishiki.view.adapter.TimeLineAdapter;
+import com.seki.saezurishiki.view.adapter.TweetListAdapter;
 import com.seki.saezurishiki.view.control.FragmentControl;
-import com.seki.saezurishiki.view.fragment.Fragments;
 import com.seki.saezurishiki.view.fragment.dialog.TweetLongClickDialog;
 import com.seki.saezurishiki.view.fragment.dialog.TweetSelectDialog;
 import com.seki.saezurishiki.view.fragment.dialog.YesNoSelectDialog;
 import com.seki.saezurishiki.view.fragment.dialog.adapter.DialogSelectAction;
-import com.seki.saezurishiki.view.fragment.other.PictureFragment;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
+
+import javax.inject.Inject;
 
 import twitter4j.TwitterException;
+
+import static com.seki.saezurishiki.control.ScreenNav.KEY_POSITION;
+import static com.seki.saezurishiki.control.ScreenNav.KEY_TWEET;
+import static com.seki.saezurishiki.control.ScreenNav.KEY_TWEET_ID;
+import static com.seki.saezurishiki.control.ScreenNav.KEY_USER_ID;
 
 public abstract class TweetListFragment extends Fragment
         implements
@@ -45,18 +48,17 @@ public abstract class TweetListFragment extends Fragment
         TweetLongClickDialog.LongClickDialogListener,
         TweetListPresenter.TweetListView {
 
-    protected TimeLineAdapter mAdapter;
+    protected static final String USER_ID = "user_id";
 
-    protected ListView mListView;
-
-    protected View mFooterView;
-
+    protected TweetListAdapter mAdapter;
+    protected RecyclerView mRecyclerView;
     protected FragmentControl fragmentControl;
 
+    @Inject
     TweetListPresenter presenter;
 
-    final int NEW_LOADING = -0x0003;
-
+    @Inject
+    GetTweetById repositoryAccessor;
 
     @Override
     public void onAttach(Context context) {
@@ -64,38 +66,32 @@ public abstract class TweetListFragment extends Fragment
         this.fragmentControl = (FragmentControl)getActivity();
     }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+
+        Bundle argument = getArguments();
+        if (argument == null) {
+            throw new IllegalStateException("Argument is null");
+        }
     }
 
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater,
+                             ViewGroup container,
+                             Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_list_view, container, false);
         this.initComponents(rootView);
 
-        rootView.setBackgroundColor(UIControlUtil.backgroundColor(this.getContext()));
+        rootView.setBackgroundColor(UIControlUtil.backgroundColor(container.getContext()));
         return rootView;
     }
-
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        mAdapter = new TimeLineAdapter(getActivity(), R.layout.tweet_layout_with_picture, presenter);
-        mListView.setAdapter(mAdapter);
-    }
-
 
     @Override
     public void onResume() {
         super.onResume();
-        this.presenter.onResume();
-
+        presenter.onResume();
         if (mAdapter.isEmpty()) {
             this.loadTimeLine();
         }
@@ -104,74 +100,66 @@ public abstract class TweetListFragment extends Fragment
     @Override
     public void onPause() {
         super.onPause();
-        this.presenter.onPause();
+        presenter.onPause();
     }
-
 
     @Override
     public void onDestroy() {
-        mAdapter.clear();
         this.fragmentControl = null;
         super.onDestroy();
     }
 
-
-
     protected void initComponents(View rootView) {
-        mListView = (ListView) rootView.findViewById(R.id.list);
-        mListView.setOnItemClickListener((parent, view, position, id) -> TweetListFragment.this.onItemClick(position));
+        mRecyclerView = rootView.findViewById(R.id.list);
 
-        mListView.setOnItemLongClickListener((adapterView, view, position, l) -> TweetListFragment.this.onItemLongClick(position));
+        Context context = rootView.getContext();
 
-        mFooterView = getActivity().getLayoutInflater().inflate(R.layout.read_more_tweet, null);
-        mFooterView.setOnClickListener(footer -> TweetListFragment.this.clickReadMoreButton());
+        mAdapter = new TweetListAdapter(
+                context,
+                repositoryAccessor,
+                presenter,
+                (view) -> clickReadMoreButton()
+        );
 
-        mFooterView.setTag(NEW_LOADING, false);
-        mListView.addFooterView(mFooterView, null, true);
-        mListView.setSmoothScrollbarEnabled(true);
-        mListView.setFooterDividersEnabled(false);
+        RecyclerView.LayoutManager layoutManager =
+                new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+
+        RecyclerView.ItemDecoration dividerDecoration =
+                new DividerItemDecoration(context, DividerItemDecoration.VERTICAL);
+
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.addItemDecoration(dividerDecoration);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
-
-    void onItemClick(int position) {
-        final TwitterEntity entity = mAdapter.getEntity(position);
-        TweetListFragment.this.showDialog((TweetEntity)entity);
-    }
-
-
-    boolean onItemLongClick(int position) {
-        final TwitterEntity entity = mAdapter.getEntity(position);
-        this.presenter.onLongClickListItem(entity);
-        return true;
+    @Override
+    public void showTweetDialog(TweetEntity tweet, int[] forbidAction) {
+        showDialog(tweet, forbidAction);
     }
 
     @Override
     public void showLongClickDialog(TweetEntity status) {
         DialogFragment dialog = TweetLongClickDialog.newInstance(status);
         dialog.setTargetFragment(this, 0);
-        dialog.show(getFragmentManager(), "TweetLongClickDialog");
+        dialog.show(Objects.requireNonNull(getFragmentManager()), "TweetLongClickDialog");
     }
 
-
-    protected void showDialog(TweetEntity status) {
-        DialogFragment dialog = TweetSelectDialog.getInstance(status.getId());
+    protected void showDialog(TweetEntity status, int[] forbidActions) {
+        DialogFragment dialog = TweetSelectDialog.getInstance(status.getId(), forbidActions);
         dialog.setTargetFragment(this, 0);
-        dialog.show(getFragmentManager(), "tweet_select");
+        dialog.show(Objects.requireNonNull(getFragmentManager()), "tweet_select");
     }
-
 
     @Override
     public void openReplyEditor(TweetEntity tweet) {
-        final Map<String, Object> args = new HashMap<>();
-        args.put("tweet", tweet);
+        Bundle args = new Bundle();
+        args.putSerializable(KEY_TWEET, tweet);
         this.fragmentControl.requestChangeScreen(ScreenNav.TWEET_EDITOR, args);
     }
-
 
     @SuppressWarnings("unchecked")
     @Override
     public void showFavoriteDialog(final TweetEntity tweet) {
-
         YesNoSelectDialog.Listener<TweetEntity> action = (YesNoSelectDialog.Listener<TweetEntity>) tweet1 -> {
             if (tweet1.isFavorited) {
                 presenter.destroyFavorite(tweet1);
@@ -184,7 +172,6 @@ public abstract class TweetListFragment extends Fragment
         dialogFragment.show(getChildFragmentManager(), "YesNoSelectDialog");
     }
 
-
     @SuppressWarnings("unchecked")
     @Override
     public void showReTweetDialog(final TweetEntity tweet) {
@@ -194,52 +181,41 @@ public abstract class TweetListFragment extends Fragment
         dialogFragment.show(getChildFragmentManager(), "YesNoSelectDialog");
     }
 
-
     @Override
     public void completeReTweet(TweetEntity tweet) {
         CustomToast.show(TweetListFragment.this.getActivity(), R.string.re_tweet_done, Toast.LENGTH_SHORT);
     }
 
-
     @Override
     public void completeDeleteTweet(TweetEntity tweet) {
         CustomToast.show(TweetListFragment.this.getActivity(), R.string.delete_tweet, Toast.LENGTH_SHORT);
-        mAdapter.remove(tweet.getId());
+        mAdapter.remove(tweet);
     }
 
     @Override
     public void catchNewTweet(TweetEntity tweetEntity) {
-        this.mAdapter.insert(tweetEntity, 0);
+        // no-op
     }
-
 
     @Override
     public void updateTweet(TweetEntity tweet) {
         mAdapter.notifyDataSetChanged();
     }
 
-
     @Override
     public void loadTweets(List<TweetEntity> tweets) {
         mAdapter.addAll(tweets);
-        TextView footerText = (TextView)mFooterView.findViewById(R.id.read_more);
-        footerText.setText(R.string.click_to_load);
-        mFooterView.setTag(NEW_LOADING, false);
+        mAdapter.setLoading(false);
     }
 
     @Override
     public void hideFooterLoadButton() {
-        mFooterView.setVisibility(View.GONE);
+        mAdapter.setNeedFooter(false);
     }
 
     @Override
     public void deletionTweet(long deletedTweetId) {
         mAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void setPresenter(TweetListPresenter presenter) {
-        this.presenter = presenter;
     }
 
     @Override
@@ -254,21 +230,21 @@ public abstract class TweetListFragment extends Fragment
 
     @Override
     public void onDialogItemClick(DialogSelectAction<TweetEntity> selectedItem) {
-       this.presenter.onClickDialogItem(selectedItem);
+        presenter.onClickDialogItem(selectedItem);
     }
 
     @Override
     public void displayDetailTweet(long userID, long tweetID) {
-        Map<String, Object> args = new HashMap<>();
-        args.put("userId", userID);
-        args.put("tweetId", tweetID);
+        Bundle args = new Bundle();
+        args.putLong(KEY_USER_ID, userID);
+        args.putLong(KEY_TWEET_ID, tweetID);
         this.fragmentControl.requestChangeScreen(ScreenNav.CONVERSATION, args);
     }
 
     @Override
     public void showUserActivity(long userID) {
-        final Map<String, Object> args = new HashMap<>();
-        args.put("userId", userID);
+        Bundle args = new Bundle();
+        args.putLong(KEY_USER_ID, userID);
         this.fragmentControl.requestChangeScreen(ScreenNav.USER_ACTIVITY, args);
     }
 
@@ -280,45 +256,32 @@ public abstract class TweetListFragment extends Fragment
 
     @Override
     public void showPicture(TweetEntity tweet, int position) {
-        final Map<String, Object> args = new HashMap<>();
-        args.put("tweet", tweet);
-        args.put("position", position);
+        Bundle args = new Bundle();
+        args.putSerializable(KEY_TWEET, tweet);
+        args.putInt(KEY_POSITION, position);
         this.fragmentControl.requestChangeScreen(ScreenNav.PICTURE, args);
     }
 
     @Override
     public void onLongClickDialogItemSelect(DialogSelectAction<TweetEntity> selectedItem) {
-        this.presenter.onClickLongClickDialog(selectedItem);
+        presenter.onClickLongClickDialog(selectedItem);
     }
 
-
     protected void clickReadMoreButton() {
-        final boolean isLoading = (Boolean)mFooterView.getTag(NEW_LOADING);
-
-        if (isLoading) {
-            return;
-        }
-
-        TextView footerText = (TextView)mFooterView.findViewById(R.id.read_more);
-        footerText.setText(R.string.now_loading);
-        mFooterView.setTag(NEW_LOADING, true);
-
+        mAdapter.setLoading(true);
         loadTimeLine();
     }
 
     protected long getLastId() {
-        if (mAdapter == null || mAdapter.getCount() == 0) {
+        if (mAdapter == null || mAdapter.isEmpty()) {
             return -1;
         }
-
-        return mAdapter.getItemIdAtPosition(mAdapter.getCount() - 1);
+        return mAdapter.getLastTweetId();
     }
 
-
-    protected void
-    loadTimeLine() {
+    protected void loadTimeLine() {
         final long maxID = this.getLastId() - 1;
-        this.presenter.load(new RequestInfo().maxID(maxID == -1 ? 0 : maxID).count(50));
+        presenter.load(new RequestInfo().maxID(maxID == -1 ? 0 : maxID).count(50));
     }
 
 }

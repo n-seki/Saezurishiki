@@ -1,10 +1,8 @@
 package com.seki.saezurishiki.view.customview;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.os.Build;
+import androidx.appcompat.widget.AppCompatEditText;
 import android.util.AttributeSet;
-import android.widget.EditText;
 
 import com.seki.saezurishiki.control.UIControlUtil;
 
@@ -12,10 +10,7 @@ import java.util.List;
 
 import twitter4j.HashtagEntity;
 
-/**
- * Created by seki on 2016/05/14.
- */
-public class TweetTextEditor extends EditText {
+public class TweetTextEditor extends AppCompatEditText {
     public TweetTextEditor(Context context) {
         super(context);
     }
@@ -27,12 +22,6 @@ public class TweetTextEditor extends EditText {
     public TweetTextEditor(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public TweetTextEditor(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-    }
-
 
     public void setUserName(List<String> names) {
         String text = UIControlUtil.getMentionUserNameText(names);

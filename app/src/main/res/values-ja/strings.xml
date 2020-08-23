@@ -74,6 +74,19 @@
     <string name="click_to_oauth">承認します</string>
     <string name="user_icon">user icon</string>
 
+    <!-- title -->
+    <string name="title_edit_tweet">ツイートする</string>
+    <string name="title_conversation">会話</string>
+    <string name="title_favorite">Favorite</string>
+    <string name="title_follower">Follower</string>
+    <string name="title_friend">Friends</string>
+    <string name="title_user_tweet">Tweet</string>
+    <string name="title_license">囀り式について</string>
+    <string name="title_setting">Setting</string>
+    <string name="title_search">検索結果</string>
+    <string name="title_picture">画像</string>
+    <string name="sub_title_picture">Picture %d/%d</string>
+
     <string name="send">送信</string>
     <string name="zero">0</string>
     <string name="per_140">/ 140</string>
@@ -142,7 +155,6 @@
     <string name="action_destroy_block">ブロック解除</string>
     <string name="remove">リムーブ</string>
     <string name="onFollowed">フォローされました</string>
-    <string name="user_stream_disconnect">ユーザーストリームを停止しました</string>
     <string name="reply_from">Reply from</string>
     <string name="delete">Delete</string>
     <string name="unfavorite_complete">お気に入りを解除しました</string>
@@ -151,10 +163,10 @@
     <string name="message_by">DM受信</string>
     <string name="apache_license">http://www.apache.org/licenses/LICENSE-2.0</string>
     <string name="about_license">ライセンスについて</string>
-    <string name="version">バージョン</string>
+    <string name="version">バージョン %s</string>
     <string name="about_version">バージョン情報</string>
     <string name="update_date">更新日</string>
-    <string name="last_update_date">リリース日 2018/01/08</string>
+    <string name="last_update_date">リリース日 %s</string>
     <string name="showing_loginUser">あなたです！</string>
     <string name="pref_category_operation">操作設定</string>
     <string name="pref_favorite_operation_Key">pref_favorite_operation_Key</string>
@@ -168,7 +180,7 @@
     <string name="pref_summary_reTweet_operation">リツイートボタンをタップした際の動作を設定します</string>
     <string name="pref_dialog_title_reTweet_operation">動作を選択してください</string>
     <string name="pref_category_regist_word">登録ツイート機能</string>
-    <string name="pref_summary_regist_word">よくツイートする言葉を登録してください¥nツイート編集画面でボタンを押すだけで文字入力が行われます</string>
+    <string name="pref_summary_regist_word">よくツイートする言葉を登録してください</string>
     <string name="pref_key_register_tweet">pref_key_register_tweet</string>
     <string name="pref_key_register_tweet_1">pref_key_register_tweet_1</string>
     <string name="pref_key_register_tweet_2">pref_key_register_tweet_2</string>
@@ -189,5 +201,4 @@
     <string name="library_link3">https://facebook.github.io/conceal/</string>
     <string name="license_description2">囀り式は、BSD License の下で提供される以下のライブラリを使用しています</string>
     <string name="no_recently_message">直近のメッセージはありません</string>
-    <string name="user_stream_connect">ユーザーストリームを開始します</string>
 </resources>

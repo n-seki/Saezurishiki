@@ -1,18 +1,15 @@
+*.iml
 .gradle
 /local.properties
-/.idea/workspace.xml
-/.idea/libraries
-/.idea/compiler.xml
-/.idea/copyright/profiles_settings.xml
-/.idea/caches/*
-/.idea/codeStyles/*
+/.idea/*
+!/.idea/codeStyles/
+!/.idea/dictionaries/
 .DS_Store
 /build
-
-.idea/*.xml
-.idea/misc.xml
-
-build.gradle
+/captures
+.externalNativeBuild
+/buildSrc/.gradle
+/buildSrc/build
 
 gradle.properties
 app/gradle.properties

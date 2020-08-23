@@ -12,7 +12,6 @@ public enum ModelActionType {
     RECEIVE_TWEET(true, DisplayType.ADD),
     RECEIVE_FAVORITE(true, DisplayType.UPDATE_UNLESS_MAIN),
     RECEIVE_UN_FAVORITE(true, DisplayType.UPDATE_UNLESS_MAIN),
-    RECEIVE_DIRECT_MESSAGE(true, DisplayType.ADD),
     RECEIVE_DELETION(true, DisplayType.UPDATE_UNLESS_MAIN),
 
     COMPLETE_FAVORITE(false, DisplayType.UPDATE),
@@ -20,7 +19,6 @@ public enum ModelActionType {
     COMPLETE_RETWEET(false, DisplayType.UPDATE),
     COMPLETE_DELETE_TWEET(false, DisplayType.DELETE),
     COMPLETE_POST_TWEET(false, DisplayType.NO_DISPLAY),
-    COMPLETE_SEND_MESSAGE(false, DisplayType.NO_DISPLAY),
 
     LOAD_FRIENDS(false, DisplayType.ADD),
     LOAD_FOLLOWERS(false, DisplayType.ADD),
@@ -31,9 +29,6 @@ public enum ModelActionType {
     COMPLETE_REMOVE(false, DisplayType.NO_DISPLAY),
     COMPLETE_BLOCK(false, DisplayType.NO_DISPLAY),
     COMPLETE_DESTROY_BLOCK(false, DisplayType.NO_DISPLAY),
-
-    LOAD_DIRECT_MESSAGE(false, DisplayType.ADD),
-    LOAD_DIRECT_MESSAGE_CONVERSATION(false, DisplayType.ADD),
 
     START_USER_STREAM(true, DisplayType.NO_DISPLAY),
     STOP_USER_STREAM(true, DisplayType.NO_DISPLAY),

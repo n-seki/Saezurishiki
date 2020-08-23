@@ -1,6 +1,6 @@
 package com.seki.saezurishiki.entity;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.seki.saezurishiki.control.UIControlUtil;
 import com.seki.saezurishiki.entity.mapper.EntityMapper;
@@ -8,7 +8,6 @@ import com.seki.saezurishiki.entity.mapper.EntityMapper;
 import java.io.Serializable;
 import java.util.List;
 
-import twitter4j.ExtendedMediaEntity;
 import twitter4j.HashtagEntity;
 import twitter4j.MediaEntity;
 import twitter4j.Status;
@@ -43,9 +42,7 @@ public class TweetEntity implements TwitterEntity, Serializable, Comparable<Twee
     public final URLEntity[] urlEntities;
     public final HashtagEntity[] hashtagEntities;
     public final MediaEntity[] mediaEntities;
-    public final ExtendedMediaEntity[] extendedMediaEntities;
-    public final List<String> mediaUrlList;
-
+    public final List<Media> mediaUrlList;
 
     private final long id;
 
@@ -75,7 +72,6 @@ public class TweetEntity implements TwitterEntity, Serializable, Comparable<Twee
         this.urlEntities = status.getURLEntities();
         this.hashtagEntities = status.getHashtagEntities();
         this.mediaEntities = status.getMediaEntities();
-        this.extendedMediaEntities = status.getExtendedMediaEntities();
 
         this.id = status.getId();
 

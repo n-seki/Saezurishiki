@@ -2,7 +2,7 @@ package com.seki.saezurishiki.control;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.v7.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 
 import com.seki.saezurishiki.R;
 
@@ -111,7 +111,7 @@ public final class Setting {
 
     public static String getRegisterWord(Context context, int registerNumber) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        final String key = context.getString(R.string.pref_key_register_tweet) + "_" + String.valueOf(registerNumber);
+        final String key = context.getString(R.string.pref_key_register_tweet) + "_" + registerNumber;
         return sharedPref.getString(key, "");
     }
 

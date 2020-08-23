@@ -4,13 +4,21 @@ import com.seki.saezurishiki.entity.UserEntity;
 import com.seki.saezurishiki.model.GetUserById;
 import com.seki.saezurishiki.repository.UserRepository;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+@Singleton
 public class GetUserByIdImp implements GetUserById {
 
+    private final UserRepository mRepository;
 
-    GetUserByIdImp() {}
+    @Inject
+    GetUserByIdImp(UserRepository repository) {
+        mRepository = repository;
+    }
 
     @Override
     public UserEntity get(long id) {
-        return UserRepository.INSTANCE.getUser(id);
+        return mRepository.getUser(id);
     }
 }

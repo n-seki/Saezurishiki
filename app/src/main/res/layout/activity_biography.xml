@@ -4,26 +4,26 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-        <android.support.design.widget.AppBarLayout
+        <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <android.support.v7.widget.Toolbar
+            <androidx.appcompat.widget.Toolbar
                 android:id="@+id/tool_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="?attr/actionBarSize">
-            </android.support.v7.widget.Toolbar>
-        </android.support.design.widget.AppBarLayout>
+            </androidx.appcompat.widget.Toolbar>
+        </com.google.android.material.appbar.AppBarLayout>
 
-        <android.support.v4.view.ViewPager
+        <androidx.viewpager.widget.ViewPager
             android:id="@+id/bio_header_page"
             android:layout_width="match_parent"
             android:layout_height="160dp"
             android:layout_below="@id/appBarLayout">
-        </android.support.v4.view.ViewPager>
+        </androidx.viewpager.widget.ViewPager>
 
-        <android.support.v7.widget.ButtonBarLayout
+        <androidx.appcompat.widget.ButtonBarLayout
             android:id="@+id/bio_action_buttons"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
@@ -43,16 +43,6 @@
                 app:backgroundTint="@color/blue_button_color_state"/>
 
             <Button
-                android:id="@+id/bio_message_button"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:text="@string/send_DM"
-                android:textStyle="bold"
-                android:textColor="@color/white_FFFFFF"
-                app:backgroundTint="@color/blue_button_color_state"/>
-
-            <Button
                 android:id="@+id/bio_follow_button"
                 android:layout_width="0dp"
                 android:layout_weight="1"
@@ -61,7 +51,7 @@
                 android:textColor="@color/white_FFFFFF"
                 android:textStyle="bold"
                 app:backgroundTint="@color/blue_button_color_state"/>
-        </android.support.v7.widget.ButtonBarLayout>
+        </androidx.appcompat.widget.ButtonBarLayout>
 
         <ListView
             android:id="@+id/bio_drawer_list"

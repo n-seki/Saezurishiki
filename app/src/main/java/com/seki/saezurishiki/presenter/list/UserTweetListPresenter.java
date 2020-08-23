@@ -2,15 +2,15 @@ package com.seki.saezurishiki.presenter.list;
 
 import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.model.TweetListModel;
-import com.seki.saezurishiki.model.adapter.ModelActionType;
 import com.seki.saezurishiki.model.adapter.ModelMessage;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import twitter4j.StatusDeletionNotice;
 
 public class UserTweetListPresenter extends TweetListPresenter {
-
 
     public UserTweetListPresenter(TweetListView view, long listOwnerId, TweetListModel listModel) {
         super(view, listOwnerId, listModel);

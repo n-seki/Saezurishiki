@@ -2,16 +2,14 @@ package com.seki.saezurishiki.view.fragment.dialog;
 
 import android.app.Dialog;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.view.View;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+
 import android.view.Window;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.seki.saezurishiki.R;
-import com.seki.saezurishiki.application.SaezurishikiApp;
 import com.seki.saezurishiki.control.Setting;
 import com.seki.saezurishiki.entity.TweetEntity;
 import com.seki.saezurishiki.view.fragment.util.DataType;
@@ -60,7 +58,7 @@ public class TweetLongClickDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Dialog dialog = new Dialog(getActivity());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.fragment_list_view);
+        dialog.setContentView(R.layout.dialog_list);
         this.initDialog(dialog);
         return dialog;
     }

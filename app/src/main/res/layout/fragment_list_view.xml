@@ -4,12 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-        <ListView
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@color/gray_808080"
-            android:dividerHeight="1sp"
-            android:clipToPadding="false"
-            android:id="@+id/list"/>
+            android:layout_height="match_parent" />
 
 </FrameLayout>
