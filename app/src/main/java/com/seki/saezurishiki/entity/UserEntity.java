@@ -65,10 +65,11 @@ public class UserEntity implements Serializable {
     }
 
     public String getBiggerProfileImageURL() {
-        return mUser.getBiggerProfileImageURL();
+        return mUser.getBiggerProfileImageURLHttps();
     }
 
     public String getProfileBannerURL() {
+        // not supported (always null)
         return mUser.getProfileBannerURL();
     }
 
